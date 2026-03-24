@@ -1,0 +1,58 @@
+/* tokens.css */
+@theme {
+  /* Primary / Yellow */
+  --color-brand-yellow: #ffd700;
+  --color-brand-yellow-80: #ffdf33;
+  --color-brand-yellow-60: #ffe766;
+  --color-brand-yellow-40: #ffef99;
+  --color-brand-yellow-20: #fff7cc;
+  --color-brand-yellow-10: #fffbe5;
+
+  /* Secondary / Blue */
+  --color-brand-blue-darkest: #003066;
+  --color-brand-blue-dark: #095ef5;
+  --color-brand-blue: #0057b8;
+  --color-brand-blue-40: #caf2fa;
+  --color-brand-blue-20: #e5f9fc;
+  --color-brand-blue-10: #f2fcfe;
+
+  /* Neutral / Text */
+  --color-text-strong: #2d3748;
+  --color-text-primary: #4d5154;
+  --color-text-secondary: #718096;
+
+  /* Grey scale */
+  --color-grey-40: #e9e9ea;
+  --color-grey-20: #a6a8a9;
+  --color-grey-10: #d3d3d4;
+
+  /* Surfaces */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-bg: #fafafa;
+  --color-surface-primary: #ffffff;
+  --color-surface-secondary: #fafafa;
+  --color-surface-tertiary: #f2fcfe;
+
+  /* Borders */
+  --color-border: #e9e9ea;
+  --color-border-hover: #d3d3d4;
+
+  /* Extra colors */
+  --color-accent-1: #fcf3c3;
+  --color-accent-2: #bdd8f7;
+  --color-accent-3: #cbfacf;
+  --color-accent-4: #ffc1f7;
+  --color-accent-5: #dbddff;
+
+  /* Fonts */
+  --font-sans: var(--font-mariupol), system-ui, sans-serif;
+  --font-heading: var(--font-heading-var), system-ui, sans-serif;
+
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+}

@@ -1,14 +1,7 @@
+/* typography.css */
 @layer components {
   .text-h1 {
-    @apply text-[90px] leading-[110%] tracking-[0] font-medium;
-  }
-
-  .text-h1-tablet {
-    @apply text-[48px] leading-[110%] tracking-[0] font-medium;
-  }
-
-  .text-h1-mobile {
-    @apply text-[36px] leading-[110%] tracking-[0] font-medium;
+    @apply text-[36px] leading-[110%] font-medium md:text-[48px] xl:text-[90px];
   }
 
   .text-h2 {
