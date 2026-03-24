@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Link, useRouter } from "@/i18n/routing";
 import { useState } from "react";
 import FacebookIcon from "@/components/icons/FacebookIcon";
-import { Menu, X, ShoppingCart } from "lucide-react";
+import { Menu, X, ShoppingCart, ShoppingBag } from "lucide-react";
 import { NavItem } from "@/components/navigation/nav-item";
 import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { MobileNav } from "@/components/navigation/mobile-nav";
@@ -44,7 +44,7 @@ export function Header() {
   const navItems = NAV_ITEMS.map((item) => ({ ...item, label: t(item.key) }));
 
   return (
-    <header className="sticky top-25 mb-5 z-50 bg-white border-b border-border">
+    <header className=" mb-5 z-50 bg-white border border-border">
       <div className="container-page">
         <div className="flex items-center justify-between h-16 lg:h-22">
           {/* Logo */}
@@ -76,22 +76,27 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
-              className="w-9 h-9 rounded-full bg-grey-10 flex items-center justify-center hover:bg-brand-blue-dark transition-colors"
+              className="w-12 h-12 rounded-full bg-secondary-10 flex items-center justify-center hover:bg-brand-blue-dark transition-colors"
             >
-              <FacebookIcon className="w-4 h-4 text-white" />
+              <FacebookIcon className="w-6 h-6 text-grey-100" />
             </a>
 
             <Link href="/campaigns">
-              <Button variant="primary" size="md" className="text-white" pill>
+              <Button
+                variant="primary"
+                size="md"
+                className="text-white w-38 h-11.75"
+                pill
+              >
                 {t("support")}
               </Button>
             </Link>
 
             <button
               aria-label="Cart"
-              className="w-12 h-12 bg-grey-10 rounded-full border border-border flex items-center justify-center hover:border-brand-blue transition-colors"
+              className="w-12 h-12 bg-secondary-10 rounded-full  flex items-center justify-center hover:border-brand-blue transition-colors"
             >
-              <ShoppingBasketIcon className="w-6 h-6 text-text-secondary" />
+              <ShoppingBag className="w-6 h-6 text-grey-100" />
             </button>
           </div>
 

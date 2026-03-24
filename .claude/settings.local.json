@@ -27,7 +27,15 @@
       "Bash(git remote:*)",
       "Bash(git checkout:*)",
       "Bash(git push:*)",
-      "Bash(kill 35382)"
+      "Bash(kill 35382)",
+      "Bash(kill 88607)",
+      "Bash(ls -la /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/app/[locale]/)",
+      "Bash(pandoc --track-changes=all \"/Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/DreamsBranch_Blueprint_v3.docx\" -o /tmp/blueprint.md)",
+      "Bash(python scripts/office/unpack.py \"/Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/DreamsBranch_Blueprint_v3.docx\" /tmp/blueprint_unpacked/)",
+      "Bash(python3 -c \":*)",
+      "Bash(kill 97756)",
+      "Bash(pandoc \"/Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/DreamsBranch_Blueprint_v3.docx\" -o /tmp/blueprint.md)",
+      "Bash(npx shadcn@latest init --defaults)"
     ]
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 type Locale = "ua" | "en";
@@ -16,57 +16,51 @@ export function LanguageSwitcher({
   onSwitch,
   className,
 }: LanguageSwitcherProps) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const options: Locale[] = ["ua", "en"];
+  const otherLocale: Locale = currentLocale === "ua" ? "en" : "ua";
 
   return (
-    <div ref={ref} className={cn("relative", className)}>
-      <button
-        onClick={() => setOpen((v) => !v)}
-        aria-label="Switch language"
+    // Outer div is exactly the size of one button — anchors layout, never shifts
+    <div
+      className={cn("relative h-12 w-12", className)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* White pill: absolutely positioned from top-0, expands downward on hover */}
+      <div
         className={cn(
-          "w-9 h-9 rounded-full border border-border text-body font-medium transition-colors uppercase",
-          open
-            ? "bg-brand-blue text-white border-brand-blue"
-            : "bg-surface-primary text-text-primary hover:border-brand-blue hover:text-brand-blue",
+          "absolute top-0 left-0 right-0 flex flex-col items-center overflow-hidden rounded-[999px] bg-white ",
+          "transition-all duration-300 ease-out",
+          hovered ? "pb-2 gap-1" : "pb-0 gap-0",
         )}
       >
-        {currentLocale.toUpperCase()}
-      </button>
+        {/* CURRENT */}
+        <button
+          type="button"
+          className={cn(
+            "flex h-12 w-12 shrink-0 items-center justify-center rounded-full",
+            "text-body leading-[120%] font-bold uppercase transition-colors duration-200 bg-secondary-10 text-text-primary",
+          )}
+        >
+          {currentLocale}
+        </button>
 
-      {open && (
-        <div className="absolute right-0 top-full mt-1 rounded-xl border border-border bg-surface-primary shadow-md py-1 z-50 min-w-[4rem]">
-          {options.map((locale) => (
-            <button
-              key={locale}
-              onClick={() => {
-                onSwitch(locale);
-                setOpen(false);
-              }}
-              className={cn(
-                "w-full px-4 py-2 text-body-sm font-medium uppercase transition-colors text-left",
-                locale === currentLocale
-                  ? "text-brand-blue bg-brand-blue-light"
-                  : "text-text-primary hover:bg-surface-secondary",
-              )}
-            >
-              {locale.toUpperCase()}
-            </button>
-          ))}
-        </div>
-      )}
+        {/* OTHER */}
+        <button
+          type="button"
+          onClick={() => onSwitch(otherLocale)}
+          className={cn(
+            "flex shrink-0 items-center justify-center rounded-full w-12",
+            "text-body leading-[120%] font-bold uppercase",
+            "bg-secondary-10 text-text-primary transition-all duration-300",
+            "hover:bg-secondary hover:text-white",
+            hovered ? "h-12 opacity-100" : "h-0 opacity-0 pointer-events-none",
+          )}
+        >
+          {otherLocale}
+        </button>
+      </div>
     </div>
   );
 }

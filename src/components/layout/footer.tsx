@@ -1,121 +1,169 @@
 "use client";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { Facebook, Mail, ArrowUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+import { MailIcon, ArrowUpRight } from "lucide-react";
+import ArrowUpCircleIcon from "@/components/icons/ArrowUpCircleIcon";
+import FacebookInCircleIcon from "../icons/FacebookInCircleIcon";
 
 export function Footer() {
   const t = useTranslations();
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-brand-blue text-white">
-      <div className="container-page py-12 lg:py-16">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
-          <div className="space-y-4">
-            <div>
-              <p className="text-h4 font-bold">Dreams Branch of UWAA</p>
-              <p className="text-brand-yellow text-body-sm font-medium">
-                HELP UKRAINE WIN
-              </p>
-            </div>
+    <footer className="mx-auto ">
+      <div className="bg-[#00448F] text-white rounded-3xl px-8 py-10 lg:px-12 lg:py-12">
+        {/* Top row: Logo + Back to top */}
+        <div className="flex items-center justify-between mb-10">
+          <Link href="/" className="shrink-0">
+            <img
+              src="/logo-white.svg"
+              alt="Dreams Branch of UWAA"
+              className="h-10"
+            />
+          </Link>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="flex items-center gap-2 text-body text-white hover:text-primary transition-colors"
+          >
+            {t("footer.back_to_top")}
+            <ArrowUpCircleIcon size={32} />
+          </button>
+        </div>
+
+        {/* Main row: Social | Nav | Support button */}
+        <div className=" border-t border-white/20 pt-5 flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-10 mb-10">
+          {/* Social + contact */}
+          <div className="flex flex-col gap-4 shrink-0">
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/profile.php?id=100092434277929"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 transition-colors"
               aria-label="Facebook"
+              className=" hover:border-white transition-colors"
             >
-              <Facebook className="w-5 h-5" />
+              <FacebookInCircleIcon className=" w-9 h-9 text-white" />
             </a>
             <a
-              href="mailto:dreamsbrunch@gmail.com"
-              className="flex items-center gap-2 text-body-sm hover:text-brand-yellow transition-colors"
+              href="mailto:dreamsbranch@gmail.com"
+              className="flex items-center gap-2 text-h3 text-white/80 hover:text-white transition-colors"
             >
-              <Mail className="w-4 h-4" />
-              dreamsbrunch@gmail.com
+              <MailIcon size={30} />
+              dreamsbranch@gmail.com
             </a>
           </div>
 
-          <nav className="grid grid-cols-2 sm:grid-cols-4 gap-8 lg:gap-12">
+          {/* Nav */}
+          <nav className="flex-1 grid grid-cols-2 sm:grid-cols-5 gap-6">
             <div>
               <Link
                 href="/about"
-                className="text-body-sm font-medium hover:text-brand-yellow transition-colors"
+                className="text-secondary text-white font-medium hover:text-primary transition-colors"
               >
                 {t("nav.about")}
               </Link>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Link
                 href="/campaigns"
-                className="block text-body-sm font-medium hover:text-brand-yellow transition-colors"
+                className="block text-secondary text-white font-medium hover:text-primary transition-colors"
               >
                 {t("nav.campaigns")}
               </Link>
+              <Link
+                href="/lottery"
+                className="block text-body text-white hover:text-primary transition-colors"
+              >
+                {t("nav.lottery")}
+              </Link>
+              <Link
+                href="/auction"
+                className="block text-body text-white hover:text-primary transition-colors"
+              >
+                {t("nav.auction")}
+              </Link>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Link
                 href="/events"
-                className="block text-body-sm font-medium hover:text-brand-yellow transition-colors"
+                className="block text-secondary text-white font-medium hover:text-primary transition-colors"
               >
                 {t("nav.events")}
               </Link>
               <Link
                 href="/reports"
-                className="block text-caption text-white/60 hover:text-brand-yellow transition-colors"
+                className="block text-body text-white hover:text-primary transition-colors"
               >
                 {t("nav.reports")}
               </Link>
               <Link
                 href="/news"
-                className="block text-caption text-white/60 hover:text-brand-yellow transition-colors"
+                className="block text-body text-white hover:text-primary transition-colors"
               >
                 {t("nav.news")}
               </Link>
             </div>
-            <div className="space-y-2">
+            <div>
               <Link
                 href="/shop"
-                className="block text-body-sm font-medium hover:text-brand-yellow transition-colors"
+                className="block text-secondary font-medium text-white hover:text-primary transition-colors"
               >
                 {t("nav.shop")}
               </Link>
+            </div>
+            <div>
               <Link
                 href="/contact"
-                className="block text-body-sm font-medium hover:text-brand-yellow transition-colors"
+                className="block text-secondary font-medium text-white  hover:text-primary transition-colors"
               >
                 {t("nav.contact")}
               </Link>
             </div>
           </nav>
 
-          <div className="flex flex-col items-end gap-4">
-            <Link href="/campaigns" className="btn-secondary text-body-sm">
-              {t("nav.support")}
+          {/* Support button */}
+          <div className="shrink-0">
+            <Link href="/campaigns">
+              <Button
+                variant="secondary"
+                size="md"
+                className="text-grey-100 w-50 h-12"
+                pill
+              >
+                {t("nav.support")}
+              </Button>
             </Link>
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="flex items-center gap-1 text-caption text-white/60 hover:text-white transition-colors"
-            >
-              {t("footer.back_to_top")}
-              <ArrowUp className="w-4 h-4" />
-            </button>
           </div>
         </div>
 
-        <div className="border-t border-white/20 mt-10 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        {/* Bottom: Privacy + Copyright */}
+        <div className="border-t border-white/20 pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <Link
             href="/privacy"
-            className="text-caption text-white/60 hover:text-white transition-colors"
+            className="text-small text-white/60 hover:text-white transition-colors"
           >
             {t("footer.privacy")}
           </Link>
-          <p className="text-caption text-white/60">
-            {t("footer.copyright", { year })}
+          <p className="text-small text-white/60">
+            © Copyright {year} |{" "}
+            <span>Developed By </span>
+            <a
+              href="https://olhachernysh.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-0.5 text-white/80 hover:text-white underline underline-offset-2 transition-colors"
+            >
+              olhachernysh.dev
+              <ArrowUpRight size={13} />
+            </a>
+            {" "}| All Rights Reserved
           </p>
         </div>
-        <div className="mt-6 pt-6 border-t border-white/10">
-          <p className="text-caption text-white/40 max-w-3xl">
+
+        {/* Acknowledgment */}
+        <div className="mt-5 pt-5 border-t border-white/10">
+          <p className="text-small text-white/40 max-w-3xl">
             {t("footer.acknowledgment")}
           </p>
         </div>
