@@ -1,0 +1,41 @@
+@layer components {
+  .text-h1 {
+    @apply text-[90px] leading-[110%] tracking-[0] font-medium;
+  }
+
+  .text-h1-tablet {
+    @apply text-[48px] leading-[110%] tracking-[0] font-medium;
+  }
+
+  .text-h1-mobile {
+    @apply text-[36px] leading-[110%] tracking-[0] font-medium;
+  }
+
+  .text-h2 {
+    @apply text-[32px] leading-[120%] tracking-[0] font-normal;
+  }
+
+  .text-h3 {
+    @apply text-[24px] leading-[120%] tracking-[0] font-normal;
+  }
+
+  .text-subheading {
+    @apply text-[24px] leading-[120%] tracking-[0] font-normal;
+  }
+
+  .text-h4 {
+    @apply text-[18px] leading-[120%] tracking-[0] font-medium uppercase;
+  }
+
+  .text-secondary {
+    @apply text-[18px] leading-[120%] tracking-[0] font-normal;
+  }
+
+  .text-body {
+    @apply text-[16px] leading-[120%] tracking-[0] font-normal;
+  }
+
+  .text-small {
+    @apply text-[12px] leading-[120%] tracking-[0] font-medium;
+  }
+}

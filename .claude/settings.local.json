@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(node -e \"console.log\\(''tailwindcss:'', require\\(''./node_modules/tailwindcss/package.json''\\).version\\); console.log\\(''@tailwindcss/postcss:'', require\\(''./node_modules/@tailwindcss/postcss/package.json''\\).version\\)\")",
+      "Bash(node -e \":*)",
+      "Bash(npm outdated:*)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(tee /tmp/outdated.txt)",
+      "Read(//tmp/**)",
+      "Bash(npm list:*)",
+      "Read(//Users/olha_chernysh/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/93fd0c76-727d-43ff-b3a0-22b0e2ae536e/2bb58e75-bfd3-494a-8a4d-1702f60a99aa/skills/docx/**)",
+      "Bash(pandoc \"/Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/DreamsBranch_Build_Blueprint_v2.docx\" -t markdown)",
+      "Bash(SKILL_DIR=\"/Users/olha_chernysh/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/93fd0c76-727d-43ff-b3a0-22b0e2ae536e/2bb58e75-bfd3-494a-8a4d-1702f60a99aa/skills/docx\")",
+      "Bash(python3 \"$SKILL_DIR/scripts/office/unpack.py\" \"/Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/DreamsBranch_Build_Blueprint_v2.docx\" /tmp/blueprint_unpacked/)",
+      "Bash(python3 \"$SKILL_DIR/scripts/office/unpack.py\" \"/Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/DreamsBranch_Cost_Breakdown.docx\" /tmp/cost_unpacked/)",
+      "Bash(pip3 install:*)",
+      "Bash(npm --version)",
+      "mcp__Claude_Preview__preview_start",
+      "WebFetch(domain:www.prisma.io)",
+      "Bash(ls /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/app/[locale]/)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)",
+      "Bash(kill 35382)"
+    ]
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "title": "Dreams Branch of UWAA — Допоможемо Україні перемогти",
+    "description": "Платформа української спільноти в Австралії для підтримки України через збори, події та волонтерство."
+  },
+  "nav": {
+    "about": "Про нас",
+    "campaigns": "Збори",
+    "events": "Подiї",
+    "news": "Новини",
+    "reports": "Звіти",
+    "shop": "Магазин",
+    "contact": "Контакти",
+    "support": "Підтримати",
+    "language": "EN"
+  },
+  "home": {
+    "hero": {
+      "title": "«Dreams»",
+      "subtitle": "Союз Українок Австралії",
+      "description": "Мріємо про мир, діємо заради життя. Підтримуємо ЗСУ збір коштами та збірками.",
+      "cta_campaigns": "Дивитись збори",
+      "cta_donate": "Донат"
+    },
+    "stats": {
+      "raised": "Зібрано для України",
+      "people": "Людям допомогли",
+      "campaigns": "роки роботи",
+      "transparency": "Прозорість"
+    },
+    "sections": {
+      "active_campaigns": "Активні збори",
+      "events": "Події спільноти",
+      "support_title": "Підтримайте нашу діяльність",
+      "support_description": "Ми приймаємо донати та благодійний продаж товарів і послуг — від коштів, мерчу й сувенірів з України до виробів волонтерів і домашніх смаколиків.",
+      "donate": "Донат",
+      "shop": "Магазин",
+      "auction": "Аукціон та лотерея",
+      "volunteer": "Діями",
+      "news": "Новини",
+      "reports": "Фото-звіти",
+      "contact_title": "Зв'язатись з нами",
+      "contact_description": "Якщо у вас є питання, ви хочете стати нашим партнером чи поволонтерити — заповнюйте форму, і ми обов'язково з вами зв'яжемося.",
+      "more": "Більше"
+    }
+  },
+  "campaigns": {
+    "title": "Збори",
+    "description": "Тут ви можете познайомитись із проектами фонду.",
+    "active": "Активні збори",
+    "archived": "Архівні збори",
+    "raised": "Зібрано",
+    "goal": "Мета",
+    "donate_btn": "Допомогти",
+    "more": "Більше проєктів"
+  },
+  "donation": {
+    "choose_amount": "Оберіть суму для донату:",
+    "custom": "Інша",
+    "pay_card": "Картою",
+    "pay_paypal": "PayPal",
+    "cover_fees": "Додати 3% на покриття комісії",
+    "donors": "Донати",
+    "thank_you": "Дякуємо!",
+    "success_message": "Ваш донат отримано. Разом ми робимо різницю."
+  },
+  "events": {
+    "title": "Події спільноти",
+    "description": "Тут ви можете познайомитися із проектами фонду.",
+    "date_time": "Дата та час",
+    "location": "Місце проведення",
+    "view_map": "Відкрити на карті",
+    "learn_more": "Дізнатись більше",
+    "volunteer": "Хочу долучитись",
+    "all": "Всі події",
+    "active": "Активні",
+    "archive": "Архів"
+  },
+  "news": {
+    "title": "Новини спільноти",
+    "description": "Тут ви знайдете найсвіжіші новини фонду та його проєктів.",
+    "search": "Пошук",
+    "sort_date": "Сортувати за датою",
+    "read_more": "Читати далі",
+    "share": "Поділитись через:",
+    "copy_link": "Копіювати посилання",
+    "more_news": "Більше новин"
+  },
+  "reports": {
+    "title": "Звіти діяльності",
+    "description": "Нам важливо, щоб ви бачили плоди нашої спільної роботи.",
+    "details": "Детальніше"
+  },
+  "contact": {
+    "title": "Зв'язатись з нами",
+    "description": "Якщо у вас є питання, ви хочете стати нашим партнером чи поволонтерити у проєктах фонду — заповнюйте форму, і ми обов'язково з вами зв'яжемося.",
+    "name": "Ім'я",
+    "phone": "Телефон",
+    "email": "Email",
+    "message": "Коментар",
+    "send": "Відправити",
+    "success": "Дякуємо! Ми зв'яжемося з вами найближчим часом.",
+    "our_email": "Наш Email:",
+    "our_socials": "Наші соціальні мережі:"
+  },
+  "footer": {
+    "privacy": "Політика конфеденційності",
+    "copyright": "© Copyright {year} | Developed By Olga | All Rights Reserved",
+    "acknowledgment": "We acknowledge the Traditional Owners of Country throughout Australia and acknowledges their continuing connection to land, waters and community. We pay our respects to the people, the cultures and Elders past and present.",
+    "back_to_top": "До початку"
+  },
+  "common": {
+    "loading": "Завантаження...",
+    "error": "Щось пішло не так",
+    "not_found": "Сторінку не знайдено",
+    "not_found_description": "Сторінка, яку ви шукаєте, не існує або була переміщена."
+  }
+}
