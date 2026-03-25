@@ -83,10 +83,9 @@ export function Header() {
 
             <Link href="/campaigns">
               <Button
-                variant="primary"
-                size="md"
-                className="text-white w-38 h-11.75"
-                pill
+                variant="default"
+                size="lg"
+                className="rounded-full w-38 h-11.75"
               >
                 {t("support")}
               </Button>

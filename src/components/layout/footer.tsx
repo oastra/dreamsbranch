@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { MailIcon, ArrowUpRight } from "lucide-react";
 import ArrowUpCircleIcon from "@/components/icons/ArrowUpCircleIcon";
 import FacebookInCircleIcon from "../icons/FacebookInCircleIcon";
+import UserCircleIcon from "@/components/icons/UserCircleIcon";
 
 export function Footer() {
   const t = useTranslations();
@@ -127,9 +128,8 @@ export function Footer() {
             <Link href="/campaigns">
               <Button
                 variant="secondary"
-                size="md"
-                className="text-grey-100 w-50 h-12"
-                pill
+                size="lg"
+                className="rounded-full w-50 h-12"
               >
                 {t("nav.support")}
               </Button>
@@ -138,32 +138,40 @@ export function Footer() {
         </div>
 
         {/* Bottom: Privacy + Copyright */}
-        <div className="border-t border-white/20 pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="border-t border-white pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <Link
             href="/privacy"
-            className="text-small text-white/60 hover:text-white transition-colors"
+            className="text-body text-white hover:text-primary transition-colors"
           >
             {t("footer.privacy")}
           </Link>
-          <p className="text-small text-white/60">
-            © Copyright {year} |{" "}
-            <span>Developed By </span>
+          <div className="flex items-center gap-4">
+            <p className="text-body text-white">
+              © Copyright {year} | <span>Developed By </span>
+              <a
+                href="https://olhachernysh.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-0.5 text-white hover:text-primary underline underline-offset-2 transition-colors"
+              >
+                olhachernysh.dev
+                <ArrowUpRight size={13} />
+              </a>{" "}
+              | All Rights Reserved
+            </p>
             <a
-              href="https://olhachernysh.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-0.5 text-white/80 hover:text-white underline underline-offset-2 transition-colors"
+              href="/admin/login"
+              className="text-white hover:text-white/50 transition-colors text-[11px]"
+              title="Admin"
             >
-              olhachernysh.dev
-              <ArrowUpRight size={13} />
+              <UserCircleIcon size={36} />
             </a>
-            {" "}| All Rights Reserved
-          </p>
+          </div>
         </div>
 
         {/* Acknowledgment */}
         <div className="mt-5 pt-5 border-t border-white/10">
-          <p className="text-small text-white/40 max-w-3xl">
+          <p className="text-small text-white max-w-3xl">
             {t("footer.acknowledgment")}
           </p>
         </div>

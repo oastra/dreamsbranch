@@ -23,7 +23,7 @@ export function NavItem({
       href={href}
       onClick={onClick}
       className={cn(
-        "px-3 py-1.5 rounded-full text-secondary text-gray-100 font-regular transition-colors no-wrap",
+        "px-3 py-1.5 rounded-full text-secondary text-gray-100 font-regular transition-colors nowrap",
         isActive
           ? "bg-primary text-text-primary-80"
           : "text-text-primary hover:text-secondary",

@@ -35,7 +35,23 @@
       "Bash(python3 -c \":*)",
       "Bash(kill 97756)",
       "Bash(pandoc \"/Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/DreamsBranch_Blueprint_v3.docx\" -o /tmp/blueprint.md)",
-      "Bash(npx shadcn@latest init --defaults)"
+      "Bash(npx shadcn@latest init --defaults)",
+      "Bash(npx shadcn@latest add table dialog form input textarea select badge tabs label separator dropdown-menu toast sonner --yes)",
+      "Bash(npx shadcn@latest add table dialog form input textarea select badge tabs label separator dropdown-menu sonner --yes)",
+      "Bash(npx shadcn@latest add form --yes)",
+      "Bash(npx shadcn:*)",
+      "Bash(npx tsc:*)",
+      "Bash(grep -E \"\\\\.\\(env|ts|js\\)$|^d\")",
+      "Bash(mkdir -p /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/app/admin/events/[id])",
+      "Bash(mkdir -p /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/app/admin/news/[id])",
+      "Bash(mkdir -p /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/app/admin/reports/[id])",
+      "Bash(mkdir -p /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/app/admin/campaigns/[id])",
+      "Bash(mv page.tsx \\\\\\(protected\\\\\\)/page.tsx)",
+      "Bash(mv events:*)",
+      "Bash(mv news:*)",
+      "Bash(mv reports:*)",
+      "Bash(mv campaigns:*)",
+      "Bash(kill 29209)"
     ]
   }
 }

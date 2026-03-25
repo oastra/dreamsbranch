@@ -98,8 +98,7 @@ body {
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
+  /* shadcn semantic tokens — only those that don't conflict with brand tokens */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -115,29 +114,20 @@ body {
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
-  --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  /* NOTE: --color-primary, --color-secondary, --color-border, --radius-*
+     are intentionally NOT mapped here — brand tokens in tokens.css take precedence */
 }
 
 :root {
@@ -211,12 +201,34 @@ body {
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
+    @apply outline-ring/50;
   }
   html {
     @apply font-sans;
   }
+  /* body styling is set above using brand tokens (bg-bg text-text-primary) */
 }
+
+/* ── Button cursor-ripple hover effect ─────────────────────────── */
+[data-slot="button"]::before {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: var(--ripple-color, theme(colors.primary));
+  width: calc(var(--ripple-r, 120px) * 2);
+  height: calc(var(--ripple-r, 120px) * 2);
+  left: var(--ripple-x, 50%);
+  top: var(--ripple-y, 50%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-slot="button"]:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+

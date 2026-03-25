@@ -53,7 +53,7 @@ export function MobileNav({
             {targetLocale}
           </Button>
           <Link href="/campaigns" onClick={onClose} className="flex-1">
-            <Button variant="primary" size="sm" pill className="w-full">
+            <Button variant="default" size="sm" className="rounded-full w-full">
               {supportLabel}
             </Button>
           </Link>
