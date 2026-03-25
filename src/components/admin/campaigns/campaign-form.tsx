@@ -116,8 +116,8 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
       </div>
 
       <div className="flex gap-3">
-        <Button type="submit" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create campaign'}</Button>
-        <Button type="button" variant="outline" className="rounded-full" onClick={() => router.push('/admin/campaigns')}>Cancel</Button>
+        <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create campaign'}</Button>
+        <Button type="button" size="lg" variant="outline" className="rounded-full" onClick={() => router.push('/admin/campaigns')}>Cancel</Button>
       </div>
     </form>
   );

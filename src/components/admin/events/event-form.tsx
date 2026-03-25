@@ -130,10 +130,10 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
       </div>
 
       <div className="flex gap-3">
-        <Button type="submit" variant="default" className="rounded-full" disabled={saving}>
+        <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>
           {saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create event'}
         </Button>
-        <Button type="button" variant="outline" className="rounded-full" onClick={() => router.push('/admin/events')}>
+        <Button type="button" size="lg" variant="outline" className="rounded-full" onClick={() => router.push('/admin/events')}>
           Cancel
         </Button>
       </div>

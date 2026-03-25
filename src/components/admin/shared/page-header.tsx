@@ -18,7 +18,7 @@ export function PageHeader({ title, description, createHref, createLabel }: Page
       </div>
       {createHref && (
         <Link href={createHref}>
-          <Button variant="secondary" size="default" className="rounded-full">
+          <Button variant="secondary" size="lg" className="rounded-full">
             <Plus className="w-4 h-4" />
             {createLabel ?? 'New'}
           </Button>

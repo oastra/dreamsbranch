@@ -116,5 +116,10 @@
     "error": "Something went wrong",
     "not_found": "Page not found",
     "not_found_description": "The page you are looking for does not exist or has been moved."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "We couldn't find what you were looking for. The page may have been moved. Try using the menu or go back to the home page.",
+    "cta": "Go home"
   }
 }

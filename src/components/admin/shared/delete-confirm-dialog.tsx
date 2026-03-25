@@ -19,8 +19,8 @@ export function DeleteConfirmDialog({ open, onOpenChange, onConfirm, loading, it
           <DialogDescription>This action cannot be undone.</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>Cancel</Button>
-          <Button variant="destructive" onClick={onConfirm} disabled={loading}>
+          <Button size="lg" variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>Cancel</Button>
+          <Button size="lg" variant="destructive" onClick={onConfirm} disabled={loading}>
             {loading ? 'Deleting...' : 'Delete'}
           </Button>
         </DialogFooter>

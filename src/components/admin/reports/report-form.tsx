@@ -86,8 +86,8 @@ export function ReportForm({ report }: { report?: Record<string, any> }) {
       </div>
 
       <div className="flex gap-3">
-        <Button type="submit" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create report'}</Button>
-        <Button type="button" variant="outline" className="rounded-full" onClick={() => router.push('/admin/reports')}>Cancel</Button>
+        <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create report'}</Button>
+        <Button type="button" size="lg" variant="outline" className="rounded-full" onClick={() => router.push('/admin/reports')}>Cancel</Button>
       </div>
     </form>
   );

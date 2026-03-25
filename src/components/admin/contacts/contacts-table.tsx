@@ -48,7 +48,7 @@ export function ContactsTable({ contacts }: { contacts: Contact[] }) {
               <TableCell className="max-w-xs truncate text-text-secondary">{c.message}</TableCell>
               <TableCell>
                 {!c.is_read && (
-                  <Button size="xs" variant="outline" disabled={marking === c.id} onClick={() => handleMarkRead(c.id)}>
+                  <Button size="sm" variant="outline" disabled={marking === c.id} onClick={() => handleMarkRead(c.id)}>
                     {marking === c.id ? '...' : 'Mark read'}
                   </Button>
                 )}

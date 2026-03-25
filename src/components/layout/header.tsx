@@ -49,7 +49,11 @@ export function Header() {
         <div className="flex items-center justify-between h-16 lg:h-22">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <img src="/logo-n.svg" alt="Dreams Branch" className="w-70 h-10" />
+            <img
+              src="/logo-blue.svg"
+              alt="Dreams Branch"
+              className="w-70 h-10"
+            />
           </Link>
 
           {/* Desktop nav */}

@@ -51,6 +51,14 @@ body {
   @apply text-[16px] leading-[120%] tracking-[0] font-normal;
 }
 
+@utility text-body-sm {
+  @apply text-[14px] leading-[140%] tracking-[0] font-normal;
+}
+
+@utility text-caption {
+  @apply text-[12px] leading-[140%] tracking-[0] font-normal;
+}
+
 @utility text-small {
   @apply text-[12px] leading-[120%] tracking-[0] font-medium;
 }

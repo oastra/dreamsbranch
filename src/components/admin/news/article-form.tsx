@@ -120,8 +120,8 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
       </div>
 
       <div className="flex gap-3">
-        <Button type="submit" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create article'}</Button>
-        <Button type="button" variant="outline" className="rounded-full" onClick={() => router.push('/admin/news')}>Cancel</Button>
+        <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create article'}</Button>
+        <Button type="button" size="lg" variant="outline" className="rounded-full" onClick={() => router.push('/admin/news')}>Cancel</Button>
       </div>
     </form>
   );
