@@ -1,7 +1,10 @@
-import { useTranslations } from 'next-intl';
 
-export default function Page() {
-  const t = useTranslations();
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale });
   const pageName = 'events';
   const titleKey = pageName === 'about' ? 'nav.about' : pageName === 'shop' ? 'nav.shop' : `${pageName}.title`;
   const descKey = `${pageName}.description`;
@@ -16,7 +19,7 @@ export default function Page() {
       </section>
       <section className="section">
         <div className="container-page">
-          <p className="text-text-secondary">Content coming in Milestone 1</p>
+          <p className="text-text-secondary">{t('common.coming_soon')}</p>
         </div>
       </section>
     </>

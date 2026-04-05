@@ -27,6 +27,10 @@ body {
   @apply text-[36px] leading-[110%] font-medium md:text-[48px] xl:text-[90px];
 }
 
+@utility text-display {
+  @apply text-[36px] leading-[110%] font-medium md:text-[48px] xl:text-[90px];
+}
+
 @utility text-h2 {
   @apply text-[32px] leading-[120%] tracking-[0] font-normal;
 }

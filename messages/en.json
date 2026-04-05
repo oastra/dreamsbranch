@@ -102,8 +102,81 @@
     "message": "Comment",
     "send": "Send",
     "success": "Thank you! We will get back to you soon.",
+    "error": "Something went wrong. Please try again.",
     "our_email": "Our Email:",
     "our_socials": "Our social media:"
+  },
+  "about": {
+    "hero": {
+      "title": "About the Community",
+      "description_1": "Our community in Australia is a reliable support base for Ukraine's defenders. The foundation's projects focus on rapidly meeting frontline needs — from tactical gear to critical medicine. We do everything to ensure every soldier feels supported, even from across the ocean.",
+      "description_2": "Here you can join fundraising campaigns, become a volunteer, and find like-minded people among thousands of Ukrainians in Australia. Together we turn every contribution into real help, build a strong community, and bring victory closer by acting according to our values.",
+      "cta": "Learn more"
+    },
+    "team": {
+      "title": "About the Team",
+      "founded_label": "Year founded",
+      "founded_value": "2022",
+      "location_label": "Location",
+      "location_value": "Sydney",
+      "volunteers_label": "Volunteers",
+      "volunteers_value": "40+",
+      "desc_1": "Over 40 volunteers and staff work every day to ensure every donation translates into real help for Ukraine. Each of us has our own story of how we joined the team.",
+      "desc_2": "The Dreams Branch of UWAA team is made up of volunteers who do everything to achieve victory!",
+      "desc_3": "Our work is a story of collective support, mutual understanding, and generosity that changes lives — not only those who receive help, but also those who give their energy and resources to make the world better.",
+      "desc_4": "Thousands of Ukrainians trust us. That is a great honour and a great responsibility. We do everything possible to justify this trust and bring our country closer to victory!"
+    },
+    "story": {
+      "title": "Dreams: Our Beginning",
+      "ch1_title": "The Line That Changed Everything",
+      "ch1_text": "If you scroll back through our Facebook page a few years, one thing becomes clear: our lives were divided sharply into \"before\" and \"after\" by a single date — February 24, 2022. Before that date, the feed was full of happy photos: friends gathering, children smiling, jokes and everyday worries. And then — an abyss. Horror, panic, and an overwhelming sense of reality slipping away.",
+      "ch1_highlight": "But from that shock, something else was born — something stronger: we must act!",
+      "ch2_title": "First Steps: Martin Place and the Power of Unity",
+      "ch2_text": "The first impulse came through the \"Ukrainians in Sydney\" group. When its leader, Anton Bogdanovich, called everyone to rally at Martin Place, we were there without hesitation. It was there, at protests in rain and sun, that our volunteer community was forged. Ira Raevska and I had met earlier — our children swam together at the same pool. Now we were at rallies every day with prams. But after a few weeks came the realisation: just standing with signs wasn't enough.",
+      "ch2_highlight": "We can and must do more.",
+      "ch3_title": "The First \"Sausage Sizzle\": How Sausages Save Lives",
+      "ch3_text": "Inspiration came from Melbourne. We learned that the local Bunnings network lets community groups run charity barbecues. We began searching for a supporting organisation, and the incredible women of the Ukrainian Women's Association of NSW — Mrs Mariyka Havryliv and Odarka — responded immediately. May 15, 2022, became the day of our \"baptism by fire\" in Padstow. There was an incredible spirit! We all wore matching yellow-and-blue shirts, united by a common purpose. I remember a young man who was just walking by, asked what we were raising money for, and stayed with us all day to grill onions. Just like that. Because his heart told him to.",
+      "ch3_highlight": "That day we raised the first $2,865 for a military hospital in Ukraine. It was our first big step.",
+      "ch4_title": "\"Embroidering\" Your Grief: The Needlework Circle",
+      "ch4_text": "We understood: support was needed not only financially for the front, but emotionally for those who had just arrived in Sydney fleeing the war. So in June 2022, our needlework circle was born. It became a place of quiet therapy. Women who had been through hell and couldn't speak of it aloud would sit together, take up a needle, and as if \"embroider\" their pain into the fabric. Those who had lived in Sydney longer brought threads and fabrics, shared warmth and tea. Together we preserved our culture, showcasing the beauty of Ukrainian embroidery at official city events.",
+      "ch5_title": "The Birth of the \"Tsybulky\" (Onions)",
+      "ch5_text": "Our second barbecue in Kirrawee in June set a record — $3,750! But most importantly, that was when our volunteer family — lovingly called the \"Tsybulky\" (Onions) — began to take shape. Why Onions? Simple: before every barbecue, we gather to chop mountains of onions. What used to be a \"teary\" solo task became a shared evening of jokes, support, and planning for the future.",
+      "ch5_highlight": "Today we are not just a group of activists. We are a family that raises funds together for thermal imagers, body armour, and uniforms — bringing victory closer every day."
+    },
+    "results": {
+      "title": "Results",
+      "description": "Over the years we have taken concrete steps to help Ukraine. Here are some numbers that represent real people and real help.",
+      "years_value": "4+",
+      "years_label": "Years supporting the Armed Forces",
+      "members_value": "1,200",
+      "members_label": "Volunteers engaged",
+      "raised_value": "$12,000",
+      "raised_label": "Total assistance provided",
+      "transparency_value": "100%",
+      "transparency_label": "Reporting transparency"
+    },
+    "transparency": {
+      "title": "We Report Openly",
+      "description": "Every contribution turns into real help. Check out our reports.",
+      "cta": "View reports"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": "What do you do?",
+      "a1": "We are a volunteer organisation affiliated with the Union of Ukrainian Women of Australia. We raise funds for the Armed Forces, run cultural events, and unite Ukrainians in Sydney.",
+      "q2": "Who do you help?",
+      "a2": "We help Ukrainian military personnel and their families, as well as Ukrainians who have come to Australia fleeing the war.",
+      "q3": "Can I become a volunteer or join the foundation's projects?",
+      "a3": "Yes! We are always happy to welcome new volunteers. Write to us through the contact form or on our social media.",
+      "q4": "Where can I view the foundation's reports?",
+      "a4": "All reports are published in the Reports section of our website and on our official social media channels.",
+      "q5": "How can I become a partner or donor?",
+      "a5": "For partnership and sponsorship, please contact us through the contact form or email us at dreamsbranch@gmail.com."
+    },
+    "contact_section": {
+      "title": "Contact Us",
+      "description": "If you have questions, want to become a partner, or volunteer in the foundation's projects — fill out the form and we will get in touch."
+    }
   },
   "footer": {
     "privacy": "Privacy Policy",
@@ -115,11 +188,82 @@
     "loading": "Loading...",
     "error": "Something went wrong",
     "not_found": "Page not found",
-    "not_found_description": "The page you are looking for does not exist or has been moved."
+    "not_found_description": "The page you are looking for does not exist or has been moved.",
+    "coming_soon": "This section is coming soon."
   },
   "notFound": {
     "title": "Page not found",
     "description": "We couldn't find what you were looking for. The page may have been moved. Try using the menu or go back to the home page.",
     "cta": "Go home"
+  },
+  "legal": {
+    "title": "Legal Information",
+    "last_updated": "Last updated: March 22, 2026",
+    "contact_note": "If you have questions about our legal terms, please contact us at",
+    "terms": {
+      "title": "Terms of Use",
+      "general": {
+        "title": "General Provisions",
+        "text": "By using this website, you agree to comply with these Terms of Use. If you do not agree with any part of these terms, please stop using the site."
+      },
+      "ip": {
+        "title": "Intellectual Property",
+        "text": "All materials on this site, including texts, graphics, logos (including the \"Dreams branch\" and \"Cybulky\" branding), images, and software, are the property of the fund or used with the authors' permission. Copying or distributing content without written permission is prohibited."
+      },
+      "usage": {
+        "title": "Website Usage",
+        "text": "You agree to use the site only for lawful purposes and not to take actions that may damage its operation or access by other users."
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "collection": {
+        "title": "Information Collection",
+        "text": "We collect personal information (name, email, phone number) only when you voluntarily provide it through donation forms, subscriptions, or feedback. In accordance with the Privacy Act 1988 (Cth), we ensure a high level of protection of your data."
+      },
+      "usage": {
+        "title": "Data Usage",
+        "intro": "Your data is used exclusively for:",
+        "item_0": "Processing your donations and providing reports",
+        "item_1": "Sending news about the fund's activities (if you have subscribed)",
+        "item_2": "Responding to your requests"
+      },
+      "third_party": {
+        "title": "Third Party Transfer",
+        "text": "We do not sell or share your personal data with third-party organisations, with the exception of verified payment systems (Stripe, PayPal, Apple Pay) for processing transactions."
+      }
+    },
+    "disclaimer": {
+      "title": "Disclaimer",
+      "informational": {
+        "title": "Informational Nature",
+        "text": "All content on this site is provided solely for general information about the fund's activities. We strive to keep the data up to date, but do not guarantee the absolute accuracy or completeness of information at any given time."
+      },
+      "external": {
+        "title": "External Links",
+        "text": "Our site may contain links to third-party resources. We are not responsible for the content, privacy policy, or security of those sites."
+      },
+      "liability": {
+        "title": "Liability Limitations",
+        "text": "The fund is not liable for any damages (direct or indirect) that arise as a result of using or being unable to use this site or its services."
+      }
+    },
+    "cookies": {
+      "title": "Cookie Policy",
+      "what": {
+        "title": "What are cookies?",
+        "text": "These are small text files that are stored on your device to improve the website's performance."
+      },
+      "how": {
+        "title": "How do we use them?",
+        "intro": "We use cookies for:",
+        "item_0": "Analytics: to understand which sections of the site are most popular among visitors.",
+        "item_1": "Functionality: to remember your settings (for example, your chosen language or currency AUD)."
+      },
+      "manage": {
+        "title": "Managing Cookies",
+        "text": "You can disable cookies in your browser settings, however this may affect the correct display of some elements of our site."
+      }
+    }
   }
 }

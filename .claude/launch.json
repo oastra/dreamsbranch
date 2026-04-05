@@ -3,10 +3,12 @@
   "configurations": [
     {
       "name": "dreamsbranch-dev",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3000,
-      "autoPort": true
+      "runtimeExecutable": "/Users/olha_chernysh/.nvm/versions/node/v20.19.0/bin/node",
+      "runtimeArgs": ["node_modules/.bin/next", "dev"],
+      "env": {
+        "PATH": "/Users/olha_chernysh/.nvm/versions/node/v20.19.0/bin:/usr/local/bin:/usr/bin:/bin"
+      },
+      "port": 3001
     }
   ]
 }

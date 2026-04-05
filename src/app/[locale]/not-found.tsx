@@ -37,7 +37,7 @@ function AnimatedEyes({ className }: { className?: string }) {
       <svg
         width="293"
         height="168"
-        viewBox="0 0 293 168"
+        viewBox="0 0 293 163"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className={className}
@@ -72,44 +72,51 @@ export default function NotFound() {
   const t = useTranslations("notFound");
 
   return (
-    <div className="container-page py-12 lg:py-16">
-      <div className="bg-secondary-10 rounded-3xl px-6 py-10 lg:px-14 lg:py-12">
-        {/* ── Full-width Oops + eyes overlay ── */}
-        <div className="relative mb-8">
-          <Image
-            src="/images/404/Oops.svg"
-            alt="Oops"
-            width={1068}
-            height={390}
-            className="w-full"
-            priority
-          />
-          {/* eyes centred over the "oo" circles: 29%→69% of Oops width */}
+    <div className="container-page py-6 pb-12">
+      <div className="relative min-h-168 isolate bg-secondary-10 rounded-3xl px-6 lg:px-14">
+        {/* ── Illustration: eyes (z:1) behind Oops (z:2) ── */}
+        <div className="relative w-full" style={{ aspectRatio: "1068 / 390" }}>
+          {/* Eyes – sit behind the Oops letters */}
           <div
             className="absolute pointer-events-none"
-            style={{ left: "29%", top: "-4%", width: "40%" }}
+            style={{ left: "35%", top: "10%", width: "30%", zIndex: 1 }}
           >
             <AnimatedEyes className="w-full h-auto" />
           </div>
+          {/* Oops – covers lower part of eyes */}
+          <Image
+            src="/images/404/Oops.svg"
+            alt="Oops"
+            fill
+            className="object-fill"
+            style={{ top: "30%", zIndex: 2 }}
+            priority
+          />
         </div>
 
-        {/* ── Bottom row: heading left · description + CTA right ── */}
-        <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-          <div className="flex-1">
-            <h1 className="text-h2 text-text-primary">{t("title")}</h1>
-          </div>
-
-          <div className="flex flex-col items-start gap-4 sm:w-[260px] shrink-0">
-            <div className="bg-white rounded-2xl p-5 shadow-sm">
-              <p className="text-body text-text-primary leading-relaxed">
-                {t("description")}
-              </p>
+        {/* ── Content row: overlaps bottom ~30% of Oops (z:3) ── */}
+        <div
+          className="relative pb-10 lg:pb-12"
+          style={{ marginTop: "2%", zIndex: 3 }}
+        >
+          <div className="flex flex-col lg:flex-row lg:items-end gap-6">
+            <div className="flex-1">
+              <h1 className="text-[48px] font-medium text-text-primary">
+                {t("title")}
+              </h1>
             </div>
-            <Link href="/">
-              <Button variant="default" size="lg" className="rounded-full">
-                {t("cta")}
-              </Button>
-            </Link>
+            <div className="flex flex-col items-start gap-4 lg:w-95 shrink-0">
+              <div className="bg-white/80 min-w-448px rounded-2xl p-5 shadow-sm">
+                <p className="text-body text-text-primary leading-relaxed">
+                  {t("description")}
+                </p>
+              </div>
+              <Link href="/">
+                <Button variant="default" size="lg" className="rounded-full">
+                  {t("cta")}
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

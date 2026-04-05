@@ -75,7 +75,7 @@ export function Header() {
               onSwitch={switchLocale}
             />
 
-            <a
+            <Link
               href="https://www.facebook.com/profile.php?id=100092434277929"
               target="_blank"
               rel="noopener noreferrer"
@@ -83,7 +83,7 @@ export function Header() {
               className="w-12 h-12 rounded-full bg-secondary-10 flex items-center justify-center hover:bg-brand-blue-dark transition-colors"
             >
               <FacebookIcon className="w-6 h-6 text-grey-100" />
-            </a>
+            </Link>
 
             <Link href="/campaigns">
               <Button
