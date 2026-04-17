@@ -183,47 +183,58 @@ export type AdminUserUpdate = Partial<Omit<AdminUserInsert, 'id'>>
 // ── Database type for Supabase client ─────────────────────────
 
 export type Database = {
+  __InternalSupabase: {
+    PostgrestVersion: '12'
+  }
   public: {
     Tables: {
       campaigns: {
         Row: Campaign
         Insert: CampaignInsert
         Update: CampaignUpdate
+        Relationships: []
       }
       donations: {
         Row: Donation
         Insert: DonationInsert
         Update: Partial<DonationInsert>
+        Relationships: []
       }
       events: {
         Row: Event
         Insert: EventInsert
         Update: EventUpdate
+        Relationships: []
       }
       news_articles: {
         Row: NewsArticle
         Insert: NewsArticleInsert
         Update: NewsArticleUpdate
+        Relationships: []
       }
       reports: {
         Row: Report
         Insert: ReportInsert
         Update: ReportUpdate
+        Relationships: []
       }
       contact_submissions: {
         Row: ContactSubmission
         Insert: ContactSubmissionInsert
         Update: { is_read?: boolean }
+        Relationships: []
       }
       home_page_settings: {
         Row: HomePageSettings
         Insert: Partial<Omit<HomePageSettings, 'id'>>
         Update: Partial<Omit<HomePageSettings, 'id'>>
+        Relationships: []
       }
       admin_users: {
         Row: AdminUser
         Insert: AdminUserInsert
         Update: AdminUserUpdate
+        Relationships: []
       }
     }
     Views: Record<string, never>

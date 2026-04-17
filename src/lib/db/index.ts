@@ -8,6 +8,19 @@
  *  • toDb() / fromDb() convert between the two
  */
 import { createAdminClient } from '../supabase/server';
+import type {
+  AdminUserInsert,
+  AdminUserUpdate,
+  CampaignInsert,
+  CampaignUpdate,
+  DonationInsert,
+  EventInsert,
+  EventUpdate,
+  NewsArticleInsert,
+  NewsArticleUpdate,
+  ReportInsert,
+  ReportUpdate,
+} from '@/types/database';
 
 // ─── Enum helpers ─────────────────────────────────────────────────────────────
 
@@ -105,14 +118,14 @@ export const db = {
 
     async create({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = { ...data, role: toDb(data.role as string) };
+      const row = { ...data, role: toDb(data.role as string) } as unknown as AdminUserInsert;
       const { data: created } = await sb.from('admin_users').insert(row).select().single();
       return created ? normRole(created as Record<string, unknown>) : null;
     },
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = data.role ? { ...data, role: toDb(data.role as string) } : data;
+      const row = (data.role ? { ...data, role: toDb(data.role as string) } : data) as unknown as AdminUserUpdate;
       const { data: updated } = await sb.from('admin_users').update(row).eq('id', where.id).select().single();
       return updated ? normRole(updated as Record<string, unknown>) : null;
     },
@@ -154,14 +167,14 @@ export const db = {
 
     async create({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') };
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as CampaignInsert;
       const { data: created } = await sb.from('campaigns').insert(row).select().single();
       return created ? normStatus(created as Record<string, unknown>) : null;
     },
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = data.status ? { ...data, status: toDb(data.status as string) } : data;
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as CampaignUpdate;
       const { data: updated } = await sb.from('campaigns').update(row).eq('id', where.id).select().single();
       return updated ? normStatus(updated as Record<string, unknown>) : null;
     },
@@ -207,7 +220,7 @@ export const db = {
         ...data,
         status: toDb((data.status as string) ?? 'PENDING'),
         source: toDb(data.source as string),
-      };
+      } as unknown as DonationInsert;
       const { data: created } = await sb.from('donations').insert(row).select().single();
       return created ? normStatusSource(created as Record<string, unknown>) : null;
     },
@@ -244,14 +257,14 @@ export const db = {
 
     async create({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') };
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as EventInsert;
       const { data: created } = await sb.from('events').insert(row).select().single();
       return created ? normStatus(created as Record<string, unknown>) : null;
     },
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = data.status ? { ...data, status: toDb(data.status as string) } : data;
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as EventUpdate;
       const { data: updated } = await sb.from('events').update(row).eq('id', where.id).select().single();
       return updated ? normStatus(updated as Record<string, unknown>) : null;
     },
@@ -293,14 +306,14 @@ export const db = {
 
     async create({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') };
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as NewsArticleInsert;
       const { data: created } = await sb.from('news_articles').insert(row).select().single();
       return created ? normStatus(created as Record<string, unknown>) : null;
     },
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = data.status ? { ...data, status: toDb(data.status as string) } : data;
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as NewsArticleUpdate;
       const { data: updated } = await sb.from('news_articles').update(row).eq('id', where.id).select().single();
       return updated ? normStatus(updated as Record<string, unknown>) : null;
     },
@@ -342,14 +355,14 @@ export const db = {
 
     async create({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') };
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as ReportInsert;
       const { data: created } = await sb.from('reports').insert(row).select().single();
       return created ? normStatus(created as Record<string, unknown>) : null;
     },
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = data.status ? { ...data, status: toDb(data.status as string) } : data;
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as ReportUpdate;
       const { data: updated } = await sb.from('reports').update(row).eq('id', where.id).select().single();
       return updated ? normStatus(updated as Record<string, unknown>) : null;
     },
@@ -382,7 +395,7 @@ export const db = {
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const { data: updated } = await sb.from('contact_submissions').update(data).eq('id', where.id).select().single();
+      const { data: updated } = await sb.from('contact_submissions').update(data as { is_read?: boolean }).eq('id', where.id).select().single();
       return updated ? normTag(updated as Record<string, unknown>) : null;
     },
 
@@ -404,7 +417,7 @@ export const db = {
       const sb = createAdminClient();
       const { data: updated } = await sb
         .from('home_page_settings')
-        .update({ ...data, updated_at: new Date().toISOString() })
+        .update({ ...data, updated_at: new Date().toISOString() } as Partial<Omit<import('@/types/database').HomePageSettings, 'id'>>)
         .eq('id', 1)
         .select()
         .single();

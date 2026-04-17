@@ -22,7 +22,7 @@ function toSnake(input: Record<string, unknown>) {
 export async function createCampaign(formData: unknown) {
   await requireAdmin();
   const parsed = campaignSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.errors[0].message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
   const row = toSnake(parsed.data as Record<string, unknown>);
   const result = await db.campaign.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create campaign' };
@@ -33,7 +33,7 @@ export async function createCampaign(formData: unknown) {
 export async function updateCampaign(id: string, formData: unknown) {
   await requireAdmin();
   const parsed = campaignSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.errors[0].message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
   const row = toSnake(parsed.data as Record<string, unknown>);
   const result = await db.campaign.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update campaign' };

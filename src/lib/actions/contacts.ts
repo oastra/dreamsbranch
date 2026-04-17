@@ -4,19 +4,21 @@ import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/helpers';
 import { createAdminClient } from '@/lib/supabase/server';
 import { contactSchema, type ContactInput } from '@/lib/validations';
+import type { ContactSubmissionInsert } from '@/types/database';
 
 export async function submitContact(input: ContactInput) {
   const parsed = contactSchema.safeParse(input);
   if (!parsed.success) return { success: false as const, error: 'Invalid data' };
 
   const sb = createAdminClient();
-  const { error } = await sb.from('contact_submissions').insert({
+  const row: ContactSubmissionInsert = {
     name: parsed.data.name,
     phone: parsed.data.phone ?? null,
     email: parsed.data.email,
     message: parsed.data.message,
-    tag: parsed.data.tag.toLowerCase(),
-  });
+    tag: parsed.data.tag.toLowerCase() as ContactSubmissionInsert['tag'],
+  };
+  const { error } = await sb.from('contact_submissions').insert(row);
 
   if (error) return { success: false as const, error: 'Failed to submit' };
   return { success: true as const };
