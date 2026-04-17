@@ -7,6 +7,10 @@ import localFont from "next/font/local";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 const mariupol = localFont({
   src: [
     { path: "../fonts/mariupol-Regular.woff2", weight: "400", style: "normal" },
