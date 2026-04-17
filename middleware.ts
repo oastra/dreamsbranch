@@ -4,10 +4,16 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
-    {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+
+  if (!url || !key) {
+    console.error('[middleware] Missing Supabase env vars', { hasUrl: !!url, hasKey: !!key })
+    return supabaseResponse
+  }
+
+  try {
+    const supabase = createServerClient(url, key, {
       cookies: {
         getAll() {
           return request.cookies.getAll()
@@ -20,20 +26,18 @@ export async function middleware(request: NextRequest) {
           )
         },
       },
-    },
-  )
+    })
 
-  // Refresh session — keeps the user logged in
-  const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await supabase.auth.getUser()
 
-  // Admin route protection
-  const { pathname } = request.nextUrl
-  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
-    if (!user) {
+    const { pathname } = request.nextUrl
+    if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !user) {
       const loginUrl = request.nextUrl.clone()
       loginUrl.pathname = '/admin/login'
       return NextResponse.redirect(loginUrl)
     }
+  } catch (err) {
+    console.error('[middleware] Supabase auth failed', err)
   }
 
   return supabaseResponse
