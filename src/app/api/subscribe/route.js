@@ -1,7 +1,5 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req) {
   try {
     const { email } = await req.json();
@@ -9,6 +7,12 @@ export async function POST(req) {
     if (!email) {
       return Response.json({ error: "Email is required" }, { status: 400 });
     }
+
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      return Response.json({ error: "Email service not configured" }, { status: 503 });
+    }
+    const resend = new Resend(apiKey);
 
     await resend.emails.send({
       from: "Dreams Branch <onboarding@resend.dev>",
