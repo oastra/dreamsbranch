@@ -79,7 +79,24 @@
       "Bash(/usr/local/bin/node --version)",
       "Bash(python3:*)",
       "Bash(/Users/olha_chernysh/.nvm/versions/node/v22.14.0/bin/npx tsc:*)",
-      "Bash(/usr/local/bin/node node_modules/.bin/tsc --noEmit)"
+      "Bash(/usr/local/bin/node node_modules/.bin/tsc --noEmit)",
+      "Bash(ls *.svg *.png)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/olha_chernysh/.nvm/versions/node/**)",
+      "Bash(~/.nvm/versions/node/v20.19.0/bin/npx tsc:*)",
+      "Bash(export PATH=\"$HOME/.nvm/versions/node/v20.19.0/bin:$PATH\")",
+      "Bash(npx next:*)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH\")",
+      "Bash(ls src/components/ src/app/[locale]/)",
+      "Read(//Users/olha_chernysh/.claude/**)",
+      "Read(//Users/olha_chernysh/**)",
+      "Bash(claude mcp:*)",
+      "mcp__figma__get_figma_data",
+      "mcp__figma__download_figma_images",
+      "Bash(git diff *)",
+      "Bash(git rm *)",
+      "Bash(echo \"EXITCODE:$?\")",
+      "Bash(npm run *)"
     ]
   }
 }
