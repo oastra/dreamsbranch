@@ -5,16 +5,13 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
-  const pageName = 'reports';
-  const titleKey = pageName === 'about' ? 'nav.about' : pageName === 'shop' ? 'nav.shop' : `${pageName}.title`;
-  const descKey = `${pageName}.description`;
 
   return (
     <>
       <section className="page-header">
         <div className="container-page">
           <p className="text-body-sm mb-2 text-white/70">Dreams branch of UWAA</p>
-          <h1 className="text-display">{t(titleKey)}</h1>
+          <h1 className="text-display">{t('reports.title')}</h1>
         </div>
       </section>
       <section className="section">
