@@ -68,7 +68,8 @@ export const contactSchema = z.object({
   message: z.string().min(1, 'Message is required').max(2000),
   tag: z.enum(['GENERAL', 'CATERING', 'VOLUNTEER']).default('GENERAL'),
 });
-export type ContactInput = z.infer<typeof contactSchema>;
+export type ContactInput = z.input<typeof contactSchema>;
+export type ContactOutput = z.infer<typeof contactSchema>;
 
 export const manualDonationSchema = z.object({
   campaignId: z.string().min(1, 'Campaign is required'),

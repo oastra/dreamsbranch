@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 
-import { contactSchema, type ContactInput } from '@/lib/validations';
+import { contactSchema, type ContactInput, type ContactOutput } from '@/lib/validations';
 import { submitContact } from '@/lib/actions/contacts';
 import {
   Form,
@@ -24,12 +24,12 @@ export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState(false);
 
-  const form = useForm<ContactInput>({
+  const form = useForm<ContactInput, unknown, ContactOutput>({
     resolver: zodResolver(contactSchema),
     defaultValues: { name: '', phone: '', email: '', message: '', tag: 'GENERAL' },
   });
 
-  async function onSubmit(data: ContactInput) {
+  async function onSubmit(data: ContactOutput) {
     setServerError(false);
     const result = await submitContact(data);
     if (result.success) {
