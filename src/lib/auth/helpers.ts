@@ -2,13 +2,22 @@ import { createClient as createServerSupabase } from '../supabase/server';
 import { db } from '../db';
 import { redirect } from 'next/navigation';
 
+export type AdminUserRecord = {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
 export async function getSession() {
   const supabase = await createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   return user;
 }
 
-export async function getAdminUser() {
+export async function getAdminUser(): Promise<AdminUserRecord | null> {
   const user = await getSession();
   if (!user?.email) return null;
 
@@ -16,10 +25,10 @@ export async function getAdminUser() {
     where: { email: user.email },
   });
 
-  return admin;
+  return admin as AdminUserRecord | null;
 }
 
-export async function requireAdmin() {
+export async function requireAdmin(): Promise<AdminUserRecord> {
   const admin = await getAdminUser();
   if (!admin) {
     redirect('/admin/login');
@@ -27,7 +36,7 @@ export async function requireAdmin() {
   return admin;
 }
 
-export async function requireSuperAdmin() {
+export async function requireSuperAdmin(): Promise<AdminUserRecord> {
   const admin = await requireAdmin();
   if (admin.role !== 'SUPER_ADMIN') {
     redirect('/admin');
