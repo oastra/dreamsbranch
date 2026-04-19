@@ -17,12 +17,13 @@ const MASK_HOLES =
   "M0 0 L0.25 0 L0 0.52 Z " +
   "M1 1 L0.75 1 L1 0.48 Z";
 
-// Simple triangles matching the mask hole geometry — sharp 3-point paths
-// that stay geometrically parallel to the mask hypotenuse under non-uniform
-// (preserveAspectRatio="none") scaling. Rounded outer corner comes from the
-// parent container's rounded-[20px] + overflow-hidden.
-const INNER_TL = "M0 0 L157 0 L0 216 Z";
-const INNER_BR = "M157 216 L0 216 L157 0 Z";
+// Triangles with small rounded tips (~7-8px) on the two non-outer corners.
+// Outer corner (0,0 for TL / 157,216 for BR) is left sharp and gets rounded
+// to 20px by the parent container's rounded-[20px] + overflow-hidden.
+const INNER_TL =
+  "M0 0 L148 0 Q157 0 153.5 8 L4 208 Q0 216 0 208 L0 0 Z";
+const INNER_BR =
+  "M157 216 L9 216 Q0 216 3.5 208 L153 8 Q157 0 157 8 L157 216 Z";
 
 export function MaskedImage({
   src,
