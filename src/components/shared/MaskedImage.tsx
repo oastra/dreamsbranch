@@ -13,8 +13,7 @@ type Props = {
   bottomRightColor?: string;
 };
 
-const CLIP_PATH =
-  "M0 0 H1 V1 H0 Z " +
+const MASK_HOLES =
   "M0 0 L0.25 0 L0 0.52 Z " +
   "M1 1 L0.75 1 L1 0.48 Z";
 
@@ -38,30 +37,31 @@ export function MaskedImage({
   bottomRightColor = "#CCDDF1",
 }: Props) {
   const rawId = useId();
-  const clipId = `masked-image-clip-${rawId.replace(/[:]/g, "")}`;
+  const maskId = `masked-image-mask-${rawId.replace(/[:]/g, "")}`;
 
   return (
-    <div className={`relative rounded-[20px] ${className}`}>
+    <div className={`relative overflow-hidden rounded-[20px] ${className}`}>
       <svg width="0" height="0" className="absolute" aria-hidden>
         <defs>
-          <clipPath id={clipId} clipPathUnits="objectBoundingBox">
-            <path d={CLIP_PATH} clipRule="evenodd" />
-          </clipPath>
+          <mask id={maskId} maskContentUnits="objectBoundingBox">
+            <rect x="0" y="0" width="1" height="1" fill="white" />
+            <path d={MASK_HOLES} fill="black" />
+          </mask>
         </defs>
       </svg>
 
       <div
         className="absolute inset-0 overflow-hidden rounded-[20px]"
-        style={{ clipPath: `url(#${clipId})`, WebkitClipPath: `url(#${clipId})` }}
+        style={{ mask: `url(#${maskId})`, WebkitMask: `url(#${maskId})` }}
       >
         <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />
       </div>
 
       <svg
         viewBox="0 0 157 216"
-        preserveAspectRatio="xMinYMin meet"
-        className="pointer-events-none absolute left-0 top-0 w-[23%]"
-        style={{ aspectRatio: "157 / 216" }}
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute left-0 top-0"
+        style={{ width: "calc(25% - 4px)", height: "calc(52% - 4px)" }}
         aria-hidden
       >
         <path d={INNER_TL} fill={topLeftColor} />
@@ -69,9 +69,9 @@ export function MaskedImage({
 
       <svg
         viewBox="0 0 157 216"
-        preserveAspectRatio="xMaxYMax meet"
-        className="pointer-events-none absolute bottom-0 right-0 w-[23%]"
-        style={{ aspectRatio: "157 / 216" }}
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute bottom-0 right-0"
+        style={{ width: "calc(25% - 4px)", height: "calc(52% - 4px)" }}
         aria-hidden
       >
         <path d={INNER_BR} fill={bottomRightColor} />

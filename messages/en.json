@@ -181,15 +181,19 @@
       "location_value": "Sydney",
       "volunteers_label": "Volunteers",
       "volunteers_value": "40+",
-      "desc_1": "Over 40 volunteers and staff work every day to ensure every donation translates into real help for Ukraine. Each of us has our own story of how we joined the team.",
+      "desc_1": "Over 40 volunteers and staff work every day to ensure every donation translates into real help for Ukraine.",
+      "desc_1b": "Each of us has our own story of how we joined the team.",
       "desc_2": "The Dreams Branch of UWAA team is made up of volunteers who do everything to achieve victory!",
       "desc_3": "Our work is a story of collective support, mutual understanding, and generosity that changes lives — not only those who receive help, but also those who give their energy and resources to make the world better.",
-      "desc_4": "Thousands of Ukrainians trust us. That is a great honour and a great responsibility. We do everything possible to justify this trust and bring our country closer to victory!"
+      "desc_4": "Thousands of Ukrainians trust us. That is a great honour and a great responsibility. We do everything possible to justify this trust and bring our country closer to victory!",
+      "banner": "Let us be part of the changes we want to see in the world!"
     },
     "story": {
       "title": "Dreams: Our Beginning",
       "ch1_title": "The Line That Changed Everything",
-      "ch1_text": "If you scroll back through our Facebook page a few years, one thing becomes clear: our lives were divided sharply into \"before\" and \"after\" by a single date — February 24, 2022. Before that date, the feed was full of happy photos: friends gathering, children smiling, jokes and everyday worries. And then — an abyss. Horror, panic, and an overwhelming sense of reality slipping away.",
+      "ch1_text_a": "If you scroll back through our Facebook page a few years, one thing becomes clear: our lives were divided sharply into \"before\" and \"after\" by a single date —",
+      "ch1_date": "February 24, 2022",
+      "ch1_text_b": "Before that date, the feed was full of happy photos: friends gathering, children smiling, jokes and everyday worries. And then — an abyss. Horror, panic, and an overwhelming sense of reality slipping away.",
       "ch1_highlight": "But from that shock, something else was born — something stronger: we must act!",
       "ch2_title": "First Steps: Martin Place and the Power of Unity",
       "ch2_text": "The first impulse came through the \"Ukrainians in Sydney\" group. When its leader, Anton Bogdanovich, called everyone to rally at Martin Place, we were there without hesitation. It was there, at protests in rain and sun, that our volunteer community was forged. Ira Raevska and I had met earlier — our children swam together at the same pool. Now we were at rallies every day with prams. But after a few weeks came the realisation: just standing with signs wasn't enough.",

@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ContactSection } from '@/components/contact/ContactSection';
+import { MaskedImageCarousel, type CarouselSlide } from '@/components/shared/MaskedImageCarousel';
+import { SectionHeading } from '@/components/shared/SectionHeading';
 
 const btnPrimary =
   'inline-flex items-center justify-center rounded-full bg-secondary px-10 py-[14px] text-body font-medium text-white transition-colors duration-300 hover:text-primary';
@@ -10,6 +12,14 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'about' });
+
+  const heroSlides: CarouselSlide[] = [
+    { src: '/images/about/about-us.webp', alt: 'Dreams Branch of UWAA community' },
+  ];
+
+  const teamSlides: CarouselSlide[] = [
+    { src: '/images/about/about-team.webp', alt: 'Dreams Branch team' },
+  ];
 
   const faqItems = [
     { q: t('faq.q1'), a: t('faq.a1') },
@@ -22,33 +32,30 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   return (
     <>
       {/* ── Hero ──────────────────────────────────────────────── */}
-      <section className="bg-secondary text-white">
+      <section>
         <div className="container-page">
-          <div className="grid min-h-[480px] grid-cols-1 items-center gap-10 py-16 lg:grid-cols-2 lg:py-20">
+          <div className="grid grid-cols-1 items-stretch gap-10 py-12 lg:grid-cols-2 lg:py-16">
             {/* Left */}
             <div className="flex flex-col gap-6">
               <div>
-                <p className="text-body-sm mb-3 text-white/70">Dreams branch of UWAA</p>
-                <h1 className="text-display mb-6">{t('hero.title')}</h1>
+                <p className="text-body-sm mb-3 text-text-strong">Dreams branch of UWAA</p>
+                <h1 className="text-display mb-6 text-secondary">{t('hero.title')}</h1>
               </div>
-              <p className="text-secondary text-white/85">{t('hero.description_1')}</p>
-              <p className="text-secondary text-white/85">{t('hero.description_2')}</p>
-              <div className="pt-2">
+              <p className="text-secondary text-text-secondary">{t('hero.description_1')}</p>
+              <p className="text-secondary text-text-secondary">{t('hero.description_2')}</p>
+              <div className="mt-auto pt-2">
                 <Link href={`/${locale}/contact`} className={btnPrimary}>
                   {t('hero.cta')}
                 </Link>
               </div>
             </div>
 
-            {/* Right: hero image */}
-            <div className="relative hidden aspect-square overflow-hidden rounded-[40px] lg:block">
-              <Image
-                src="/images/about/about-us.webp"
-                alt="Dreams Branch of UWAA community"
-                fill
-                priority
-                className="object-cover"
-                sizes="(max-width: 1024px) 0px, 45vw"
+            {/* Right: hero carousel — fills column fully */}
+            <div className="relative min-h-[400px] w-full lg:min-h-0">
+              <MaskedImageCarousel
+                slides={heroSlides}
+                aspectRatio={null}
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </div>
@@ -58,62 +65,77 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       {/* ── About the Team ────────────────────────────────────── */}
       <section className="section">
         <div className="container-page">
-          <h2 className="text-h2 mb-10 text-text-strong">{t('team.title')}</h2>
+          <SectionHeading className="mb-10">{t('team.title')}</SectionHeading>
 
-          {/* Stats */}
-          <div className="mb-10 flex flex-wrap gap-4">
-            <div className="rounded-2xl bg-primary px-8 py-5 text-text-strong">
-              <p className="text-body-sm mb-1 text-text-secondary">{t('team.founded_label')}</p>
-              <p className="text-h2 font-medium">{t('team.founded_value')}</p>
+          <div className="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Left: 2x2 grid of stat cards */}
+            <div className="grid auto-rows-fr grid-cols-2 gap-4">
+              <div className="flex flex-col items-center justify-center rounded-2xl bg-accent-1 px-6 py-8 text-center text-text-strong">
+                <p className="text-body-sm mb-2 text-text-secondary">{t('team.founded_label')}</p>
+                <p className="text-h2 font-medium">{t('team.founded_value')}</p>
+              </div>
+              <div className="flex flex-col items-center justify-center rounded-2xl bg-accent-3 px-6 py-8 text-center text-text-strong">
+                <p className="text-body-sm mb-2 text-text-secondary">{t('team.location_label')}</p>
+                <p className="text-h2 font-medium">{t('team.location_value')}</p>
+              </div>
+              <div className="flex flex-col items-center justify-center rounded-2xl bg-accent-4 px-6 py-8 text-center text-text-strong">
+                <p className="text-body-sm mb-2 text-text-secondary">{t('team.volunteers_label')}</p>
+                <p className="text-h2 font-medium">{t('team.volunteers_value')}</p>
+              </div>
+              <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-secondary px-6 py-8 text-center">
+                <p className="text-body font-medium text-secondary">{t('team.desc_2')}</p>
+              </div>
             </div>
-            <div className="rounded-2xl bg-accent-3 px-8 py-5 text-text-strong">
-              <p className="text-body-sm mb-1 text-text-secondary">{t('team.location_label')}</p>
-              <p className="text-h2 font-medium">{t('team.location_value')}</p>
-            </div>
-            <div className="rounded-2xl bg-accent-4 px-8 py-5 text-text-strong">
-              <p className="text-body-sm mb-1 text-text-secondary">{t('team.volunteers_label')}</p>
-              <p className="text-h2 font-medium">{t('team.volunteers_value')}</p>
-            </div>
-          </div>
 
-          {/* Description columns */}
-          <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[t('team.desc_1'), t('team.desc_2'), t('team.desc_3'), t('team.desc_4')].map(
-              (desc, i) => (
-                <p key={i} className="text-body text-text-secondary">
-                  {desc}
+            {/* Right: description paragraphs */}
+            <div className="flex flex-col gap-6">
+              <p className="text-body text-text-strong">{t('team.desc_1')}</p>
+              <p className="text-body text-text-strong">{t('team.desc_1b')}</p>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <p className="text-body-sm text-text-secondary">{t('team.desc_3')}</p>
+                <p className="text-body-sm text-text-secondary">{t('team.desc_4')}</p>
+              </div>
+              <div className="mt-auto rounded-2xl bg-[#CCDDF1] px-6 py-5 text-center">
+                <p className="text-body font-medium text-text-strong">
+                  {t('team.banner')}
                 </p>
-              ),
-            )}
+              </div>
+            </div>
           </div>
+        </div>
 
-          {/* Team photo */}
-          <div className="relative aspect-[21/9] overflow-hidden rounded-2xl">
-            <Image
-              src="/images/about/about-team.webp"
-              alt="Dreams Branch team"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1440px) 100vw, 1280px"
-            />
-          </div>
+        {/* Full-width team carousel */}
+        <div className="mt-10">
+          <MaskedImageCarousel
+            slides={teamSlides}
+            aspectRatio="1280/540"
+            sizes="100vw"
+            masked={false}
+            className="mx-auto max-w-[1280px]"
+          />
         </div>
       </section>
 
       {/* ── Story: Our Beginning ──────────────────────────────── */}
       <section className="section bg-secondary-10">
         <div className="container-page">
-          <h2 className="text-h2 mb-12 text-center text-text-strong">{t('story.title')}</h2>
+          <SectionHeading className="mb-12">{t('story.title')}</SectionHeading>
 
           <div className="flex flex-col gap-8">
             {/* Chapter 1 — dark card */}
-            <div className="grid grid-cols-1 gap-6 overflow-hidden rounded-2xl bg-secondary lg:grid-cols-2">
-              <div className="flex flex-col justify-center gap-4 p-8 lg:p-10">
+            <div className="grid grid-cols-1 gap-6 overflow-hidden rounded-2xl bg-grey-100 lg:grid-cols-2">
+              <div className="flex flex-col justify-center gap-6 p-8 lg:p-10">
                 <h3 className="text-h3 text-white">{t('story.ch1_title')}</h3>
-                <p className="text-body text-white/80">{t('story.ch1_text')}</p>
-                <div className="mt-2 rounded-xl bg-primary px-5 py-4">
-                  <p className="text-body font-medium text-text-strong">{t('story.ch1_highlight')}</p>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div className="flex flex-col gap-3">
+                    <p className="text-body-sm text-white/80">{t('story.ch1_text_a')}</p>
+                    <p className="text-h3 font-medium text-white">{t('story.ch1_date')}</p>
+                  </div>
+                  <p className="text-body-sm text-white/80">{t('story.ch1_text_b')}</p>
                 </div>
+                <p className="text-body text-center font-medium text-white">
+                  {t('story.ch1_highlight')}
+                </p>
               </div>
               <div className="relative min-h-[280px]">
                 <Image
@@ -151,8 +173,8 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
               <div className="flex flex-col justify-center gap-4 p-8 lg:p-10">
                 <h3 className="text-h3 text-text-strong">{t('story.ch3_title')}</h3>
                 <p className="text-body text-text-secondary">{t('story.ch3_text')}</p>
-                <div className="mt-2 rounded-xl bg-primary px-5 py-4">
-                  <p className="text-body font-medium text-text-strong">{t('story.ch3_highlight')}</p>
+                <div className="mt-2 rounded-xl bg-secondary px-5 py-4">
+                  <p className="text-body font-medium text-white">{t('story.ch3_highlight')}</p>
                 </div>
               </div>
               <div className="relative min-h-[280px]">
@@ -183,11 +205,11 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
               </div>
             </div>
 
-            {/* Chapter 5 — dark card */}
-            <div className="grid grid-cols-1 gap-6 overflow-hidden rounded-2xl bg-secondary lg:grid-cols-2">
+            {/* Chapter 5 — light card with yellow highlight */}
+            <div className="grid grid-cols-1 gap-6 overflow-hidden rounded-2xl bg-white lg:grid-cols-2">
               <div className="flex flex-col justify-center gap-4 p-8 lg:p-10">
-                <h3 className="text-h3 text-white">{t('story.ch5_title')}</h3>
-                <p className="text-body text-white/80">{t('story.ch5_text')}</p>
+                <h3 className="text-h3 text-text-strong">{t('story.ch5_title')}</h3>
+                <p className="text-body text-text-secondary">{t('story.ch5_text')}</p>
                 <div className="mt-2 rounded-xl bg-primary px-5 py-4">
                   <p className="text-body font-medium text-text-strong">{t('story.ch5_highlight')}</p>
                 </div>
@@ -207,10 +229,11 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       </section>
 
       {/* ── Results ───────────────────────────────────────────── */}
-      <section className="section bg-secondary text-white">
+      <section className="section">
         <div className="container-page">
-          <h2 className="text-h2 mb-4 text-white">{t('results.title')}</h2>
-          <p className="text-secondary mb-10 text-white/80">{t('results.description')}</p>
+          <SectionHeading align="left" className="mb-10" description={t('results.description')}>
+            {t('results.title')}
+          </SectionHeading>
 
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {[
@@ -248,7 +271,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       {/* ── FAQ ───────────────────────────────────────────────── */}
       <section className="section">
         <div className="container-page">
-          <h2 className="text-h2 mb-10 text-text-strong">{t('faq.title')}</h2>
+          <SectionHeading align="left" className="mb-10">{t('faq.title')}</SectionHeading>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {faqItems.map(({ q, a }, i) => (
