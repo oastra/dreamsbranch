@@ -17,15 +17,12 @@ const MASK_HOLES =
   "M0 0 L0.25 0 L0 0.52 Z " +
   "M1 1 L0.75 1 L1 0.48 Z";
 
-const INNER_TL =
-  "M14.5452 212.429 C10.0421 218.811,0 215.625,0 207.814 " +
-  "L0 8.00468 C0 3.58381,3.58377 0,8.00463 0 " +
-  "H148.981 C155.471 0,159.263 7.31685,155.522 12.6194 L14.5452 212.429Z";
-
-const INNER_BR =
-  "M142.455 3.40505 C146.958 -2.9773,157 0.208777,157 8.01981 " +
-  "L157 207.829 C157 212.25,153.416 215.834,148.995 215.834 " +
-  "H8.0188 C1.52924 215.834,-2.26305 208.517,1.47822 203.214 L142.455 3.40505Z";
+// Simple triangles matching the mask hole geometry — sharp 3-point paths
+// that stay geometrically parallel to the mask hypotenuse under non-uniform
+// (preserveAspectRatio="none") scaling. Rounded outer corner comes from the
+// parent container's rounded-[20px] + overflow-hidden.
+const INNER_TL = "M0 0 L157 0 L0 216 Z";
+const INNER_BR = "M157 216 L0 216 L157 0 Z";
 
 export function MaskedImage({
   src,
@@ -61,7 +58,12 @@ export function MaskedImage({
         viewBox="0 0 157 216"
         preserveAspectRatio="none"
         className="pointer-events-none absolute left-0 top-0"
-        style={{ width: "calc(25% - 4px)", height: "calc(52% - 4px)" }}
+        style={{
+          width: "25%",
+          height: "52%",
+          transform: "scale(0.96)",
+          transformOrigin: "0 0",
+        }}
         aria-hidden
       >
         <path d={INNER_TL} fill={topLeftColor} />
@@ -71,7 +73,12 @@ export function MaskedImage({
         viewBox="0 0 157 216"
         preserveAspectRatio="none"
         className="pointer-events-none absolute bottom-0 right-0"
-        style={{ width: "calc(25% - 4px)", height: "calc(52% - 4px)" }}
+        style={{
+          width: "25%",
+          height: "52%",
+          transform: "scale(0.96)",
+          transformOrigin: "100% 100%",
+        }}
         aria-hidden
       >
         <path d={INNER_BR} fill={bottomRightColor} />
