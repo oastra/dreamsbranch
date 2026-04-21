@@ -96,7 +96,12 @@
       "Bash(git diff *)",
       "Bash(git rm *)",
       "Bash(echo \"EXITCODE:$?\")",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "WebSearch",
+      "Bash(mkdir -p /tmp/figma_chunks)",
+      "Bash(split -b 30000 \"/Users/olha_chernysh/.claude/projects/-Users-olha-chernysh-Documents-FREELANCE-Projects-dreams-branch-www-dreamsbranch/53fe1682-8079-4dbf-b9eb-697d4465672e/tool-results/mcp-figma-get_figma_data-1776493144074.txt\" /tmp/figma_chunks/chunk_)",
+      "Bash(pandoc --track-changes=all \"/Users/olha_chernysh/Downloads/audio1700301311.docx\" -o /tmp/transcript.md)",
+      "Bash(unzip -l \"/Users/olha_chernysh/Downloads/Meeting_Minutes_Website_Structure_Review.docx\")"
     ]
   }
 }
