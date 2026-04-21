@@ -14,6 +14,7 @@ import {
   Settings,
   Users,
   Home,
+  Info,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,7 @@ const navItems = [
   { label: "Donations", href: "/admin/donations", icon: DollarSign },
   { label: "Contact Inbox", href: "/admin/contacts", icon: Inbox },
   { label: "Home Page", href: "/admin/home-settings", icon: Home },
+  { label: "About Page", href: "/admin/about-settings", icon: Info },
 ];
 
 const superAdminItems = [

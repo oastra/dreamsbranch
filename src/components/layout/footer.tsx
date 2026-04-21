@@ -13,8 +13,8 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mx-auto ">
-      <div className="bg-[#00448F] text-white rounded-3xl px-8 py-10 lg:px-12 lg:py-12">
+    <footer className="bg-[#00448F] text-white">
+      <div className="container-page py-10 lg:py-12">
         {/* Top row: Logo + Back to top */}
         <div className="flex items-center justify-between mb-10">
           <Link href="/" className="shrink-0">

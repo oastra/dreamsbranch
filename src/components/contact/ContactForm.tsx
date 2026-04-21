@@ -59,7 +59,10 @@ export function ContactForm() {
               <FormItem>
                 <FormLabel>{t('name')}</FormLabel>
                 <FormControl>
-                  <Input className="bg-white" {...field} />
+                  <Input
+                    className="h-12 rounded-full bg-white px-5"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -72,7 +75,10 @@ export function ContactForm() {
               <FormItem>
                 <FormLabel>{t('phone')}</FormLabel>
                 <FormControl>
-                  <Input className="bg-white" {...field} />
+                  <Input
+                    className="h-12 rounded-full bg-white px-5"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -102,7 +108,7 @@ export function ContactForm() {
               <FormLabel>{t('message')}</FormLabel>
               <FormControl>
                 <Textarea
-                  className="min-h-[140px] bg-white"
+                  className="min-h-[140px] rounded-2xl bg-white px-5 py-3"
                   {...field}
                 />
               </FormControl>
@@ -111,11 +117,11 @@ export function ContactForm() {
           )}
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-center gap-3">
           <Button
             type="submit"
             size="lg"
-            className="rounded-full px-10"
+            className="w-full rounded-full px-10 sm:w-auto sm:px-16"
             disabled={form.formState.isSubmitting}
           >
             {t('send')}

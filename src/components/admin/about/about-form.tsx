@@ -1,0 +1,236 @@
+'use client';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { Plus, Trash2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
+import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
+import { updateAboutSettings } from '@/lib/actions/about';
+import type { AboutPageSettings, FaqItem } from '@/types/database';
+
+type Props = {
+  settings: AboutPageSettings | null;
+};
+
+export function AboutForm({ settings }: Props) {
+  const router = useRouter();
+  const [saving, setSaving] = useState(false);
+
+  const [heroImages, setHeroImages] = useState<string[]>(settings?.hero_images ?? []);
+  const [teamImages, setTeamImages] = useState<string[]>(settings?.team_images ?? []);
+  const [yearsValue, setYearsValue] = useState(settings?.years_value ?? '');
+  const [membersValue, setMembersValue] = useState(settings?.members_value ?? '');
+  const [raisedValue, setRaisedValue] = useState(settings?.raised_value ?? '');
+  const [transparencyValue, setTransparencyValue] = useState(
+    settings?.transparency_value ?? '',
+  );
+  const [faqItems, setFaqItems] = useState<FaqItem[]>(settings?.faq_items ?? []);
+
+  function addFaq() {
+    setFaqItems([...faqItems, { q_ua: '', a_ua: '', q_en: '', a_en: '' }]);
+  }
+  function removeFaq(i: number) {
+    setFaqItems(faqItems.filter((_, idx) => idx !== i));
+  }
+  function updateFaq(i: number, key: keyof FaqItem, val: string) {
+    setFaqItems(faqItems.map((it, idx) => (idx === i ? { ...it, [key]: val } : it)));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    const result = await updateAboutSettings({
+      heroImages,
+      teamImages,
+      yearsValue,
+      membersValue,
+      raisedValue,
+      transparencyValue,
+      faqItems,
+    });
+    setSaving(false);
+    if (result.success) {
+      toast.success('About page updated');
+      router.refresh();
+    } else {
+      toast.error(result.error ?? 'Something went wrong');
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-5xl">
+      {/* Hero carousel */}
+      <div className="bg-white rounded-xl border border-border p-6">
+        <h2 className="text-body font-semibold mb-1">Hero carousel</h2>
+        <p className="text-caption text-text-tertiary mb-4">
+          Top of About page, right column. Landscape images work best.
+        </p>
+        <MultiImageUpload
+          value={heroImages}
+          onChange={setHeroImages}
+          folder="about-hero"
+          label="Hero images"
+          requirements="Recommended: min 1200 × 900 px, landscape, JPG / WebP / PNG, under 4 MB each."
+          minImages={4}
+        />
+      </div>
+
+      {/* Team carousel */}
+      <div className="bg-white rounded-xl border border-border p-6">
+        <h2 className="text-body font-semibold mb-1">Team carousel (full-width)</h2>
+        <p className="text-caption text-text-tertiary mb-4">
+          Full-width strip below the About-the-Team section. Wide aspect ratio.
+        </p>
+        <MultiImageUpload
+          value={teamImages}
+          onChange={setTeamImages}
+          folder="about-team"
+          label="Team images"
+          requirements="Recommended: min 1920 × 810 px (≈2.37 : 1), landscape, JPG / WebP / PNG, under 4 MB each."
+          minImages={4}
+        />
+      </div>
+
+      {/* Results */}
+      <div className="bg-white rounded-xl border border-border p-6">
+        <h2 className="text-body font-semibold mb-1">Results</h2>
+        <p className="text-caption text-text-tertiary mb-4">
+          The four numbers shown in the Results section. Labels stay in i18n.
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label>Years (e.g. &quot;4&quot;)</Label>
+            <Input value={yearsValue} onChange={(e) => setYearsValue(e.target.value)} />
+          </div>
+          <div>
+            <Label>Members / events (e.g. &quot;1 200&quot;)</Label>
+            <Input
+              value={membersValue}
+              onChange={(e) => setMembersValue(e.target.value)}
+            />
+          </div>
+          <div>
+            <Label>Raised (e.g. &quot;$12 000&quot;)</Label>
+            <Input value={raisedValue} onChange={(e) => setRaisedValue(e.target.value)} />
+          </div>
+          <div>
+            <Label>Transparency (e.g. &quot;100%&quot;)</Label>
+            <Input
+              value={transparencyValue}
+              onChange={(e) => setTransparencyValue(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div className="bg-white rounded-xl border border-border p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-body font-semibold">FAQ</h2>
+            <p className="text-caption text-text-tertiary">
+              Question & answer pairs in Ukrainian and English.
+            </p>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={addFaq}
+            className="rounded-full"
+          >
+            <Plus className="w-4 h-4 mr-1" />
+            Add question
+          </Button>
+        </div>
+
+        {faqItems.length === 0 && (
+          <p className="text-body-sm text-text-tertiary py-4 text-center">
+            No questions yet. Click &quot;Add question&quot; to create one.
+          </p>
+        )}
+
+        <div className="space-y-4">
+          {faqItems.map((item, i) => (
+            <div
+              key={i}
+              className="rounded-lg border border-border p-4 bg-surface-secondary/40"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-body-sm font-medium">Question {i + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => removeFaq(i)}
+                  className="text-red-600 hover:text-red-700"
+                  aria-label="Remove question"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+              <BilingualTabs
+                ua={
+                  <>
+                    <div>
+                      <Label>Question (UA) *</Label>
+                      <Input
+                        value={item.q_ua}
+                        onChange={(e) => updateFaq(i, 'q_ua', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label>Answer (UA) *</Label>
+                      <Textarea
+                        rows={3}
+                        value={item.a_ua}
+                        onChange={(e) => updateFaq(i, 'a_ua', e.target.value)}
+                        required
+                      />
+                    </div>
+                  </>
+                }
+                en={
+                  <>
+                    <div>
+                      <Label>Question (EN) *</Label>
+                      <Input
+                        value={item.q_en}
+                        onChange={(e) => updateFaq(i, 'q_en', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label>Answer (EN) *</Label>
+                      <Textarea
+                        rows={3}
+                        value={item.a_en}
+                        onChange={(e) => updateFaq(i, 'a_en', e.target.value)}
+                        required
+                      />
+                    </div>
+                  </>
+                }
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <Button
+          type="submit"
+          size="lg"
+          variant="default"
+          className="rounded-full"
+          disabled={saving}
+        >
+          {saving ? 'Saving...' : 'Save changes'}
+        </Button>
+      </div>
+    </form>
+  );
+}

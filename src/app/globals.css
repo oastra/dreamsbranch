@@ -32,7 +32,7 @@ body {
 }
 
 @utility text-h2 {
-  @apply text-[32px] leading-[120%] tracking-[0] font-normal;
+  @apply text-[20px] leading-[120%] tracking-[0] font-normal md:text-[24px] lg:text-[32px];
 }
 
 @utility text-h3 {
@@ -40,11 +40,19 @@ body {
 }
 
 @utility text-subheading {
-  @apply text-[24px] leading-[120%] tracking-[0] font-normal;
+  @apply text-[24px] leading-[120%] tracking-[0] font-medium;
 }
 
 @utility text-h4 {
   @apply text-[18px] leading-[120%] tracking-[0] font-medium uppercase;
+}
+
+@utility text-h5 {
+  @apply text-[16px] leading-[120%] tracking-[0] font-medium;
+}
+
+@utility text-title-tablet {
+  @apply text-[36px] leading-[110%] font-medium md:text-[48px];
 }
 
 @utility text-secondary {
@@ -52,7 +60,7 @@ body {
 }
 
 @utility text-body {
-  @apply text-[16px] leading-[120%] tracking-[0] font-normal;
+  @apply text-[16px] leading-[120%] tracking-[0] font-normal lg:text-[20px];
 }
 
 @utility text-body-sm {
@@ -233,8 +241,9 @@ body {
   top: var(--ripple-y, 50%);
   transform: translate(-50%, -50%) scale(0);
   opacity: 0;
-  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   z-index: 0;
 }
@@ -243,4 +252,3 @@ body {
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
 }
-

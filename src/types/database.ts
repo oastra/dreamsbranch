@@ -133,6 +133,25 @@ export type ContactSubmission = {
   created_at: string
 }
 
+export type FaqItem = {
+  q_ua: string
+  a_ua: string
+  q_en: string
+  a_en: string
+}
+
+export type AboutPageSettings = {
+  id: 1
+  hero_images: string[]
+  team_images: string[]
+  years_value: string
+  members_value: string
+  raised_value: string
+  transparency_value: string
+  faq_items: FaqItem[]
+  updated_at: string
+}
+
 export type HomePageSettings = {
   id: 1
   hero_title_ua: string
@@ -228,6 +247,12 @@ export type Database = {
         Row: HomePageSettings
         Insert: Partial<Omit<HomePageSettings, 'id'>>
         Update: Partial<Omit<HomePageSettings, 'id'>>
+        Relationships: []
+      }
+      about_page_settings: {
+        Row: AboutPageSettings
+        Insert: Partial<Omit<AboutPageSettings, 'id'>>
+        Update: Partial<Omit<AboutPageSettings, 'id'>>
         Relationships: []
       }
       admin_users: {

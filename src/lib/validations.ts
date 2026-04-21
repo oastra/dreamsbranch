@@ -93,3 +93,25 @@ export const homeSettingsSchema = z.object({
   ctaTextEn: z.string(),
 });
 export type HomeSettingsInput = z.infer<typeof homeSettingsSchema>;
+
+export const faqItemSchema = z.object({
+  q_ua: z.string().min(1, 'Question (UA) is required'),
+  a_ua: z.string().min(1, 'Answer (UA) is required'),
+  q_en: z.string().min(1, 'Question (EN) is required'),
+  a_en: z.string().min(1, 'Answer (EN) is required'),
+});
+
+export const aboutSettingsSchema = z.object({
+  heroImages: z
+    .array(z.string().url())
+    .min(4, 'At least 4 hero images are required'),
+  teamImages: z
+    .array(z.string().url())
+    .min(4, 'At least 4 team images are required'),
+  yearsValue: z.string(),
+  membersValue: z.string(),
+  raisedValue: z.string(),
+  transparencyValue: z.string(),
+  faqItems: z.array(faqItemSchema),
+});
+export type AboutSettingsInput = z.infer<typeof aboutSettingsSchema>;

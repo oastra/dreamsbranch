@@ -4,7 +4,7 @@
     {
       "name": "dreamsbranch-dev",
       "runtimeExecutable": "/Users/olha_chernysh/.nvm/versions/node/v20.19.0/bin/node",
-      "runtimeArgs": ["node_modules/.bin/next", "dev"],
+      "runtimeArgs": ["node_modules/.bin/next", "dev", "-p", "3001"],
       "env": {
         "PATH": "/Users/olha_chernysh/.nvm/versions/node/v20.19.0/bin:/usr/local/bin:/usr/bin:/bin"
       },
