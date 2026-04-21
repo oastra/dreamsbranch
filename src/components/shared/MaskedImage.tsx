@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useId } from "react";
 
 type Props = {
   src: string;
@@ -13,17 +12,26 @@ type Props = {
   bottomRightColor?: string;
 };
 
-const MASK_HOLES =
-  "M0 0 L0.25 0 L0 0.52 Z " +
-  "M1 1 L0.75 1 L1 0.48 Z";
-
-// Triangles with small rounded tips (~7-8px) on the two non-outer corners.
-// Outer corner (0,0 for TL / 157,216 for BR) is left sharp and gets rounded
-// to 20px by the parent container's rounded-[20px] + overflow-hidden.
+// Figma triangle paths (viewBox 120×167). Rounded tips baked into cubic
+// beziers at Figma's exact tangent points.
 const INNER_TL =
-  "M0 0 L148 0 Q157 0 153.5 8 L4 208 Q0 216 0 208 L0 0 Z";
+  "M12.8269 163.07C8.89718 168.743 0 165.962 0 159.061L0 7.04C0 3.15193 3.15182 0 7.0399 0H112.356C118.036 0 121.377 6.38011 118.143 11.0491L12.8269 163.07Z";
 const INNER_BR =
-  "M157 216 L9 216 Q0 216 3.5 208 L153 8 Q157 0 157 8 L157 216 Z";
+  "M106.581 3.04415C110.511 -2.6283 119.408 0.152527 119.408 7.0532L119.408 159.074C119.408 162.962 116.256 166.114 112.368 166.114H7.05228C1.37238 166.114 -1.96922 159.734 1.2653 155.065L106.581 3.04415Z";
+
+// Decorative triangle: width 20% of container, height follows 120:167 aspect.
+// Image clip uses cqw so both the clip and the triangle scale with container
+// width — their hypotenuses stay parallel at any aspect ratio. Clip extends
+// 2cqw × ~3.2cqw further than the triangle (≈6px perpendicular gap at a
+// typical 700px-wide container, proportionally more/less at other widths).
+const CLIP_PATH = [
+  "22cqw 0",
+  "100% 0",
+  "100% calc(100% - 31.75cqw)",
+  "calc(100% - 22cqw) 100%",
+  "0 100%",
+  "0 31.75cqw",
+].join(", ");
 
 export function MaskedImage({
   src,
@@ -34,52 +42,31 @@ export function MaskedImage({
   topLeftColor = "#FFEF99",
   bottomRightColor = "#CCDDF1",
 }: Props) {
-  const rawId = useId();
-  const maskId = `masked-image-mask-${rawId.replace(/[:]/g, "")}`;
-
   return (
-    <div className={`relative overflow-hidden rounded-[20px] ${className}`}>
-      <svg width="0" height="0" className="absolute" aria-hidden>
-        <defs>
-          <mask id={maskId} maskContentUnits="objectBoundingBox">
-            <rect x="0" y="0" width="1" height="1" fill="white" />
-            <path d={MASK_HOLES} fill="black" />
-          </mask>
-        </defs>
-      </svg>
-
+    <div
+      className={`relative overflow-hidden rounded-[20px] ${className}`}
+      style={{ containerType: "inline-size" }}
+    >
       <div
         className="absolute inset-0 overflow-hidden rounded-[20px]"
-        style={{ mask: `url(#${maskId})`, WebkitMask: `url(#${maskId})` }}
+        style={{ clipPath: `polygon(${CLIP_PATH})` }}
       >
         <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />
       </div>
 
       <svg
-        viewBox="0 0 157 216"
-        preserveAspectRatio="none"
+        viewBox="0 0 120 167"
         className="pointer-events-none absolute left-0 top-0"
-        style={{
-          width: "25%",
-          height: "52%",
-          transform: "scale(0.96)",
-          transformOrigin: "0 0",
-        }}
+        style={{ width: "20%", aspectRatio: "120 / 167" }}
         aria-hidden
       >
         <path d={INNER_TL} fill={topLeftColor} />
       </svg>
 
       <svg
-        viewBox="0 0 157 216"
-        preserveAspectRatio="none"
+        viewBox="0 0 120 167"
         className="pointer-events-none absolute bottom-0 right-0"
-        style={{
-          width: "25%",
-          height: "52%",
-          transform: "scale(0.96)",
-          transformOrigin: "100% 100%",
-        }}
+        style={{ width: "20%", aspectRatio: "120 / 167" }}
         aria-hidden
       >
         <path d={INNER_BR} fill={bottomRightColor} />
