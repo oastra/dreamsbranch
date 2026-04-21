@@ -217,16 +217,10 @@ export default async function Page({
               </div>
             </div>
 
-            {/* Chapter 2 — stacked: heading, text_a, 2 images, text_b, yellow highlight */}
-            <div className="flex flex-col gap-6">
-              <h3 className="text-h2 text-text-strong">
-                {t("story.ch2_title")}
-              </h3>
-              <p className="text-body text-text-secondary">
-                {t("story.ch2_text_a")}
-              </p>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="relative aspect-[1/1] overflow-hidden rounded-2xl">
+            {/* Chapter 2 — desktop: images left | text right. Mobile: heading, text_a, images, text_b, highlight */}
+            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-6">
+              <div className="order-3 grid grid-cols-2 gap-4 lg:order-1 lg:self-stretch">
+                <div className="relative aspect-[1/1] overflow-hidden rounded-2xl lg:aspect-auto">
                   <Image
                     src="/images/about/from-beginning-1.webp"
                     alt={t("story.ch2_title")}
@@ -235,7 +229,7 @@ export default async function Page({
                     sizes="(max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
-                <div className="relative aspect-[1/1] overflow-hidden rounded-2xl">
+                <div className="relative aspect-[1/1] overflow-hidden rounded-2xl lg:aspect-auto">
                   <Image
                     src="/images/about/from-beginning-2.webp"
                     alt={t("story.ch2_title")}
@@ -245,99 +239,113 @@ export default async function Page({
                   />
                 </div>
               </div>
-              <p className="text-body text-text-secondary">
-                {t("story.ch2_text_b")}
-              </p>
-              <div className="rounded-2xl bg-primary px-6 py-5">
-                <p className="text-h3 font-medium text-text-strong">
-                  {t("story.ch2_highlight")}
+              <div className="contents lg:order-2 lg:flex lg:flex-col lg:gap-4">
+                <h3 className="order-1 text-h2 text-text-strong">
+                  {t("story.ch2_title")}
+                </h3>
+                <p className="order-2 text-body text-text-secondary">
+                  {t("story.ch2_text_a")}
                 </p>
+                <p className="order-4 text-body text-text-secondary">
+                  {t("story.ch2_text_b")}
+                </p>
+                <div className="order-5 rounded-2xl bg-primary px-6 py-5">
+                  <p className="text-h3 font-medium text-text-strong">
+                    {t("story.ch2_highlight")}
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Chapter 3 — stacked: heading (2 lines, 2nd right-aligned), image, text_a, text_b w/ bold date, blue highlight */}
-            <div className="flex flex-col gap-6">
-              <h3 className="flex flex-col text-h2 text-text-strong">
-                <span>{t("story.ch3_title_a")}</span>
-                <span className="self-end">{t("story.ch3_title_b")}</span>
-              </h3>
-              <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
+            {/* Chapter 3 — desktop: text left | image right. Mobile: heading, image, text_a, text_b(bold date), highlight */}
+            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-6">
+              <div className="contents lg:order-1 lg:flex lg:flex-col lg:gap-4">
+                <h3 className="order-1 flex flex-col text-h2 text-text-strong">
+                  <span>{t("story.ch3_title_a")}</span>
+                  <span className="self-end">{t("story.ch3_title_b")}</span>
+                </h3>
+                <p className="order-3 text-body text-text-secondary">
+                  {t("story.ch3_text_a")}
+                </p>
+                <p className="order-4 text-body text-text-secondary">
+                  <strong className="font-medium text-text-strong">
+                    {t("story.ch3_date")}
+                  </strong>{" "}
+                  {t("story.ch3_text_b")}
+                </p>
+                <div className="order-5 rounded-2xl bg-secondary px-6 py-5">
+                  <p className="text-h3 font-medium text-white">
+                    {t("story.ch3_highlight")}
+                  </p>
+                </div>
+              </div>
+              <div className="order-2 relative aspect-[16/9] overflow-hidden rounded-2xl lg:order-2 lg:aspect-auto lg:min-h-[400px] lg:self-stretch">
                 <Image
                   src="/images/about/from-beginning-3.webp"
                   alt={t("story.ch3_title_a")}
                   fill
                   className="object-cover"
-                  sizes="100vw"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-              </div>
-              <p className="text-body text-text-secondary">
-                {t("story.ch3_text_a")}
-              </p>
-              <p className="text-body text-text-secondary">
-                <strong className="font-medium text-text-strong">
-                  {t("story.ch3_date")}
-                </strong>{" "}
-                {t("story.ch3_text_b")}
-              </p>
-              <div className="rounded-2xl bg-secondary px-6 py-5">
-                <p className="text-h3 font-medium text-white">
-                  {t("story.ch3_highlight")}
-                </p>
               </div>
             </div>
 
-            {/* Chapter 4 — stacked: heading, image, 3 paragraphs */}
-            <div className="flex flex-col gap-6">
-              <h3 className="text-h2 text-text-strong">
-                {t("story.ch4_title")}
-              </h3>
-              <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
+            {/* Chapter 4 — desktop: image left | text right. Mobile: heading, image, 3 paragraphs */}
+            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-6">
+              <div className="order-2 relative aspect-[16/9] overflow-hidden rounded-2xl lg:order-1 lg:aspect-auto lg:min-h-[400px] lg:self-stretch">
                 <Image
                   src="/images/about/from-beginning-4.webp"
                   alt={t("story.ch4_title")}
                   fill
                   className="object-cover"
-                  sizes="100vw"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
-              <p className="text-body text-text-secondary">
-                {t("story.ch4_text_a")}
-              </p>
-              <p className="text-body text-text-secondary">
-                {t("story.ch4_text_b")}
-              </p>
-              <p className="text-body text-text-secondary">
-                {t("story.ch4_text_c")}
-              </p>
+              <div className="contents lg:order-2 lg:flex lg:flex-col lg:gap-4">
+                <h3 className="order-1 text-h2 text-text-strong">
+                  {t("story.ch4_title")}
+                </h3>
+                <p className="order-3 text-body text-text-secondary">
+                  {t("story.ch4_text_a")}
+                </p>
+                <p className="order-4 text-body text-text-secondary">
+                  {t("story.ch4_text_b")}
+                </p>
+                <p className="order-5 text-body text-text-secondary">
+                  {t("story.ch4_text_c")}
+                </p>
+              </div>
             </div>
 
-            {/* Chapter 5 — stacked: heading, image, 2 body paragraphs, smaller paragraph, yellow highlight */}
-            <div className="flex flex-col gap-6">
-              <h3 className="text-h2 text-text-strong">
-                {t("story.ch5_title")}
-              </h3>
-              <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
+            {/* Chapter 5 — desktop: text left | image right. Mobile: heading, image, 2 paragraphs, small paragraph, highlight */}
+            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-6">
+              <div className="contents lg:order-1 lg:flex lg:flex-col lg:gap-4">
+                <h3 className="order-1 text-h2 text-text-strong">
+                  {t("story.ch5_title")}
+                </h3>
+                <p className="order-3 text-body text-text-secondary">
+                  {t("story.ch5_text_a")}
+                </p>
+                <p className="order-4 text-body text-text-secondary">
+                  {t("story.ch5_text_b")}
+                </p>
+                <p className="order-5 text-body-sm text-text-secondary">
+                  {t("story.ch5_text_c")}
+                </p>
+                <div className="order-6 rounded-2xl bg-primary px-6 py-5">
+                  <p className="text-h3 text-center font-medium text-text-strong">
+                    {t("story.ch5_highlight")}
+                  </p>
+                </div>
+              </div>
+              <div className="order-2 relative aspect-[16/9] overflow-hidden rounded-2xl lg:order-2 lg:aspect-auto lg:min-h-[400px] lg:self-stretch">
                 <Image
                   src="/images/about/from-beginning-5.webp"
                   alt={t("story.ch5_title")}
                   fill
                   className="object-cover"
-                  sizes="100vw"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-              </div>
-              <p className="text-body text-text-secondary">
-                {t("story.ch5_text_a")}
-              </p>
-              <p className="text-body text-text-secondary">
-                {t("story.ch5_text_b")}
-              </p>
-              <p className="text-body-sm text-text-secondary">
-                {t("story.ch5_text_c")}
-              </p>
-              <div className="rounded-2xl bg-primary px-6 py-5">
-                <p className="text-h3 text-center font-medium text-text-strong">
-                  {t("story.ch5_highlight")}
-                </p>
               </div>
             </div>
 
