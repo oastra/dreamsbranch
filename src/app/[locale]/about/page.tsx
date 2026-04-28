@@ -441,7 +441,7 @@ export default async function Page({
                 key={i}
                 className="group h-fit rounded-2xl border border-border bg-white px-6 py-5 open:border-secondary-10 open:bg-secondary-10"
               >
-                <summary className="flex min-h-[66px] cursor-pointer list-none items-center justify-between gap-4">
+                <summary className="flex min-h-16.5 cursor-pointer list-none items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-small font-medium text-white">
                       {i + 1}

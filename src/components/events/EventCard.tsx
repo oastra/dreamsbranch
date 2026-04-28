@@ -36,7 +36,7 @@ export function EventCard({
       )}
 
       {/* Tags — min-height reserves space for two rows so images align across cards */}
-      <div className="mt-4 flex min-h-[74px] flex-wrap content-start gap-2">
+      <div className="mt-4 flex min-h-18.5 flex-wrap content-start gap-2">
         {isArchived ? (
           <span className="inline-flex items-center rounded-full bg-grey-40 px-4 py-1.5 text-body-sm font-medium text-text-secondary">
             {tagLabels.archived}

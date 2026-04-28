@@ -23,7 +23,7 @@ export function ContactSection({ title, description }: ContactSectionProps) {
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.3fr] lg:gap-0">
             {/* Image */}
-            <div className="relative aspect-4/3 overflow-hidden rounded-2xl lg:aspect-auto lg:min-h-[722px] lg:rounded-none">
+            <div className="relative aspect-4/3 overflow-hidden rounded-2xl lg:aspect-auto lg:min-h-180.5 lg:rounded-none">
               <Image
                 src="/images/contact-us.webp"
                 alt="Contact Dreams Branch of UWAA"

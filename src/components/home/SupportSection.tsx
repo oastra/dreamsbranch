@@ -85,7 +85,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
             >
               <h3 className={titleCls}>{t("volunteer")}</h3>
               <p className={descCls}>{t("volunteer_desc")}</p>
-              <Support2Icon size={49} className={iconCls} />
+              <Support2Icon size={64} className={iconCls} />
             </Link>
 
             {/* Аукціон та лотерея */}

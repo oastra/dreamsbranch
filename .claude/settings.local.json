@@ -127,7 +127,11 @@
       "Bash(grep -oE '\"message\":\"\\\\\\\\\\\\\\\\u001b\\\\[33mImage with src[^\"]{20,500}\"')",
       "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./node_modules/eslint-config-next/package.json'\\).exports, null, 2\\)\\)\")",
       "Bash(curl -s -o /dev/null \"http://localhost:3000/admin/login?cb=$\\(date +%s\\)\")",
-      "Bash(echo \"build-exit=$?\")"
+      "Bash(echo \"build-exit=$?\")",
+      "Bash(echo \"tsc-exit=$?\")",
+      "Bash(sed -i '' 's|min-h-\\\\[66px\\\\]|min-h-16.5|g' \"src/app/[locale]/about/page.tsx\")",
+      "Bash(sed -i '' 's|lg:min-h-\\\\[722px\\\\]|lg:min-h-180.5|g' src/components/contact/ContactSection.tsx)",
+      "Bash(sed -i '' 's|min-h-\\\\[74px\\\\]|min-h-18.5|g' src/components/events/EventCard.tsx)"
     ]
   }
 }

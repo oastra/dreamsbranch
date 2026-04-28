@@ -110,14 +110,14 @@ export default async function Page({
               <ReportIcon className="h-16 w-16 sm:h-24 sm:w-24 lg:h-32 lg:w-32" />
             </div>
 
-            <div className="relative max-w-[26ch] lg:mx-auto lg:max-w-[60ch] lg:text-center">
+            <div className="relative lg:text-center">
               <p className="text-body-sm mb-3 text-white/80 lg:text-body">
                 {t("eyebrow")}
               </p>
-              <h1 className="text-display mb-6 pr-20 text-white sm:pr-28 lg:pr-0">
+              <h1 className="text-display mb-6 whitespace-nowrap text-white">
                 {t("title")}
               </h1>
-              <p className="text-body text-white/90 lg:mx-auto">
+              <p className="text-body text-white/90 lg:mx-auto lg:max-w-[60ch]">
                 {t("description")}
               </p>
             </div>

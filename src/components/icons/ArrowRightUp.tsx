@@ -15,9 +15,9 @@ export default function ArrowDownFillIcon({ size = 24, ...props }: Props) {
       <path
         d="M13 5H19M19 5V11M19 5L5 19"
         stroke="currentColor"
-        stroke-width="1.58996"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.58996"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
