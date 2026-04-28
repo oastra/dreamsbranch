@@ -507,8 +507,8 @@ export default async function NewsArticlePage({
                   title={a[titleKey]}
                   description={extractPlainText(a[bodyKey])}
                   coverImage={a.cover_image}
-                  category={a.category}
                   categoryLabel={getCategoryLabel(a.category, t)}
+                  brandLabel="Dreams branch of UWAA"
                   publishedAt={a.published_at}
                 />
               ))}

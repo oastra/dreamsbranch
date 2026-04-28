@@ -1,12 +1,13 @@
+import { CalendarArrowUp } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { db } from '@/lib/db';
-import { NewsCard } from '@/components/news/NewsCard';
+import { NewsGrid, type NewsGridItem } from '@/components/news/NewsGrid';
 import { FeaturedNewsCard } from '@/components/news/FeaturedNewsCard';
 import { SupportSection } from '@/components/shared/SupportSection';
 import { ContactSection } from '@/components/contact/ContactSection';
 import SearchIcon from '@/components/icons/SearchIcon';
-import { PageHeroHeading } from '@/components/shared/PageHeroHeading';
+import DecorArrowIcon from '@/components/icons/DecorArrowIcon';
 import type { NewsArticle } from '@/types/database';
 
 // ─── Mock data ───────────────────────────────────────────────────────────────
@@ -33,14 +34,16 @@ const MOCK_ARTICLES: ArticlePreview[] = [
     slug: 'stay-online',
     title_ua: 'Залишайся Онлайн',
     title_en: 'Stay Online',
-    body_ua: 'Перегляд кінострічки «Ти — космос» — це досвід, який рідко приживається, ніж просто дивитись. Фільм остоголі слідити тишею, глухою й напівхвилюючою, дає кожен кадр даному глядачеві відчуття, показуючи і наскази неруш.',
-    body_en: 'Watching the film "You Are the Universe" is an experience that rarely takes hold, more than just watching. The film follows silence, deaf and half-exciting, giving each frame to the given viewer a feeling.',
+    body_ua:
+      '27 квітня перегляд кінострічки «Ти — космос» — це досвід, який радше проживаєш, ніж просто дивишся.\n\nФільм огортає глядача тишею, паузами й напівтонами, де кожен кадр дихає самотністю, пошуком і ніжною надією.',
+    body_en:
+      'On 27 April, watching the film "You Are the Universe" is an experience you live through rather than simply observe.\n\nThe film wraps the viewer in silence, pauses and halftones, where every frame breathes solitude, longing and tender hope.',
     cover_image: null,
     category: 'organiser',
     tags: [],
     is_featured: true,
     status: 'published',
-    published_at: '2026-03-15T10:00:00Z',
+    published_at: '2026-04-27T10:00:00Z',
   },
   {
     id: 'mock-n2',
@@ -79,6 +82,48 @@ const MOCK_ARTICLES: ArticlePreview[] = [
     body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
     cover_image: null,
     category: 'organiser',
+    tags: [],
+    is_featured: false,
+    status: 'published',
+    published_at: '2026-03-05T10:00:00Z',
+  },
+  {
+    id: 'mock-n5',
+    slug: 'world-protests-ukraine-3',
+    title_ua: 'Світ протестує проти примусу України до капітуляції',
+    title_en: 'The world protests against forcing Ukraine to capitulate',
+    body_ua: 'У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.',
+    body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
+    cover_image: null,
+    category: 'organiser',
+    tags: [],
+    is_featured: false,
+    status: 'published',
+    published_at: '2026-03-05T10:00:00Z',
+  },
+  {
+    id: 'mock-n6',
+    slug: 'world-protests-ukraine-3',
+    title_ua: 'Світ протестує проти примусу України до капітуляції',
+    title_en: 'The world protests against forcing Ukraine to capitulate',
+    body_ua: 'У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.',
+    body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
+    cover_image: null,
+    category: 'organiser',
+    tags: [],
+    is_featured: false,
+    status: 'published',
+    published_at: '2026-03-05T10:00:00Z',
+  },
+  {
+    id: 'mock-n7',
+    slug: 'world-protests-ukraine-3',
+    title_ua: 'Світ протестує проти примусу України до капітуляції',
+    title_en: 'The world protests against forcing Ukraine to capitulate',
+    body_ua: 'У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.',
+    body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
+    cover_image: null,
+    category: 'some one else',
     tags: [],
     is_featured: false,
     status: 'published',
@@ -141,66 +186,77 @@ export default async function NewsPage({
   return (
     <>
       {/* ── Hero section ────────────────────────────────────────── */}
-      <section className="bg-secondary py-12 text-center text-white lg:py-16">
+      <section className="py-10 lg:pt-16 lg:pb-16">
         <div className="container-page">
-          <PageHeroHeading
-            title={t('news.title')}
-            tone="dark"
-            titleClassName="mb-title-gap"
-          />
-          <div className="relative mx-auto max-w-2xl">
-            <p className="text-body text-white/80">
-              {t('news.description')}
-            </p>
-            {/* Decorative squiggle */}
-            <svg
-              className="absolute -right-12 -bottom-2 hidden text-primary lg:block"
-              width="48"
-              height="48"
-              viewBox="0 0 48 48"
-              fill="none"
-            >
-              <path
-                d="M8 40C12 20 20 12 28 16C36 20 24 32 20 24C16 16 28 8 40 8"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M36 4L40 8L36 12"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-            </svg>
-          </div>
-        </div>
-      </section>
+          <div className="relative">
+            {/* Eyebrow + title + description.
+                Left-aligned on mobile/tablet (squiggle hangs off the h1 line).
+                Centered with a constrained measure on desktop. */}
+            <div className="max-w-[68%] sm:max-w-[64%] md:max-w-[60%] lg:mx-auto lg:max-w-[760px] lg:text-center">
+              <p className="text-body-sm mb-2 font-semibold text-text-strong">
+                Dreams branch of UWAA
+              </p>
 
-      {/* ── Search + sort bar ────────────────────────────────────── */}
-      <section className="bg-white py-6">
-        <div className="container-page">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              {/* h1 wrapper is the anchor for the squiggle on every breakpoint.
+                  On mobile/tablet it's inline-block so it shrinks to the title's
+                  text width; on desktop it's a full-width block in the centred
+                  column. Both squiggles use `top-full` to sit at the h1's
+                  bottom edge — the desktop variant uses a negative `right` to
+                  hang past the centred column to the page's right edge. */}
+              <div className="relative mb-4 inline-block md:mb-6 lg:mb-8 lg:block">
+                <h1 className="text-display text-secondary">
+                  {t('news.title')}
+                </h1>
+
+                {/* Mobile/tablet squiggle: bottom-right of h1 text */}
+                <DecorArrowIcon
+                  aria-hidden="true"
+                  className="pointer-events-none absolute top-full left-full h-[140px] w-[140px] -translate-x-[30%] -translate-y-[35%] sm:h-[180px] sm:w-[180px] md:h-[210px] md:w-[210px] lg:hidden"
+                />
+
+                {/* Desktop squiggle: top sits at h1's bottom; offset right pushes
+                    past the 760px centred column to the page's right edge. */}
+                <DecorArrowIcon
+                  aria-hidden="true"
+                  className="pointer-events-none absolute top-full hidden h-[210px] w-[210px] -translate-y-[30%] lg:right-[-92px] lg:block xl:right-[-228px]"
+                />
+              </div>
+
+              <p className="text-body text-text-primary lg:mx-auto lg:max-w-[60ch]">
+                {t('news.description')}
+              </p>
+            </div>
+          </div>
+
+          {/* Search + sort row */}
+          <div className="relative z-[1] mt-8 flex items-center gap-3 sm:gap-4 lg:mt-16">
             <div className="relative flex-1">
               <SearchIcon
                 size={20}
-                className="absolute top-1/2 left-4 -translate-y-1/2 text-text-secondary"
+                className="pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 text-text-secondary"
               />
               <input
                 type="text"
                 placeholder={t('news.search')}
-                className="w-full rounded-full border border-border bg-white py-3 pr-4 pl-11 text-body text-text-strong outline-none transition-colors focus:border-secondary"
+                className="h-[52px] w-full rounded-full border border-border bg-white pr-5 pl-12 text-body text-text-strong outline-none transition-colors focus:border-secondary lg:h-[54px]"
               />
             </div>
 
-            <button className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-body-sm font-medium text-text-strong transition-opacity hover:opacity-90">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <polyline points="19 12 12 19 5 12" />
-              </svg>
+            {/* Tablet/mobile: circular icon-only button */}
+            <button
+              type="button"
+              aria-label={t('news.sort_date')}
+              className="inline-flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-secondary text-white transition-opacity hover:opacity-90 lg:hidden"
+            >
+              <CalendarArrowUp size={22} strokeWidth={1.75} />
+            </button>
+
+            {/* Desktop: full-text pill button */}
+            <button
+              type="button"
+              className="hidden h-[54px] shrink-0 items-center justify-center gap-2 rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90 lg:inline-flex"
+            >
+              <CalendarArrowUp size={20} strokeWidth={1.75} />
               {t('news.sort_date')}
             </button>
           </div>
@@ -209,7 +265,7 @@ export default async function NewsPage({
 
       {/* ── Featured article ─────────────────────────────────────── */}
       {featured && (
-        <section className="bg-white pb-8">
+        <section className=" pb-8">
           <div className="container-page">
             <FeaturedNewsCard
               slug={featured.slug}
@@ -217,8 +273,8 @@ export default async function NewsPage({
               title={featured[titleKey]}
               description={extractPlainText(featured[bodyKey])}
               coverImage={featured.cover_image}
-              category={featured.category}
-              categoryLabel={getCategoryLabel(featured.category, t)}
+              publishedAt={featured.published_at}
+              brandLabel="Dreams branch of UWAA"
               tagNewsLabel={t('news.tag_news')}
               learnMoreLabel={t('news.learn_more')}
             />
@@ -228,23 +284,22 @@ export default async function NewsPage({
 
       {/* ── News grid ────────────────────────────────────────────── */}
       {rest.length > 0 && (
-        <section className="section bg-white pt-0">
+        <section className="section pt-0">
           <div className="container-page">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {rest.map((article) => (
-                <NewsCard
-                  key={article.id}
-                  slug={article.slug}
-                  locale={locale}
-                  title={article[titleKey]}
-                  description={extractPlainText(article[bodyKey])}
-                  coverImage={article.cover_image}
-                  category={article.category}
-                  categoryLabel={getCategoryLabel(article.category, t)}
-                  publishedAt={article.published_at}
-                />
-              ))}
-            </div>
+            <NewsGrid
+              locale={locale}
+              brandLabel="Dreams branch of UWAA"
+              showMoreLabel={t('news.show_more')}
+              items={rest.map<NewsGridItem>((article) => ({
+                id: article.id,
+                slug: article.slug,
+                title: article[titleKey],
+                description: extractPlainText(article[bodyKey]),
+                coverImage: article.cover_image,
+                categoryLabel: getCategoryLabel(article.category, t),
+                publishedAt: article.published_at,
+              }))}
+            />
           </div>
         </section>
       )}

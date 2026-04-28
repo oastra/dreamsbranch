@@ -1,5 +1,6 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import { MaskedImage } from '@/components/shared/MaskedImage';
+import ArrowRightUpIcon from '@/components/icons/ArrowRightUp';
 
 export interface NewsCardProps {
   slug: string;
@@ -7,19 +8,40 @@ export interface NewsCardProps {
   title: string;
   description: string;
   coverImage: string | null;
-  category: string;
+  /** Yellow pill on the image (e.g. "Організатор"). */
   categoryLabel: string;
+  /** Blue pill in the content area (e.g. "Dreams branch of UWAA"). */
+  brandLabel: string;
   publishedAt: string | null;
 }
 
-function formatDate(dateStr: string | null, locale: string): string {
-  if (!dateStr) return '';
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(locale === 'ua' ? 'uk-UA' : 'en-AU', {
+const MONTHS_UA = [
+  'січня',
+  'лютого',
+  'березня',
+  'квітня',
+  'травня',
+  'червня',
+  'липня',
+  'серпня',
+  'вересня',
+  'жовтня',
+  'листопада',
+  'грудня',
+];
+
+function formatDate(iso: string | null, locale: string): string {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  if (locale === 'ua') {
+    return `${d.getDate()} ${MONTHS_UA[d.getMonth()]} ${d.getFullYear()}`;
+  }
+  return new Intl.DateTimeFormat('en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-  });
+  }).format(d);
 }
 
 export function NewsCard({
@@ -29,38 +51,61 @@ export function NewsCard({
   description,
   coverImage,
   categoryLabel,
+  brandLabel,
   publishedAt,
 }: NewsCardProps) {
   return (
-    <Link href={`/${locale}/news/${slug}`} className="card group flex flex-col">
-      {/* Image */}
-      <div className="relative aspect-4/3 bg-secondary-10">
+    <Link
+      href={`/${locale}/news/${slug}`}
+      className="group flex flex-col overflow-hidden rounded-2xl bg-white transition-shadow hover:shadow-md"
+    >
+      {/* ── Image with yellow category pill ─────────────────────── */}
+      <div className="relative aspect-[16/11] bg-grey-40">
         {coverImage ? (
-          <MaskedImage
+          <Image
             src={coverImage}
             alt={title}
-            className="h-full w-full"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
           />
         ) : (
-          <div className="flex h-full items-center justify-center rounded-[20px]">
-            <div className="h-14 w-14 rounded-full bg-secondary-40 opacity-60" />
-          </div>
+          <div className="absolute inset-0 bg-[repeating-conic-gradient(#e9e9ea_0%_25%,#f5f5f6_0%_50%)] bg-[length:32px_32px]" />
         )}
-        {/* Category badge */}
-        <span className="badge-active absolute bottom-3 left-3 z-10">
+        <span className="absolute bottom-4 left-4 inline-flex h-9 items-center justify-center rounded-full bg-primary px-5 text-body-sm font-medium text-text-strong">
           {categoryLabel}
         </span>
       </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <p className="text-body line-clamp-3 text-text-secondary">{description}</p>
-        {publishedAt && (
-          <p className="mt-auto text-caption text-text-secondary">
-            {formatDate(publishedAt, locale)}
-          </p>
-        )}
+      {/* ── Content ─────────────────────────────────────────────── */}
+      <div className="flex flex-1 flex-col gap-3 p-5 lg:p-6">
+        {/* Date */}
+        <p className="text-body-sm font-semibold text-secondary">
+          {formatDate(publishedAt, locale)}
+        </p>
+
+        {/* Brand pill */}
+        <div>
+          <span className="inline-flex h-9 items-center justify-center rounded-full bg-secondary px-5 text-body-sm font-medium text-white">
+            {brandLabel}
+          </span>
+        </div>
+
+        {/* Description preview */}
+        <p className="text-body-sm line-clamp-3 text-text-primary">
+          {description}
+        </p>
+
+        {/* Title row with arrow */}
+        <div className="mt-auto flex items-start justify-between gap-3 pt-1">
+          <h3 className="text-h3 font-semibold text-text-strong line-clamp-2">
+            {title}
+          </h3>
+          <ArrowRightUpIcon
+            size={24}
+            className="shrink-0 text-text-strong transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          />
+        </div>
       </div>
     </Link>
   );
