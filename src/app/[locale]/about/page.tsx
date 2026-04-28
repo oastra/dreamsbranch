@@ -250,7 +250,7 @@ export default async function Page({
                   {t("story.ch2_text_b")}
                 </p>
                 <div className="order-5 rounded-2xl bg-primary px-6 py-5">
-                  <p className="text-h3 font-medium text-text-strong">
+                  <p className="text-h3 text-center text-text-strong">
                     {t("story.ch2_highlight")}
                   </p>
                 </div>

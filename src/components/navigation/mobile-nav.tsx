@@ -1,8 +1,8 @@
 'use client';
 
+import { Mail } from 'lucide-react';
+import FacebookIcon from '@/components/icons/FacebookIcon';
 import { NavItem } from './nav-item';
-import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/routing';
 import type { Locale } from 'next-intl';
 
 interface MobileNavItem {
@@ -14,7 +14,6 @@ interface MobileNavItem {
 interface MobileNavProps {
   items: MobileNavItem[];
   currentLocale: Locale;
-  supportLabel: string;
   onLocaleSwitch: () => void;
   onClose: () => void;
   isActive: (href: string) => boolean;
@@ -23,7 +22,6 @@ interface MobileNavProps {
 export function MobileNav({
   items,
   currentLocale,
-  supportLabel,
   onLocaleSwitch,
   onClose,
   isActive,
@@ -32,7 +30,7 @@ export function MobileNav({
 
   return (
     <div className="lg:hidden border-t border-border bg-surface-primary">
-      <nav className="container-page py-4 space-y-1">
+      <nav className="container-page py-2">
         {items.map((item) => (
           <NavItem
             key={item.key}
@@ -40,23 +38,35 @@ export function MobileNav({
             label={item.label}
             isActive={isActive(item.href)}
             onClick={onClose}
-            className="block w-full px-4 py-3 rounded-lg"
+            className="block w-full px-4 py-4 border-b border-border"
           />
         ))}
 
-        <div className="pt-4 mt-4 border-t border-border flex items-center gap-3">
-          <Button
-            variant="outline"
-            size="sm"
+        <div className="pt-5 pb-4 flex items-center gap-3">
+          <button
+            type="button"
             onClick={() => { onLocaleSwitch(); onClose(); }}
+            aria-label={`Switch language to ${targetLocale}`}
+            className="h-10 min-w-10 px-3 rounded-full bg-secondary-10 text-text-strong text-body-sm font-bold uppercase transition-colors hover:bg-secondary hover:text-white"
           >
-            {targetLocale}
-          </Button>
-          <Link href="/campaigns" onClick={onClose} className="flex-1">
-            <Button variant="default" size="sm" className="rounded-full w-full">
-              {supportLabel}
-            </Button>
-          </Link>
+            {currentLocale}
+          </button>
+          <a
+            href="mailto:dreamsbranch@gmail.com"
+            className="flex-1 flex items-center gap-2 text-body text-text-strong hover:text-secondary transition-colors min-w-0"
+          >
+            <Mail className="w-5 h-5 shrink-0" />
+            <span className="truncate">dreamsbranch@gmail.com</span>
+          </a>
+          <a
+            href="https://www.facebook.com/profile.php?id=100092434277929"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 hover:bg-secondary-140 transition-colors"
+          >
+            <FacebookIcon className="w-5 h-5 text-white" />
+          </a>
         </div>
       </nav>
     </div>

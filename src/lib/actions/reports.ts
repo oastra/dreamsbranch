@@ -13,7 +13,8 @@ function toSnake(input: Record<string, unknown>) {
     description_en: input.descriptionEn ?? null,
     cover_image: input.coverImage ?? null,
     gallery_images: input.galleryImages ?? [],
-    pdf_url: input.pdfUrl || null,
+    pdf_url_ua: input.pdfUrlUa || null,
+    pdf_url_en: input.pdfUrlEn || null,
     status: (input.status as string).toLowerCase(),
   };
 }
@@ -26,6 +27,7 @@ export async function createReport(formData: unknown) {
   const result = await db.report.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create report' };
   revalidatePath('/admin/reports');
+  revalidatePath('/[locale]/reports', 'page');
   return { success: true, id: (result as Record<string, unknown>).id };
 }
 
@@ -37,6 +39,7 @@ export async function updateReport(id: string, formData: unknown) {
   const result = await db.report.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update report' };
   revalidatePath('/admin/reports');
+  revalidatePath('/[locale]/reports', 'page');
   return { success: true };
 }
 
@@ -44,5 +47,6 @@ export async function deleteReport(id: string) {
   await requireSuperAdmin();
   await db.report.delete({ where: { id } });
   revalidatePath('/admin/reports');
+  revalidatePath('/[locale]/reports', 'page');
   return { success: true };
 }

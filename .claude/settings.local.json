@@ -101,7 +101,27 @@
       "Bash(mkdir -p /tmp/figma_chunks)",
       "Bash(split -b 30000 \"/Users/olha_chernysh/.claude/projects/-Users-olha-chernysh-Documents-FREELANCE-Projects-dreams-branch-www-dreamsbranch/53fe1682-8079-4dbf-b9eb-697d4465672e/tool-results/mcp-figma-get_figma_data-1776493144074.txt\" /tmp/figma_chunks/chunk_)",
       "Bash(pandoc --track-changes=all \"/Users/olha_chernysh/Downloads/audio1700301311.docx\" -o /tmp/transcript.md)",
-      "Bash(unzip -l \"/Users/olha_chernysh/Downloads/Meeting_Minutes_Website_Structure_Review.docx\")"
+      "Bash(unzip -l \"/Users/olha_chernysh/Downloads/Meeting_Minutes_Website_Structure_Review.docx\")",
+      "Bash(grep -nA 40 \"^export.*interface Event\\\\|^export.*type Event\" /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/types/database.ts)",
+      "Bash(grep -nA 25 \"eventSchema\" /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/lib/validations.ts)",
+      "Bash(grep -nA 3 '\"events\":' /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/messages/en.json)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/ua/events)",
+      "Bash(ps -p 21333 -o pid,command)",
+      "Bash(curl -s -o /dev/null -w \"port 3000 -> %{http_code}\\\\n\" --max-time 5 http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"port 3001 -> %{http_code}\\\\n\" --max-time 5 http://localhost:3001/)",
+      "Bash(curl -s -I --max-time 5 http://localhost:3000/)",
+      "Bash(curl -sL --max-time 5 -o /dev/null -w \"Final: %{http_code} %{url_effective}\\\\n\" http://localhost:3000/)",
+      "Bash(kill 31615)",
+      "Bash(curl -s -o /dev/null -w \"UA: %{http_code}\\\\n\" http://localhost:3000/ua/reports)",
+      "Bash(curl -s -o /dev/null -w \"EN: %{http_code}\\\\n\" http://localhost:3000/en/reports)",
+      "Bash(curl -s http://localhost:3000/ua/reports)",
+      "Bash(awk 'NR<=272 && /^  \"/' messages/en.json)",
+      "Bash(curl -s -o /dev/null -w \"UA: %{http_code}\\\\nEN: %{http_code}\\\\n\" http://localhost:3000/ua/reports http://localhost:3000/en/reports)",
+      "Bash(curl -s \"http://localhost:3000/ua/reports?cb=$\\(date +%s\\)\")",
+      "Bash(curl -s \"http://localhost:3000/ua/about?cb=$\\(date +%s\\)\")",
+      "Bash(curl -s \"http://localhost:3000/ua/reports?cb=$\\(date +%s%N\\)\")",
+      "Bash(curl -s \"http://localhost:3000/ua?cb=$\\(date +%s%N\\)\")",
+      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./package.json'\\).scripts, null, 2\\)\\)\")"
     ]
   }
 }

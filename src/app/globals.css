@@ -60,7 +60,7 @@ body {
 }
 
 @utility text-body {
-  @apply text-[16px] leading-[120%] tracking-[0] font-normal lg:text-[20px];
+  @apply text-[16px] leading-[120%] tracking-[0] font-normal;
 }
 
 @utility text-body-sm {

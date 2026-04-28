@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
+import { FileUpload } from '@/components/admin/shared/file-upload';
 import { createReport, updateReport } from '@/lib/actions/reports';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +25,8 @@ export function ReportForm({ report }: { report?: Record<string, any> }) {
     descriptionUa: report?.description_ua ?? '',
     descriptionEn: report?.description_en ?? '',
     coverImage: report?.cover_image ?? '',
-    pdfUrl: report?.pdf_url ?? '',
+    pdfUrlUa: report?.pdf_url_ua ?? '',
+    pdfUrlEn: report?.pdf_url_en ?? '',
     status: report?.status ?? 'DRAFT',
   });
 
@@ -59,10 +61,23 @@ export function ReportForm({ report }: { report?: Record<string, any> }) {
             </Select>
           </div>
         </div>
-        <div>
-          <Label>PDF URL</Label>
-          <Input value={form.pdfUrl} onChange={e => set('pdfUrl', e.target.value)} placeholder="https://..." />
-          <p className="text-caption text-text-tertiary mt-1">Upload PDF to Supabase Storage and paste the public URL here</p>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FileUpload
+            value={form.pdfUrlUa}
+            onChange={url => set('pdfUrlUa', url ?? '')}
+            folder="reports/pdf"
+            label="Report PDF (UA)"
+            accept="application/pdf"
+            maxSizeMb={10}
+          />
+          <FileUpload
+            value={form.pdfUrlEn}
+            onChange={url => set('pdfUrlEn', url ?? '')}
+            folder="reports/pdf"
+            label="Report PDF (EN)"
+            accept="application/pdf"
+            maxSizeMb={10}
+          />
         </div>
         <ImageUpload value={form.coverImage} onChange={url => set('coverImage', url ?? '')} folder="reports" label="Cover image" />
       </div>

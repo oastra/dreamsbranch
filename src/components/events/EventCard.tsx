@@ -1,132 +1,90 @@
-import Link from 'next/link';
-import { MaskedImage } from '@/components/shared/MaskedImage';
+import Image from "next/image";
+import Link from "next/link";
+import ArrowRightUp from "../icons/ArrowRightUp";
 
 export interface EventCardProps {
   slug: string;
   locale: string;
   title: string;
+  subtitle?: string;
   coverImage: string | null;
-  eventDate: string;
-  startTime: string;
-  endTime: string | null;
-  location: string;
-  locationMapUrl: string | null;
   tags: string[];
   isArchived?: boolean;
   tagLabels: Record<string, string>;
-  dateTimeLabel: string;
-  locationLabel: string;
-  viewMapLabel: string;
-  learnMoreLabel: string;
-}
-
-function formatDate(dateStr: string, locale: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(locale === 'ua' ? 'uk-UA' : 'en-AU', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-}
-
-function formatTime(start: string, end: string | null): string {
-  if (end) return `${start} - ${end}`;
-  return start;
 }
 
 export function EventCard({
   slug,
   locale,
   title,
+  subtitle,
   coverImage,
-  eventDate,
-  startTime,
-  endTime,
-  location,
-  locationMapUrl,
   tags,
   isArchived = false,
   tagLabels,
-  dateTimeLabel,
-  locationLabel,
-  viewMapLabel,
-  learnMoreLabel,
 }: EventCardProps) {
   return (
-    <div className="card flex flex-col">
-      {/* Image */}
-      <div className="relative aspect-video bg-secondary-10">
-        {coverImage ? (
-          <MaskedImage
-            src={coverImage}
-            alt={title}
-            className="h-full w-full"
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
+    <Link
+      href={`/${locale}/events/${slug}`}
+      className="group flex h-full flex-col rounded-2xl bg-white p-4 transition-shadow hover:shadow-md"
+    >
+      <h3 className="text-h3 font-semibold text-text-strong">{title}</h3>
+      {subtitle && (
+        <p className="mt-1 line-clamp-2 text-body text-text-secondary">
+          {subtitle}
+        </p>
+      )}
+
+      {/* Tags — min-height reserves space for two rows so images align across cards */}
+      <div className="mt-4 flex min-h-[74px] flex-wrap content-start gap-2">
+        {isArchived ? (
+          <span className="inline-flex items-center rounded-full bg-grey-40 px-4 py-1.5 text-body-sm font-medium text-text-secondary">
+            {tagLabels.archived}
+          </span>
         ) : (
-          <div className="flex h-full items-center justify-center rounded-[20px]">
-            <div className="h-14 w-14 rounded-full bg-secondary-40 opacity-60" />
-          </div>
+          <>
+            <span className="inline-flex items-center rounded-full bg-[#3DC472] px-4 py-1.5 text-body-sm font-medium text-white">
+              {tagLabels.active}
+            </span>
+            {tags.includes("looking_for_partners") && (
+              <span className="inline-flex items-center rounded-full bg-secondary px-4 py-1.5 text-body-sm font-medium text-white">
+                {tagLabels.looking_for_partners}
+              </span>
+            )}
+            {tags.includes("looking_for_volunteers") && (
+              <span className="inline-flex items-center rounded-full bg-primary px-4 py-1.5 text-body-sm font-medium text-text-strong">
+                {tagLabels.looking_for_volunteers}
+              </span>
+            )}
+          </>
         )}
       </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col gap-3 p-4">
-        <h3 className="text-body line-clamp-2 font-medium text-text-strong">{title}</h3>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1.5">
-          {!isArchived && (
-            <span className="badge-active">{tagLabels.active}</span>
-          )}
-          {isArchived && (
-            <span className="badge-archived">{tagLabels.archive}</span>
-          )}
-          {tags.includes('looking_for_partners') && (
-            <span className="badge bg-accent-2 text-secondary">
-              {tagLabels.looking_for_partners}
-            </span>
-          )}
-          {tags.includes('looking_for_volunteers') && (
-            <span className="badge bg-accent-4 text-text-strong">
-              {tagLabels.looking_for_volunteers}
-            </span>
+      {/* Image with arrow overlay — mt-auto pins the image to the bottom for consistent alignment */}
+      <div className="relative mt-auto pt-5">
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-secondary-10">
+          {coverImage ? (
+            <Image
+              src={coverImage}
+              alt={title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center">
+              <div className="h-14 w-14 rounded-full bg-secondary-40 opacity-60" />
+            </div>
           )}
         </div>
 
-        {/* Date & Location */}
-        <div className="mt-auto space-y-2 text-body-sm text-text-secondary">
-          <div>
-            <span className="font-medium text-text-strong">{dateTimeLabel}: </span>
-            {formatDate(eventDate, locale)}, {formatTime(startTime, endTime)}
-          </div>
-          <div>
-            <span className="font-medium text-text-strong">{locationLabel}: </span>
-            {location}
-            {locationMapUrl && (
-              <>
-                {' '}
-                <a
-                  href={locationMapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-secondary underline"
-                >
-                  {viewMapLabel}
-                </a>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* CTA */}
-        <Link
-          href={`/${locale}/events/${slug}`}
-          className="mt-2 inline-flex w-full items-center justify-center rounded-full border border-border bg-white px-4 py-2 text-body font-medium text-text-strong transition-colors hover:bg-grey-40"
+        <span
+          aria-hidden
+          className="absolute right-3 top-5 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary/40 text-text-strong shadow-[0_4px_8px_0_rgba(0,68,143,0.15)] transition-colors group-hover:bg-secondary group-hover:text-white"
         >
-          {learnMoreLabel}
-        </Link>
+          <ArrowRightUp className="h-5 w-5" strokeWidth={1} />
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }

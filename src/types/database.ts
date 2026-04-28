@@ -116,7 +116,8 @@ export type Report = {
   description_en: string | null
   cover_image: string | null
   gallery_images: string[]
-  pdf_url: string | null
+  pdf_url_ua: string | null
+  pdf_url_en: string | null
   status: ReportStatus
   created_at: string
   updated_at: string

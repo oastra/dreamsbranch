@@ -34,7 +34,7 @@
       "active_campaigns": "Active campaigns",
       "events": "Community events",
       "support_title": "Support our activity",
-      "support_description": "We accept donations and sell goods and services — all proceeds support Ukraine and the Ukrainian community in Australia.",
+      "support_description": "We combine donations with the charitable sale of goods and services: from blankets, merch, and souvenirs from Ukraine to volunteer-made products and homemade treats — varenyky, cakes, sauces and more.\n\nWe also offer catering and individual food orders, so everyone can choose a convenient way to support the Armed Forces of Ukraine.",
       "donate": "Donate",
       "donate_desc": "One-time donation",
       "shop": "Shop",
@@ -99,17 +99,19 @@
     "title": "Community events",
     "description": "Here you can learn about our community projects.",
     "description_2": "As we grow closer, you will find a project close to your heart — one you can participate in as a volunteer or partner.",
-    "upcoming": "Upcoming events of the month",
+    "upcoming": "Upcoming events",
     "date_time": "Date and time",
     "location": "Location",
     "view_map": "View on map",
     "learn_more": "Learn more",
     "more_info": "More info",
+    "join": "Join us",
     "volunteer": "Join as volunteer",
     "all": "All events",
     "active": "Active",
-    "archive": "Archive",
+    "archive": "Archived",
     "tag_active": "Active",
+    "tag_archived": "Archived",
     "tag_looking_for_partners": "Looking for partners",
     "tag_looking_for_volunteers": "Looking for volunteers",
     "breadcrumb_home": "Home",
@@ -124,6 +126,8 @@
     "volunteer_cta_desc": "Fill out the form if you want to become a fund volunteer and join our projects. In return, you will find benefits for yourself that will be useful for others.",
     "volunteer_cta_btn": "I want to join",
     "more_events": "More events",
+    "show_more": "Show more",
+    "no_events": "No events found",
     "reports": "Reports",
     "we_raised": "We raised:",
     "profit": "Profit",
@@ -149,9 +153,26 @@
     "contact_description": "If you have questions, want to become a partner, or volunteer in our projects — fill out the form and we will get in touch."
   },
   "reports": {
+    "eyebrow": "Dreams branch of UWAA",
     "title": "Activity reports",
-    "description": "It is important that you see the results of our joint work.",
-    "details": "Details"
+    "description": "It is important that you see the results of our shared work. Everything we achieve year after year is made possible thanks to you — our partners, donors, benefactors, and volunteers, who invest their time, energy, and heart in helping those who need it most.",
+    "details": "Details",
+    "year_singular": "year",
+    "year_plural": "years",
+    "item_2025": {
+      "subtitle": "Annual report for 2025",
+      "description": "For the fourth year, Dreams branch of UWAA continues to do good work. And although 2025 has been a year of serious challenges, every day we did what we do best — supporting the soldiers of the Armed Forces of Ukraine, caring for their lives, recovery, and strength to keep going."
+    },
+    "item_2024": {
+      "subtitle": "Annual report for 2024",
+      "description": "The third year of Dreams branch of UWAA was dedicated to those who defend Ukraine. In 2024, we focused on procuring equipment, thermal imagers, and medical supplies that save soldiers' lives every day."
+    },
+    "item_2022_2023": {
+      "subtitle": "Annual report for 2022–2023",
+      "description": "Our first years were about the birth of a team, our first fundraisers, and our first major deliveries. In 2022–2023 we laid the foundation of what Dreams branch of UWAA is today: a community that acts consistently and with heart."
+    },
+    "contact_title": "Contact Us",
+    "contact_description": "If you have questions, want to become a partner, or volunteer in the foundation's projects — fill out the form and we will get in touch."
   },
   "contact": {
     "title": "Contact us",

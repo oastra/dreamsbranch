@@ -32,6 +32,8 @@ export function Header() {
 
   function switchLocale(target?: "ua" | "en") {
     const next = target ?? (currentLocale === "ua" ? "en" : "ua");
+    // Persist the user's manual choice so middleware honours it on next visit.
+    document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
     const pathWithoutLocale = pathname.replace(/^\/(en|ua)/, "") || "/";
     router.replace(pathWithoutLocale, { locale: next });
   }
@@ -48,11 +50,11 @@ export function Header() {
       <div className="container-page">
         <div className="flex items-center justify-between h-16 lg:h-22">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
+          <Link href="/" className="flex items-center gap-2 shrink min-w-0">
             <img
               src="/logo-blue.svg"
               alt="Dreams Branch"
-              className="w-70 h-10"
+              className="h-8 w-auto max-w-[180px] sm:max-w-[220px] lg:h-10 lg:max-w-none lg:w-70"
             />
           </Link>
 
@@ -103,19 +105,54 @@ export function Header() {
             </button>
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen((v) => !v)}
-            className="lg:hidden p-2 -mr-2"
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
+          {/* Mobile actions */}
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden shrink-0">
+            {/* Language chip — only when menu closed (drawer has its own) */}
+            {!mobileOpen && (
+              <button
+                type="button"
+                onClick={() => switchLocale()}
+                aria-label={`Switch language to ${currentLocale === "ua" ? "English" : "Ukrainian"}`}
+                className="h-9 w-9 sm:h-10 sm:min-w-10 sm:w-auto sm:px-3 rounded-full bg-secondary-10 text-text-strong text-body-sm font-bold uppercase transition-colors hover:bg-secondary hover:text-white"
+              >
+                {currentLocale}
+              </button>
             )}
-          </button>
+            {/* Cart — always visible (open or closed) */}
+            <button
+              aria-label="Cart"
+              className="w-9 h-9 sm:w-10 sm:h-10 bg-primary rounded-full flex items-center justify-center"
+            >
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
+            </button>
+            <button
+              onClick={() => setMobileOpen((v) => !v)}
+              className="w-9 h-9 sm:w-10 sm:h-10 bg-secondary-10 rounded-full flex items-center justify-center"
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? (
+                <X className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
+              ) : (
+                <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile support CTA — only when menu closed (drawer has its own) */}
+        {!mobileOpen && (
+          <div className="lg:hidden pb-3">
+            <Link href="/campaigns" className="block">
+              <Button
+                variant="default"
+                size="lg"
+                className="rounded-full w-full h-11"
+              >
+                {t("support")}
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Mobile menu */}
@@ -123,7 +160,6 @@ export function Header() {
         <MobileNav
           items={navItems}
           currentLocale={currentLocale}
-          supportLabel={t("support")}
           onLocaleSwitch={() => switchLocale()}
           onClose={() => setMobileOpen(false)}
           isActive={isActive}

@@ -31,10 +31,18 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
     locationMapUrl: event?.location_map_url ?? '',
     status: event?.status ?? 'DRAFT',
     volunteerCta: event?.volunteer_cta ?? false,
+    tags: (event?.tags ?? []) as string[],
   });
 
   function set(key: string, value: unknown) {
     setForm(f => ({ ...f, [key]: value }));
+  }
+
+  function toggleTag(tag: string) {
+    setForm(f => ({
+      ...f,
+      tags: f.tags.includes(tag) ? f.tags.filter(t => t !== tag) : [...f.tags, tag],
+    }));
   }
 
   function autoSlug(title: string) {
@@ -97,6 +105,42 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
           <Input value={form.slug} onChange={e => set('slug', e.target.value)} placeholder="event-name" required />
         </div>
         <ImageUpload value={form.coverImage} onChange={url => set('coverImage', url ?? '')} folder="events" label="Cover image" />
+
+        <div>
+          <Label>Tags</Label>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {[
+              { value: 'looking_for_partners', label: 'Looking for partners' },
+              { value: 'looking_for_volunteers', label: 'Looking for volunteers' },
+            ].map(tag => {
+              const active = form.tags.includes(tag.value);
+              return (
+                <button
+                  key={tag.value}
+                  type="button"
+                  onClick={() => toggleTag(tag.value)}
+                  className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+                    active
+                      ? 'border-secondary bg-secondary text-white'
+                      : 'border-border bg-white text-text-strong hover:bg-grey-40'
+                  }`}
+                >
+                  {tag.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={form.volunteerCta}
+            onChange={e => set('volunteerCta', e.target.checked)}
+            className="h-4 w-4 rounded border-border"
+          />
+          <span className="text-sm">Show volunteer CTA on event page</span>
+        </label>
       </div>
 
       <div className="bg-white rounded-xl border border-border p-6">

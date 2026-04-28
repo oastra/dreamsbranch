@@ -513,17 +513,8 @@ export default async function EventDetailPage({
                   locale={locale}
                   title={ev[titleKey]}
                   coverImage={ev.cover_image}
-                  eventDate={ev.event_date}
-                  startTime={ev.start_time}
-                  endTime={ev.end_time}
-                  location={ev.location}
-                  locationMapUrl={ev.location_map_url}
                   tags={ev.tags}
                   tagLabels={tagLabels}
-                  dateTimeLabel={t('events.date_time')}
-                  locationLabel={t('events.location')}
-                  viewMapLabel={t('events.view_map')}
-                  learnMoreLabel={t('events.learn_more')}
                 />
               ))}
             </div>

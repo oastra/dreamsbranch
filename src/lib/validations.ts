@@ -56,7 +56,8 @@ export const reportSchema = z.object({
   descriptionEn: z.string().optional(),
   coverImage: z.string().optional(),
   galleryImages: z.array(z.string()).optional(),
-  pdfUrl: z.string().url().optional().or(z.literal('')),
+  pdfUrlUa: z.string().url().optional().or(z.literal('')),
+  pdfUrlEn: z.string().url().optional().or(z.literal('')),
   status: z.enum(['DRAFT', 'PUBLISHED']).default('DRAFT'),
 });
 export type ReportInput = z.infer<typeof reportSchema>;
