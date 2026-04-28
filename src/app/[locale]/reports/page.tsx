@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import ReportIcon from "@/components/icons/ReportIcon";
 import { db } from "@/lib/db";
 import type { Report } from "@/types/database";
-import { SupportSection } from "@/components/home/SupportSection";
+import { SupportSection } from "@/components/shared/SupportSection";
 import { ContactSection } from "@/components/contact/ContactSection";
 
 type ReportItem = {

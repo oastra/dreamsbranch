@@ -141,6 +141,20 @@ export type FaqItem = {
   a_en: string
 }
 
+export type DeliveredItem = {
+  count: number
+  image: string
+  label_ua: string
+  label_en: string
+}
+
+export type CampaignsPageSettings = {
+  id: 1
+  hero_images: string[]
+  delivered_items: DeliveredItem[]
+  updated_at: string
+}
+
 export type AboutPageSettings = {
   id: 1
   hero_images: string[]
@@ -254,6 +268,12 @@ export type Database = {
         Row: AboutPageSettings
         Insert: Partial<Omit<AboutPageSettings, 'id'>>
         Update: Partial<Omit<AboutPageSettings, 'id'>>
+        Relationships: []
+      }
+      campaigns_page_settings: {
+        Row: CampaignsPageSettings
+        Insert: Partial<Omit<CampaignsPageSettings, 'id'>>
+        Update: Partial<Omit<CampaignsPageSettings, 'id'>>
         Relationships: []
       }
       admin_users: {

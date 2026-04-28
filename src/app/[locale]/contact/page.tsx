@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FacebookIcon from "@/components/icons/FacebookIcon";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
 
 export default async function Page({
   params,
@@ -18,12 +19,7 @@ export default async function Page({
       {/* Page header */}
       <section className="py-12 lg:py-16">
         <div className="container-page text-center">
-          <p className="text-body-sm mb-3 text-text-secondary">
-            Dreams branch of UWAA
-          </p>
-          <h1 className="text-display mb-6 text-[var(--color-secondary)]">
-            {t("title")}
-          </h1>
+          <PageHeroHeading title={t("title")} titleClassName="mb-title-gap" />
           <p className="text-secondary text-text-secondary mx-auto max-w-2xl">
             {t("description")}
           </p>

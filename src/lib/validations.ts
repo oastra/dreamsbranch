@@ -102,6 +102,19 @@ export const faqItemSchema = z.object({
   a_en: z.string().min(1, 'Answer (EN) is required'),
 });
 
+export const deliveredItemSchema = z.object({
+  count: z.coerce.number().int().min(0),
+  image: z.string().url('Image URL is required'),
+  label_ua: z.string().min(1, 'Label (UA) is required'),
+  label_en: z.string().min(1, 'Label (EN) is required'),
+});
+
+export const campaignsSettingsSchema = z.object({
+  heroImages: z.array(z.string().url()).min(1, 'At least 1 hero image is required'),
+  deliveredItems: z.array(deliveredItemSchema).max(3, 'At most 3 delivered cards'),
+});
+export type CampaignsSettingsInput = z.infer<typeof campaignsSettingsSchema>;
+
 export const aboutSettingsSchema = z.object({
   heroImages: z
     .array(z.string().url())

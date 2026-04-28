@@ -7,12 +7,12 @@ import {
   type CarouselSlide,
 } from "@/components/shared/MaskedImageCarousel";
 import { ReportsBanner } from "@/components/shared/ReportsBanner";
+import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { db } from "@/lib/db";
 import type { AboutPageSettings, FaqItem } from "@/types/database";
 
-const btnPrimary =
-  "inline-flex items-center justify-center rounded-full bg-secondary px-10 py-[14px] text-body font-medium text-white transition-colors duration-300 hover:text-primary";
+const btnPrimary = "btn-primary hover:text-primary";
 
 export default async function Page({
   params,
@@ -76,14 +76,10 @@ export default async function Page({
           <div className="grid grid-cols-1 items-stretch gap-10 py-12 lg:grid-cols-2 lg:py-16">
             {/* Left */}
             <div className="flex flex-col gap-6">
-              <div>
-                <p className="text-body-sm mb-3 text-text-strong">
-                  Dreams branch of UWAA
-                </p>
-                <h1 className="text-display mb-6 text-secondary">
-                  {t("hero.title")}
-                </h1>
-              </div>
+              <PageHeroHeading
+                title={t("hero.title")}
+                titleClassName="mb-title-gap"
+              />
               <p className="text-secondary text-text-secondary">
                 {t("hero.description_1")}
               </p>

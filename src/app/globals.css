@@ -75,6 +75,21 @@ body {
   @apply text-[12px] leading-[120%] tracking-[0] font-medium;
 }
 
+/* ---------- Button utilities (Figma spec: 280×54 on tablet/desktop) ---------- */
+
+@utility btn-primary {
+  @apply inline-flex h-[54px] w-[280px] max-w-full items-center justify-center rounded-full bg-secondary px-10 text-body font-medium text-white transition-colors duration-300 hover:opacity-90;
+}
+
+@utility btn-outline {
+  @apply inline-flex h-[54px] w-[280px] max-w-full items-center justify-center rounded-full border border-border bg-white px-10 text-body font-medium text-text-strong transition-colors duration-300 hover:bg-grey-40;
+}
+
+/* Title → subtitle / description gap. Figma: 24 / 32 / 40 (M / T / D). */
+@utility mb-title-gap {
+  @apply mb-6 md:mb-8 lg:mb-10;
+}
+
 /* ---------- Components ---------- */
 
 @layer components {
@@ -83,7 +98,7 @@ body {
   }
 
   .section {
-    @apply py-16 lg:py-24;
+    @apply py-[70px] md:py-[90px] lg:py-[100px];
   }
 
   .page-header {

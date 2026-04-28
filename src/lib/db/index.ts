@@ -425,6 +425,26 @@ export const db = {
     },
   },
 
+  // ── campaigns_page_settings (singleton row id=1) ──────────────────────────────
+  campaignsSetting: {
+    async findFirst() {
+      const sb = createAdminClient();
+      const { data } = await sb.from('campaigns_page_settings').select('*').eq('id', 1).single();
+      return data;
+    },
+
+    async update({ data }: { data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const { data: updated } = await sb
+        .from('campaigns_page_settings')
+        .update({ ...data, updated_at: new Date().toISOString() } as Partial<Omit<import('@/types/database').CampaignsPageSettings, 'id'>>)
+        .eq('id', 1)
+        .select()
+        .single();
+      return updated;
+    },
+  },
+
   // ── about_page_settings (singleton row id=1) ──────────────────────────────────
   aboutSetting: {
     async findFirst() {

@@ -34,7 +34,7 @@ export function ReportsBanner({
       </p>
       <Link
         href={ctaHref}
-        className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary px-10 py-[14px] text-body font-medium text-text-strong transition-opacity hover:opacity-90 lg:order-4"
+        className="inline-flex h-[54px] w-[280px] max-w-full shrink-0 items-center justify-center rounded-full bg-primary px-10 text-body font-medium text-text-strong transition-opacity hover:opacity-90 lg:order-4"
       >
         {ctaLabel}
       </Link>

@@ -226,7 +226,7 @@ export function EventsList({
               <button
                 type="button"
                 onClick={() => setVisible((v) => v + PAGE_SIZE)}
-                className="inline-flex items-center justify-center rounded-full bg-secondary px-10 py-3 text-body font-medium text-white transition-opacity hover:opacity-90"
+                className="btn-primary"
               >
                 {labels.showMore}
               </button>

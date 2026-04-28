@@ -3,9 +3,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { NewsCard } from '@/components/news/NewsCard';
 import { FeaturedNewsCard } from '@/components/news/FeaturedNewsCard';
-import { SupportSection } from '@/components/home/SupportSection';
+import { SupportSection } from '@/components/shared/SupportSection';
 import { ContactSection } from '@/components/contact/ContactSection';
 import SearchIcon from '@/components/icons/SearchIcon';
+import { PageHeroHeading } from '@/components/shared/PageHeroHeading';
 import type { NewsArticle } from '@/types/database';
 
 // ─── Mock data ───────────────────────────────────────────────────────────────
@@ -142,8 +143,11 @@ export default async function NewsPage({
       {/* ── Hero section ────────────────────────────────────────── */}
       <section className="bg-secondary py-12 text-center text-white lg:py-16">
         <div className="container-page">
-          <p className="text-body-sm mb-2 text-white/70">Dreams branch of UWAA</p>
-          <h1 className="text-display mb-4">{t('news.title')}</h1>
+          <PageHeroHeading
+            title={t('news.title')}
+            tone="dark"
+            titleClassName="mb-title-gap"
+          />
           <div className="relative mx-auto max-w-2xl">
             <p className="text-body text-white/80">
               {t('news.description')}

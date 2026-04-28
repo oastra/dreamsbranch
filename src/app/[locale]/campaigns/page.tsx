@@ -1,84 +1,133 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import Image from 'next/image';
-import Link from 'next/link';
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import Image from "next/image";
+import { db } from "@/lib/db";
+import { CampaignCard } from "@/components/campaigns/CampaignCard";
+import { ArchivedCampaignsList } from "@/components/campaigns/ArchivedCampaignsList";
+import { SupportSection } from "@/components/shared/SupportSection";
+import { ReportsBanner } from "@/components/shared/ReportsBanner";
+import { ContactSection } from "@/components/contact/ContactSection";
+import { MaskedImageCarousel } from "@/components/shared/MaskedImageCarousel";
+import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
+import type {
+  Campaign,
+  CampaignsPageSettings,
+  DeliveredItem,
+} from "@/types/database";
 
-import { db } from '@/lib/db';
-import { CampaignCard } from '@/components/campaigns/CampaignCard';
-import { TransparencyBanner } from '@/components/campaigns/TransparencyBanner';
-import { SupportSection } from '@/components/home/SupportSection';
-import { ContactSection } from '@/components/contact/ContactSection';
-import type { Campaign } from '@/types/database';
+const FALLBACK_HERO_SLIDES = [
+  "/images/fundaraising/backup-power-station-mobile-gadgets-charged-outdoor.webp",
+];
+
+// Background palette for delivered cards (cycled by index)
+const CARD_BGS = ["bg-accent-1", "bg-accent-3", "bg-accent-5"];
 
 // ─── Mock data (shown when Supabase returns no campaigns) ─────────────────────
 
 type CampaignPreview = Pick<
   Campaign,
-  'id' | 'slug' | 'title_ua' | 'title_en' | 'cover_image' | 'goal_amount' | 'current_amount' | 'status'
+  | "id"
+  | "slug"
+  | "title_ua"
+  | "title_en"
+  | "cover_image"
+  | "goal_amount"
+  | "current_amount"
+  | "status"
 >;
 
 const MOCK_ACTIVE: CampaignPreview[] = [
   {
-    id: 'mock-a1',
-    slug: 'recon-drone-93',
-    title_ua: 'Дрон-розвідник для 93-ї бригади',
-    title_en: 'Recon Drone for 93rd Brigade',
+    id: "mock-a1",
+    slug: "recon-drone-93",
+    title_ua: "Дрон-розвідник для 93-ї бригади",
+    title_en: "Recon Drone for 93rd Brigade",
     cover_image: null,
     goal_amount: 4000,
     current_amount: 800,
-    status: 'active',
+    status: "active",
   },
   {
-    id: 'mock-a2',
-    slug: 'ecoflow-power-station',
-    title_ua: 'Зарядна станція для підрозділу',
-    title_en: 'Power Station for Military Unit',
+    id: "mock-a2",
+    slug: "ecoflow-power-station",
+    title_ua: "Зарядна станція для підрозділу",
+    title_en: "Power Station for Military Unit",
     cover_image: null,
     goal_amount: 4000,
     current_amount: 800,
-    status: 'active',
+    status: "active",
   },
   {
-    id: 'mock-a3',
-    slug: 'field-hospital-inverter',
-    title_ua: 'Інвертор для польового госпіталю',
-    title_en: 'Inverter for Field Hospital',
+    id: "mock-a3",
+    slug: "field-hospital-inverter",
+    title_ua: "Інвертор для польового госпіталю",
+    title_en: "Inverter for Field Hospital",
     cover_image: null,
     goal_amount: 4000,
     current_amount: 800,
-    status: 'active',
+    status: "active",
   },
 ];
 
 const MOCK_ARCHIVED: CampaignPreview[] = [
   {
-    id: 'mock-r1',
-    slug: 'evacuation-straps',
-    title_ua: 'Стропи для евакуаційної машини',
-    title_en: 'Recovery Straps for Evacuation Vehicle',
+    id: "mock-r1",
+    slug: "evacuation-straps",
+    title_ua: "Стропи для евакуаційної машини",
+    title_en: "Recovery Straps for Evacuation Vehicle",
     cover_image: null,
     goal_amount: 3700,
     current_amount: 4070,
-    status: 'archived',
+    status: "archived",
   },
   {
-    id: 'mock-r2',
-    slug: 'thermal-imager',
-    title_ua: 'Тепловізор для розвідки',
-    title_en: 'Thermal Imager for Reconnaissance',
+    id: "mock-r2",
+    slug: "thermal-imager",
+    title_ua: "Тепловізор для розвідки",
+    title_en: "Thermal Imager for Reconnaissance",
     cover_image: null,
     goal_amount: 5000,
     current_amount: 5250,
-    status: 'archived',
+    status: "archived",
   },
   {
-    id: 'mock-r3',
-    slug: 'medical-kits',
-    title_ua: 'Медичне спорядження для батальйону',
-    title_en: 'Medical Kits for Battalion',
+    id: "mock-r3",
+    slug: "medical-kits",
+    title_ua: "Медичне спорядження для батальйону",
+    title_en: "Medical Kits for Battalion",
     cover_image: null,
     goal_amount: 2500,
     current_amount: 2500,
-    status: 'archived',
+    status: "archived",
+  },
+  {
+    id: "mock-r4",
+    slug: "winter-uniforms",
+    title_ua: "Зимова форма для бійців",
+    title_en: "Winter Uniforms for Soldiers",
+    cover_image: null,
+    goal_amount: 6000,
+    current_amount: 6200,
+    status: "archived",
+  },
+  {
+    id: "mock-r5",
+    slug: "drone-batteries",
+    title_ua: "Акумулятори для дронів",
+    title_en: "Batteries for Drones",
+    cover_image: null,
+    goal_amount: 1800,
+    current_amount: 1800,
+    status: "archived",
+  },
+  {
+    id: "mock-r6",
+    slug: "field-kitchen",
+    title_ua: "Польова кухня",
+    title_en: "Field Kitchen",
+    cover_image: null,
+    goal_amount: 4500,
+    current_amount: 4500,
+    status: "archived",
   },
 ];
 
@@ -93,85 +142,136 @@ export default async function CampaignsPage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
 
-  // Fetch campaigns from Supabase, fall back to mock data if empty or on error
+  // Fetch campaigns + page settings from Supabase, fall back to mock/default if empty or on error
   let active: CampaignPreview[] = [];
   let archived: CampaignPreview[] = [];
+  let pageSettings: CampaignsPageSettings | null = null;
 
   try {
-    const [fetchedActive, fetchedArchived] = await Promise.all([
-      db.campaign.findMany({ where: { status: 'ACTIVE' } }),
-      db.campaign.findMany({ where: { status: 'ARCHIVED' } }),
-    ]);
+    const [fetchedActive, fetchedArchived, fetchedSettings] = await Promise.all(
+      [
+        db.campaign.findMany({ where: { status: "ACTIVE" } }),
+        db.campaign.findMany({ where: { status: "ARCHIVED" } }),
+        db.campaignsSetting.findFirst(),
+      ],
+    );
     active = fetchedActive as CampaignPreview[];
     archived = fetchedArchived as CampaignPreview[];
+    pageSettings = fetchedSettings as CampaignsPageSettings | null;
   } catch {
-    // DB not reachable — use mock data
+    // DB not reachable — use mock/default data
   }
 
   if (active.length === 0) active = MOCK_ACTIVE;
   if (archived.length === 0) archived = MOCK_ARCHIVED;
 
-  // Stats
-  const totalRaised = [...active, ...archived].reduce(
-    (sum, c) => sum + Number(c.current_amount),
-    0,
-  );
-  const totalHelped = Math.round(totalRaised / 50); // rough approximation
+  const heroSlides =
+    pageSettings && pageSettings.hero_images.length > 0
+      ? pageSettings.hero_images.map((src) => ({ src, alt: "" }))
+      : FALLBACK_HERO_SLIDES.map((src) => ({ src, alt: "" }));
+
+  const dbDelivered = pageSettings?.delivered_items ?? [];
+  const fallbackDelivered: DeliveredItem[] = [
+    {
+      count: 6,
+      image: "/images/fundaraising/car.webp",
+      label_ua: t("campaigns.delivered_cars"),
+      label_en: t("campaigns.delivered_cars"),
+    },
+    {
+      count: 10,
+      image: "/images/fundaraising/thermal-camera.webp",
+      label_ua: t("campaigns.delivered_thermal"),
+      label_en: t("campaigns.delivered_thermal"),
+    },
+    {
+      count: 115,
+      image: "/images/fundaraising/tourniquet.webp",
+      label_ua: t("campaigns.delivered_tourniquets"),
+      label_en: t("campaigns.delivered_tourniquets"),
+    },
+  ];
+  const deliveredSource =
+    dbDelivered.length > 0 ? dbDelivered : fallbackDelivered;
+  const deliveredItems = deliveredSource.slice(0, 3).map((it, i) => ({
+    count: it.count,
+    image: it.image,
+    label: locale === "ua" ? it.label_ua : it.label_en,
+    bg: CARD_BGS[i % CARD_BGS.length],
+  }));
 
   const cardProps = {
     locale,
-    raisedLabel: t('campaigns.raised'),
-    goalLabel: t('campaigns.goal'),
-    donateBtnLabel: t('campaigns.donate_btn'),
+    raisedLabel: t("campaigns.raised"),
+    goalLabel: t("campaigns.goal"),
+    donateBtnLabel: t("campaigns.donate_btn"),
   };
 
-  const titleKey = locale === 'ua' ? 'title_ua' : 'title_en';
+  const titleKey = locale === "ua" ? "title_ua" : "title_en";
 
   return (
     <>
       {/* ── Page hero ────────────────────────────────────────────── */}
-      <section className="bg-white py-12 lg:py-16">
+      <section className="py-8 sm:py-12 lg:py-16">
         <div className="container-page">
-          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
-            {/* Left: text */}
-            <div>
-              <p className="text-body-sm mb-2 text-text-secondary">Dreams branch of UWAA</p>
-              <h1 className="text-display mb-4 text-secondary">{t('campaigns.title')}</h1>
-              <p className="text-body mb-8 max-w-xl text-text-secondary">
-                {t('campaigns.description')}
-              </p>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-stretch lg:gap-12 xl:gap-16">
+            {/* Eyebrow + title — centered on mobile/tablet, left-aligned on desktop */}
+            <PageHeroHeading
+              title={t("campaigns.title")}
+              className="text-center lg:col-start-1 lg:row-start-1 lg:self-end lg:text-left"
+              titleClassName="mb-title-gap"
+            />
 
-              {/* Stats badges */}
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-3 rounded-xl bg-primary px-5 py-3">
-                  <span className="text-caption uppercase tracking-wide text-text-strong/70">
-                    {t('campaigns.stats_raised')}
-                  </span>
-                  <span className="text-h3 font-medium text-text-strong">
-                    ${totalRaised.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 rounded-xl bg-secondary px-5 py-3">
-                  <span className="text-caption uppercase tracking-wide text-white/70">
-                    {t('campaigns.stats_helped')}
-                  </span>
-                  <span className="text-h3 font-medium text-white">
-                    {totalHelped.toLocaleString()} {locale === 'ua' ? 'людям' : 'people'}
-                  </span>
-                </div>
-              </div>
+            {/* Carousel — aspect-ratio on mobile, fills the left-column height on desktop */}
+            <div className="aspect-[716/500] lg:aspect-auto lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full">
+              <MaskedImageCarousel
+                slides={heroSlides}
+                aspectRatio={null}
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="h-full"
+              />
             </div>
 
-            {/* Right: hero image */}
-            <div className="relative aspect-4/3 overflow-hidden rounded-2xl">
-              <Image
-                src="/images/fundaraising/backup-power-station-mobile-gadgets-charged-outdoor.webp"
-                alt={t('campaigns.title')}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+            {/* Description + recently delivered */}
+            <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
+              <p className="text-body mb-6 max-w-xl whitespace-pre-line text-text-primary lg:mb-8">
+                {t("campaigns.description")}
+              </p>
+
+              <p className="text-body-sm mb-3 font-semibold uppercase tracking-wide text-text-strong">
+                {t("campaigns.recently_delivered")}
+              </p>
+
+              {/* Cards: horizontal scroll on mobile, 3-col grid on tablet+ */}
+              <div className="-mx-5 flex gap-3 overflow-x-auto px-5 pb-1 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0">
+                {deliveredItems.map((item) => (
+                  <div
+                    key={item.label}
+                    className={`relative h-[193px] w-[220px] shrink-0 overflow-hidden rounded-2xl ${item.bg} sm:h-[192px] sm:w-full sm:max-w-[183px] lg:max-w-[196px]`}
+                  >
+                    {/* Image fills the card (above the bottom label strip) */}
+                    <div className="absolute inset-x-0 top-0 bottom-12">
+                      <Image
+                        src={item.image}
+                        alt=""
+                        fill
+                        sizes="(max-width: 640px) 220px, (max-width: 1024px) 183px, 196px"
+                        className="object-contain p-2 pl-10 sm:pl-12 lg:pl-14"
+                      />
+                    </div>
+
+                    {/* Number — top-left, overlays the image */}
+                    <span className="absolute left-3 top-2 z-10 text-[36px] font-semibold leading-none text-text-strong sm:left-4 sm:top-3 sm:text-[40px] lg:text-[44px]">
+                      {item.count}
+                    </span>
+
+                    {/* Bottom label strip — full-width, 48px tall */}
+                    <div className="absolute inset-x-0 bottom-0 flex h-12 items-center justify-center bg-secondary text-body font-medium text-white">
+                      {item.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -180,7 +280,9 @@ export default async function CampaignsPage({
       {/* ── Active campaigns ─────────────────────────────────────── */}
       <section className="section">
         <div className="container-page">
-          <h2 className="text-h2 mb-8 text-text-strong">{t('campaigns.active')}</h2>
+          <h2 className="text-h2 mb-8 text-text-strong">
+            {t("campaigns.active")}
+          </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {active.map((c) => (
               <CampaignCard
@@ -198,42 +300,35 @@ export default async function CampaignsPage({
       </section>
 
       {/* ── Transparency banner ──────────────────────────────────── */}
-      <TransparencyBanner
-        title={t('campaigns.transparency_title')}
-        description={t('campaigns.transparency_description')}
-        cta={t('campaigns.transparency_cta')}
-        locale={locale}
-      />
+      <section className="section">
+        <div className="container-page">
+          <ReportsBanner
+            title={t("campaigns.transparency_title")}
+            description={t("campaigns.transparency_description")}
+            ctaLabel={t("campaigns.transparency_cta")}
+            ctaHref={`/${locale}/reports`}
+          />
+        </div>
+      </section>
 
       {/* ── Archived campaigns ───────────────────────────────────── */}
       <section className="section">
         <div className="container-page">
-          <h2 className="text-h2 mb-8 text-text-strong">{t('campaigns.archived')}</h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {archived.slice(0, 3).map((c) => (
-              <CampaignCard
-                key={c.id}
-                slug={c.slug}
-                title={c[titleKey]}
-                coverImage={c.cover_image}
-                goalAmount={Number(c.goal_amount)}
-                currentAmount={Number(c.current_amount)}
-                isArchived
-                {...cardProps}
-              />
-            ))}
-          </div>
-
-          {archived.length > 3 && (
-            <div className="mt-10 flex justify-center">
-              <Link
-                href={`/${locale}/campaigns/archive`}
-                className="inline-flex items-center justify-center rounded-full border border-border bg-white px-10 py-2.5 text-body font-medium text-text-strong transition-colors hover:bg-grey-40"
-              >
-                {t('campaigns.more')}
-              </Link>
-            </div>
-          )}
+          <h2 className="text-h2 mb-8 text-text-strong">
+            {t("campaigns.archived")}
+          </h2>
+          <ArchivedCampaignsList
+            campaigns={archived.map((c) => ({
+              id: c.id,
+              slug: c.slug,
+              title: c[titleKey],
+              coverImage: c.cover_image,
+              goalAmount: Number(c.goal_amount),
+              currentAmount: Number(c.current_amount),
+            }))}
+            cardProps={cardProps}
+            moreLabel={t("campaigns.more")}
+          />
         </div>
       </section>
 
@@ -242,8 +337,8 @@ export default async function CampaignsPage({
 
       {/* ── Contact form (reusable) ──────────────────────────────── */}
       <ContactSection
-        title={t('campaigns.contact_title')}
-        description={t('campaigns.contact_description')}
+        title={t("campaigns.contact_title")}
+        description={t("campaigns.contact_description")}
       />
     </>
   );

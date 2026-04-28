@@ -2,12 +2,13 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { db } from "@/lib/db";
 import { EventsList, type EventListItem } from "@/components/events/EventsList";
-import { SupportSection } from "@/components/home/SupportSection";
+import { SupportSection } from "@/components/shared/SupportSection";
 import { ContactSection } from "@/components/contact/ContactSection";
 import {
   MaskedImageCarousel,
   type CarouselSlide,
 } from "@/components/shared/MaskedImageCarousel";
+import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
 import type { Event } from "@/types/database";
 
 // ─── Mock data (shown when Supabase returns no events) ──────────────────────
@@ -413,16 +414,12 @@ export default async function EventsPage({
       {/* ── Page hero ────────────────────────────────────────────── */}
       <section className="bg-white py-8 lg:py-16">
         <div className="container-page">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-center lg:gap-10">
+          <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2 lg:items-center lg:gap-10">
             {/* Title — centered on mobile/tablet, left in left column on desktop */}
-            <div className="text-center lg:col-start-1 lg:row-start-1 lg:text-left">
-              <p className="text-body-sm mb-2 text-text-strong">
-                Dreams branch of UWAA
-              </p>
-              <h1 className="text-display text-secondary lg:mb-2">
-                {t("events.title")}
-              </h1>
-            </div>
+            <PageHeroHeading
+              title={t("events.title")}
+              className="text-center lg:col-start-1 lg:row-start-1 lg:text-left"
+            />
 
             {/* First paragraph — appears below title; col 1 row 2 on desktop */}
             <p className="text-body text-text-secondary lg:col-start-1 lg:row-start-2 lg:max-w-xl">

@@ -1,5 +1,6 @@
 
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { PageHeroHeading } from '@/components/shared/PageHeroHeading';
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -10,8 +11,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
     <>
       <section className="page-header">
         <div className="container-page">
-          <p className="text-body-sm mb-2 text-white/70">Dreams branch of UWAA</p>
-          <h1 className="text-display">{t('nav.shop')}</h1>
+          <PageHeroHeading title={t('nav.shop')} tone="dark" />
         </div>
       </section>
       <section className="section">
