@@ -1,16 +1,16 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { Link, useRouter } from "@/i18n/routing";
 import { useState } from "react";
 import FacebookIcon from "@/components/icons/FacebookIcon";
-import { Menu, X, ShoppingCart, ShoppingBag } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { NavItem } from "@/components/navigation/nav-item";
 import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { MobileNav } from "@/components/navigation/mobile-nav";
 import { Button } from "@/components/ui/button";
-import ShoppingBasketIcon from "../icons/ShoppingBasketIcon";
 
 const NAV_ITEMS = [
   { key: "about", href: "/about" },
@@ -51,9 +51,12 @@ export function Header() {
         <div className="flex items-center justify-between h-16 lg:h-22">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink min-w-0">
-            <img
+            <Image
               src="/logo-blue.svg"
               alt="Dreams Branch"
+              width={280}
+              height={40}
+              priority
               className="h-8 w-auto max-w-[180px] sm:max-w-[220px] lg:h-10 lg:max-w-none lg:w-70"
             />
           </Link>

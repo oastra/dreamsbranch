@@ -234,7 +234,7 @@ body {
   content: "";
   position: absolute;
   border-radius: 50%;
-  background: var(--ripple-color, theme(colors.primary));
+  background: var(--ripple-color, var(--color-primary));
   width: calc(var(--ripple-r, 120px) * 2);
   height: calc(var(--ripple-r, 120px) * 2);
   left: var(--ripple-x, 50%);

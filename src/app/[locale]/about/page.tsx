@@ -98,7 +98,7 @@ export default async function Page({
             </div>
 
             {/* Right: hero carousel — fills column fully */}
-            <div className="relative min-h-[400px] w-full lg:min-h-0">
+            <div className="relative min-h-100 w-full lg:min-h-0">
               <MaskedImageCarousel
                 slides={heroSlides}
                 aspectRatio={null}
@@ -174,7 +174,7 @@ export default async function Page({
             aspectRatio="1280/540"
             sizes="100vw"
             masked={false}
-            className="mx-auto max-w-[1280px]"
+            className="mx-auto max-w-7xl"
           />
         </div>
       </section>
@@ -206,7 +206,7 @@ export default async function Page({
                   {t("story.ch1_highlight")}
                 </p>
               </div>
-              <div className="relative min-h-[280px] overflow-hidden rounded-2xl">
+              <div className="relative min-h-70 overflow-hidden rounded-2xl">
                 <Image
                   src="/images/about/form-beginning.webp"
                   alt={t("story.ch1_title")}
@@ -220,7 +220,7 @@ export default async function Page({
             {/* Chapter 2 — desktop: images left | text right. Mobile: heading, text_a, images, text_b, highlight */}
             <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-6">
               <div className="order-3 grid grid-cols-2 gap-4 lg:order-1 lg:self-stretch">
-                <div className="relative aspect-[1/1] overflow-hidden rounded-2xl lg:aspect-auto">
+                <div className="relative aspect-square overflow-hidden rounded-2xl lg:aspect-auto">
                   <Image
                     src="/images/about/from-beginning-1.webp"
                     alt={t("story.ch2_title")}
@@ -229,7 +229,7 @@ export default async function Page({
                     sizes="(max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
-                <div className="relative aspect-[1/1] overflow-hidden rounded-2xl lg:aspect-auto">
+                <div className="relative aspect-square overflow-hidden rounded-2xl lg:aspect-auto">
                   <Image
                     src="/images/about/from-beginning-2.webp"
                     alt={t("story.ch2_title")}
@@ -279,7 +279,7 @@ export default async function Page({
                   </p>
                 </div>
               </div>
-              <div className="order-2 relative aspect-[16/9] overflow-hidden rounded-2xl lg:order-2 lg:aspect-auto lg:min-h-[400px] lg:self-stretch">
+              <div className="order-2 relative aspect-video overflow-hidden rounded-2xl lg:order-2 lg:aspect-auto lg:min-h-100 lg:self-stretch">
                 <Image
                   src="/images/about/from-beginning-3.webp"
                   alt={t("story.ch3_title_a")}
@@ -292,7 +292,7 @@ export default async function Page({
 
             {/* Chapter 4 — desktop: image left | text right. Mobile: heading, image, 3 paragraphs */}
             <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-6">
-              <div className="order-2 relative aspect-[16/9] overflow-hidden rounded-2xl lg:order-1 lg:aspect-auto lg:min-h-[400px] lg:self-stretch">
+              <div className="order-2 relative aspect-video overflow-hidden rounded-2xl lg:order-1 lg:aspect-auto lg:min-h-100 lg:self-stretch">
                 <Image
                   src="/images/about/from-beginning-4.webp"
                   alt={t("story.ch4_title")}
@@ -338,7 +338,7 @@ export default async function Page({
                   </p>
                 </div>
               </div>
-              <div className="order-2 relative aspect-[16/9] overflow-hidden rounded-2xl lg:order-2 lg:aspect-auto lg:min-h-[400px] lg:self-stretch">
+              <div className="order-2 relative aspect-video overflow-hidden rounded-2xl lg:order-2 lg:aspect-auto lg:min-h-100 lg:self-stretch">
                 <Image
                   src="/images/about/from-beginning-5.webp"
                   alt={t("story.ch5_title")}

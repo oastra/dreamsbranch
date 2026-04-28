@@ -2,7 +2,6 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import CursorDonateIcon from "@/components/icons/CursorDonateIcon";
-import ShopBasketIcon from "@/components/icons/ShopBasketIcon";
 import BasketDonateIcon from "@/components/icons/BasketDonateIcon";
 import LotteryIcon from "@/components/icons/LotteryIcon";
 import Support2Icon from "@/components/icons/Support2Icon";
@@ -40,7 +39,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
           {/* Підписка — col 1 row 1 on every breakpoint */}
           <Link
             href={`/${locale}/contact`}
-            className={`${tileBase} bg-accent-1 hover:bg-[#fbdc4f] min-h-[180px] lg:min-h-0`}
+            className={`${tileBase} bg-accent-1 hover:bg-[#fbdc4f] min-h-45 lg:min-h-0`}
           >
             <h3 className={titleCls}>{t("subscription")}</h3>
             <p className={descCls}>{t("subscription_desc")}</p>
@@ -60,7 +59,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
           {/* Донат — base/md: row 1 col 2.  lg: col 1 row 2. */}
           <Link
             href={`/${locale}/campaigns`}
-            className={`${tileBase} bg-accent-2 hover:bg-[#9AC9FF] min-h-[180px] lg:min-h-0`}
+            className={`${tileBase} bg-accent-2 hover:bg-[#9AC9FF] min-h-45 lg:min-h-0`}
           >
             <h3 className={titleCls}>{t("donate")}</h3>
             <p className={descCls}>{t("donate_desc")}</p>
@@ -70,7 +69,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
           {/* Магазин — base: full-width row.  md: col 1 row-span 2.  lg: cols 2-3 row 2. */}
           <Link
             href={`/${locale}/shop`}
-            className={`${tileBase} bg-accent-3 hover:bg-[#9AF3A2] col-span-2 min-h-[180px] md:col-span-1 md:row-span-2 lg:col-span-2 lg:row-span-1 lg:min-h-0`}
+            className={`${tileBase} bg-accent-3 hover:bg-[#9AF3A2] col-span-2 min-h-45 md:col-span-1 md:row-span-2 lg:col-span-2 lg:row-span-1 lg:min-h-0`}
           >
             <h3 className={titleCls}>{t("shop")}</h3>
             <p className={descCls}>{t("shop_desc")}</p>
@@ -82,7 +81,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
             {/* Діями */}
             <Link
               href={`/${locale}/contact`}
-              className={`${tileBase} bg-accent-4 hover:bg-[#EE9FE4] min-h-[180px] lg:min-h-0 lg:flex-1`}
+              className={`${tileBase} bg-accent-4 hover:bg-[#EE9FE4] min-h-45 lg:min-h-0 lg:flex-1`}
             >
               <h3 className={titleCls}>{t("volunteer")}</h3>
               <p className={descCls}>{t("volunteer_desc")}</p>
@@ -92,7 +91,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
             {/* Аукціон та лотерея */}
             <Link
               href={`/${locale}/events`}
-              className={`${tileBase} bg-accent-5 hover:bg-[#C2C5FF] min-h-[180px] lg:min-h-0 lg:flex-1`}
+              className={`${tileBase} bg-accent-5 hover:bg-[#C2C5FF] min-h-45 lg:min-h-0 lg:flex-1`}
             >
               <h3 className={titleCls}>{t("auction")}</h3>
               <p className={descCls}>{t("auction_desc")}</p>

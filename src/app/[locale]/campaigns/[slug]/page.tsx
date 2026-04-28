@@ -6,7 +6,6 @@ import React from 'react';
 
 import { db } from '@/lib/db';
 import { CampaignCard } from '@/components/campaigns/CampaignCard';
-import { ShareSection } from '@/components/shared/ShareSection';
 import FacebookColorIcon from '@/components/icons/FacebookIcon-color';
 import InstagramColorIcon from '@/components/icons/InstagramIcon-color';
 import WhatsAppIcon from '@/components/icons/WhatsAppIcon';
@@ -245,7 +244,7 @@ export default async function CampaignDetailPage({
               </p>
             </div>
             {/* Right: cover image */}
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-white">
+            <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-white">
               {campaign.cover_image ? (
                 <Image src={campaign.cover_image} alt={title} fill className="object-cover" priority sizes="(max-width: 1024px) 100vw, 50vw" />
               ) : (

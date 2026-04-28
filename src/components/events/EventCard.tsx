@@ -62,7 +62,7 @@ export function EventCard({
 
       {/* Image with arrow overlay — mt-auto pins the image to the bottom for consistent alignment */}
       <div className="relative mt-auto pt-5">
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-secondary-10">
+        <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl bg-secondary-10">
           {coverImage ? (
             <Image
               src={coverImage}

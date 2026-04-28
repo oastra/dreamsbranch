@@ -137,7 +137,7 @@ export default async function Page({
                   className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-12"
                 >
                   <div
-                    className={`relative aspect-[16/11] w-full overflow-hidden rounded-2xl bg-grey-40 ${
+                    className={`relative aspect-16/11 w-full overflow-hidden rounded-2xl bg-grey-40 ${
                       imageRightOnDesktop ? "lg:order-2" : "lg:order-1"
                     }`}
                   >

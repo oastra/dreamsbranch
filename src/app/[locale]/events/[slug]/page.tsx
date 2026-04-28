@@ -334,7 +334,7 @@ export default async function EventDetailPage({
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.2fr]">
             {/* Left: event image */}
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-secondary-10">
+            <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-secondary-10">
               {event.cover_image ? (
                 <Image
                   src={event.cover_image}
@@ -390,7 +390,7 @@ export default async function EventDetailPage({
             <div className="overflow-hidden rounded-[40px] bg-secondary">
               <div className="grid grid-cols-1 items-center lg:grid-cols-[1fr_1.5fr]">
                 {/* Image */}
-                <div className="relative min-h-[200px] lg:min-h-[280px]">
+                <div className="relative min-h-[200px] lg:min-h-70">
                   <Image
                     src="/images/events/events.webp"
                     alt={t('events.volunteer_cta_title')}
@@ -437,7 +437,7 @@ export default async function EventDetailPage({
                       ))}
                     </div>
                   ) : (
-                    <div className="flex aspect-[4/3] items-center justify-center rounded-xl bg-secondary-10">
+                    <div className="flex aspect-4/3 items-center justify-center rounded-xl bg-secondary-10">
                       <div className="h-16 w-16 rounded-full bg-secondary-40 opacity-60" />
                     </div>
                   )}

@@ -53,12 +53,10 @@ export function EventsList({
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [monthOffset, setMonthOffset] = useState(0);
 
-  const now = new Date();
-  const selectedMonth = new Date(
-    now.getFullYear(),
-    now.getMonth() + monthOffset,
-    1,
-  );
+  const selectedMonth = useMemo(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
+  }, [monthOffset]);
   const localeTag = locale === 'ua' ? 'uk-UA' : 'en-AU';
   const monthLabelFull = selectedMonth.toLocaleDateString(localeTag, {
     month: 'long',

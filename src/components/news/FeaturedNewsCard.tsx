@@ -27,7 +27,7 @@ export function FeaturedNewsCard({
     <div className="card overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2">
         {/* Image */}
-        <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[360px]">
+        <div className="relative aspect-4/3 md:aspect-auto md:min-h-[360px]">
           {coverImage ? (
             <Image
               src={coverImage}

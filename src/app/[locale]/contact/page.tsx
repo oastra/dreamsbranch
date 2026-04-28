@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import Image from "next/image";
 import Link from "next/link";
 import FacebookIcon from "@/components/icons/FacebookIcon";
 import { ContactForm } from "@/components/contact/ContactForm";
@@ -62,11 +63,13 @@ export default async function Page({
                 </Link>
               </div>
 
-              <div className="mt-2 overflow-hidden rounded-2xl">
-                <img
+              <div className="relative mt-2 aspect-4/3 overflow-hidden rounded-2xl">
+                <Image
                   src="/images/contact/contact-photo.webp"
                   alt="Dreams Branch of UWAA team"
-                  className="h-full w-full object-cover"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  className="object-cover"
                 />
               </div>
             </div>

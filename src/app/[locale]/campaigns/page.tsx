@@ -163,7 +163,7 @@ export default async function CampaignsPage({
             </div>
 
             {/* Right: hero image */}
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+            <div className="relative aspect-4/3 overflow-hidden rounded-2xl">
               <Image
                 src="/images/fundaraising/backup-power-station-mobile-gadgets-charged-outdoor.webp"
                 alt={t('campaigns.title')}

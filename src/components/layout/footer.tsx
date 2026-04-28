@@ -1,4 +1,6 @@
 "use client";
+import Image from "next/image";
+import NextLink from "next/link";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
@@ -18,10 +20,12 @@ export function Footer() {
         {/* Top row: Logo + Back to top */}
         <div className="flex items-center justify-between mb-10">
           <Link href="/" className="shrink-0">
-            <img
+            <Image
               src="/logo-white.svg"
               alt="Dreams Branch of UWAA"
-              className="h-10"
+              width={140}
+              height={40}
+              className="h-10 w-auto"
             />
           </Link>
           <button
@@ -159,13 +163,13 @@ export function Footer() {
               </a>{" "}
               | All Rights Reserved
             </p>
-            <a
+            <NextLink
               href="/admin/login"
               className="text-white hover:text-white/50 transition-colors text-[11px]"
               title="Admin"
             >
               <UserCircleIcon size={36} />
-            </a>
+            </NextLink>
           </div>
         </div>
 

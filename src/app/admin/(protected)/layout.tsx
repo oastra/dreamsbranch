@@ -12,16 +12,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const admin = await requireAdmin();
 
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-surface-tertiary">
-        <div className="flex">
-          <AdminSidebar user={{ id: admin.id, name: admin.name, email: admin.email, role: admin.role }} />
-          <main className="flex-1 min-h-screen">
-            <div className="p-6 lg:p-8">{children}</div>
-          </main>
-        </div>
-        <Toaster />
-      </body>
-    </html>
+    <div className="min-h-screen bg-surface-tertiary">
+      <div className="flex">
+        <AdminSidebar user={{ id: admin.id, name: admin.name, email: admin.email, role: admin.role }} />
+        <main className="flex-1 min-h-screen">
+          <div className="p-6 lg:p-8">{children}</div>
+        </main>
+      </div>
+      <Toaster />
+    </div>
   );
 }

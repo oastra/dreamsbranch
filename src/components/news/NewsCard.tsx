@@ -28,14 +28,13 @@ export function NewsCard({
   title,
   description,
   coverImage,
-  category,
   categoryLabel,
   publishedAt,
 }: NewsCardProps) {
   return (
     <Link href={`/${locale}/news/${slug}`} className="card group flex flex-col">
       {/* Image */}
-      <div className="relative aspect-[4/3] bg-secondary-10">
+      <div className="relative aspect-4/3 bg-secondary-10">
         {coverImage ? (
           <MaskedImage
             src={coverImage}

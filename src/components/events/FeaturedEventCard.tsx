@@ -160,7 +160,7 @@ export function FeaturedEventCard({
         <h3 className="text-h3 font-medium text-text-strong">{title}</h3>
         {tagPills}
         <p className="text-body text-text-strong">{description}</p>
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl">
+        <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl">
           {imageBlock}
         </div>
         {dateLocation}
