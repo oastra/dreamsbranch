@@ -214,7 +214,7 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
             <PageHeroHeading
               title={t("shop.title")}
               className="text-center lg:col-start-1 lg:row-start-1 lg:self-end lg:text-left"
-              titleClassName="mb-title-gap whitespace-nowrap lg:!text-[44px] xl:!text-[60px]"
+              titleClassName="mb-title-gap"
             />
 
             <div className="aspect-[716/500] lg:aspect-auto lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full">

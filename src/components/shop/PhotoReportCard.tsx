@@ -34,9 +34,11 @@ function ImageTile({
   innerPadding?: string;
 }) {
   return (
-    <div className={`relative overflow-hidden rounded-3xl bg-[#EAEBED] ${className}`}>
+    <div
+      className={`relative overflow-hidden rounded-3xl bg-[#EAEBED] ${className} ${src ? innerPadding : ""}`}
+    >
       {src ? (
-        <div className={`relative h-full w-full ${innerPadding}`}>
+        <div className="relative h-full w-full overflow-hidden rounded-2xl">
           <Image
             src={src}
             alt={alt}
@@ -97,7 +99,7 @@ export function PhotoReportCard({ report }: Props) {
                 alt={img.caption_ua ?? img.caption_en ?? report.title}
                 className="aspect-square"
                 sizes="16vw"
-                innerPadding="p-4"
+                innerPadding="p-5 sm:p-6"
               />
             ))}
             {productExtras.length < 2 &&
@@ -114,14 +116,12 @@ export function PhotoReportCard({ report }: Props) {
             alt={proofTop?.caption_ua ?? proofTop?.caption_en ?? report.title}
             className="aspect-[4/3]"
             sizes="33vw"
-            innerPadding="p-3"
           />
           <ImageTile
             src={proofBottom?.url}
             alt={proofBottom?.caption_ua ?? proofBottom?.caption_en ?? report.title}
             className="aspect-[4/3] flex-1"
             sizes="33vw"
-            innerPadding="p-3"
           />
         </div>
 
