@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 
 export interface FeaturedEventCardProps {
   slug: string;
@@ -135,9 +136,7 @@ export function FeaturedEventCard({
       priority
     />
   ) : (
-    <div className="flex h-full w-full items-center justify-center bg-secondary-10">
-      <div className="h-20 w-20 rounded-full bg-secondary-40 opacity-60" />
-    </div>
+    <ImagePlaceholder size="md" />
   );
 
   return (

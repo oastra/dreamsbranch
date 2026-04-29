@@ -20,6 +20,12 @@ import type {
   NewsArticleUpdate,
   ReportInsert,
   ReportUpdate,
+  ShopCategoryInsert,
+  ShopCategoryUpdate,
+  ShopProductInsert,
+  ShopProductUpdate,
+  ShopPhotoReportInsert,
+  ShopPhotoReportUpdate,
 } from '@/types/database';
 
 // ─── Enum helpers ─────────────────────────────────────────────────────────────
@@ -426,22 +432,182 @@ export const db = {
   },
 
   // ── campaigns_page_settings (singleton row id=1) ──────────────────────────────
+  // NOTE: this table is defined in supabase/migrations/20260428000002_campaigns_page_settings.sql
+  // but has not yet been applied to the remote DB, so it's missing from the
+  // auto-generated `Database` types. Cast the table name with `as never` to
+  // bypass the literal check until the migration is applied and types are regenerated.
   campaignsSetting: {
     async findFirst() {
       const sb = createAdminClient();
-      const { data } = await sb.from('campaigns_page_settings').select('*').eq('id', 1).single();
+      const { data } = await sb.from('campaigns_page_settings' as never).select('*').eq('id', 1).single();
       return data;
     },
 
     async update({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
       const { data: updated } = await sb
-        .from('campaigns_page_settings')
-        .update({ ...data, updated_at: new Date().toISOString() } as Partial<Omit<import('@/types/database').CampaignsPageSettings, 'id'>>)
+        .from('campaigns_page_settings' as never)
+        .update({ ...data, updated_at: new Date().toISOString() } as never)
         .eq('id', 1)
         .select()
         .single();
       return updated;
+    },
+  },
+
+  // ── shop_categories ──────────────────────────────────────────────────────────
+  shopCategory: {
+    async findMany({ where = {} }: { where?: Record<string, unknown> } = {}) {
+      const sb = createAdminClient();
+      let q = sb.from('shop_categories').select('*').order('sort_order');
+      q = applyWhere(q, where);
+      const { data } = await q;
+      return data ?? [];
+    },
+
+    async findUnique({ where }: { where: { id?: string; slug?: string } }) {
+      const sb = createAdminClient();
+      let q = sb.from('shop_categories').select('*');
+      if (where.id)   q = q.eq('id', where.id);
+      if (where.slug) q = q.eq('slug', where.slug);
+      const { data } = await q.maybeSingle();
+      return data;
+    },
+
+    async create({ data }: { data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const { data: created } = await sb
+        .from('shop_categories')
+        .insert(data as unknown as ShopCategoryInsert)
+        .select()
+        .single();
+      return created;
+    },
+
+    async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const { data: updated } = await sb
+        .from('shop_categories')
+        .update(data as unknown as ShopCategoryUpdate)
+        .eq('id', where.id)
+        .select()
+        .single();
+      return updated;
+    },
+
+    async delete({ where }: { where: { id: string } }) {
+      const sb = createAdminClient();
+      await sb.from('shop_categories').delete().eq('id', where.id);
+    },
+  },
+
+  // ── shop_products ────────────────────────────────────────────────────────────
+  shopProduct: {
+    async count({ where = {} }: { where?: Record<string, unknown> } = {}) {
+      const sb = createAdminClient();
+      let q = sb.from('shop_products').select('*', { count: 'exact', head: true });
+      q = applyWhere(q, where);
+      const { count } = await q;
+      return count ?? 0;
+    },
+
+    async findMany({
+      where = {},
+      skip,
+      take,
+    }: { where?: Record<string, unknown>; skip?: number; take?: number } = {}) {
+      const sb = createAdminClient();
+      let q = sb.from('shop_products').select('*').order('sort_order').order('created_at', { ascending: false });
+      q = applyWhere(q, where);
+      if (skip !== undefined && take !== undefined) q = q.range(skip, skip + take - 1);
+      else if (take) q = q.limit(take);
+      const { data } = await q;
+      return (data ?? []).map(r => normStatus(r as Record<string, unknown>));
+    },
+
+    async findUnique({ where }: { where: { id?: string; slug?: string } }) {
+      const sb = createAdminClient();
+      let q = sb.from('shop_products').select('*');
+      if (where.id)   q = q.eq('id', where.id);
+      if (where.slug) q = q.eq('slug', where.slug);
+      const { data } = await q.maybeSingle();
+      return data ? normStatus(data as Record<string, unknown>) : null;
+    },
+
+    async create({ data }: { data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as ShopProductInsert;
+      const { data: created } = await sb.from('shop_products').insert(row).select().single();
+      return created ? normStatus(created as Record<string, unknown>) : null;
+    },
+
+    async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as ShopProductUpdate;
+      const { data: updated } = await sb.from('shop_products').update(row).eq('id', where.id).select().single();
+      return updated ? normStatus(updated as Record<string, unknown>) : null;
+    },
+
+    async delete({ where }: { where: { id: string } }) {
+      const sb = createAdminClient();
+      await sb.from('shop_products').delete().eq('id', where.id);
+    },
+  },
+
+  // ── shop_photo_reports ───────────────────────────────────────────────────────
+  shopPhotoReport: {
+    async count({ where = {} }: { where?: Record<string, unknown> } = {}) {
+      const sb = createAdminClient();
+      let q = sb.from('shop_photo_reports').select('*', { count: 'exact', head: true });
+      q = applyWhere(q, where);
+      const { count } = await q;
+      return count ?? 0;
+    },
+
+    async findMany({
+      where = {},
+      skip,
+      take,
+    }: { where?: Record<string, unknown>; skip?: number; take?: number } = {}) {
+      const sb = createAdminClient();
+      let q = sb
+        .from('shop_photo_reports')
+        .select('*')
+        .order('sort_order')
+        .order('report_date', { ascending: false });
+      q = applyWhere(q, where);
+      if (skip !== undefined && take !== undefined) q = q.range(skip, skip + take - 1);
+      else if (take) q = q.limit(take);
+      const { data } = await q;
+      return (data ?? []).map(r => normStatus(r as Record<string, unknown>));
+    },
+
+    async findUnique({ where }: { where: { id?: string; slug?: string } }) {
+      const sb = createAdminClient();
+      let q = sb.from('shop_photo_reports').select('*');
+      if (where.id)   q = q.eq('id', where.id);
+      if (where.slug) q = q.eq('slug', where.slug);
+      const { data } = await q.maybeSingle();
+      return data ? normStatus(data as Record<string, unknown>) : null;
+    },
+
+    async create({ data }: { data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as ShopPhotoReportInsert;
+      const { data: created } = await sb.from('shop_photo_reports').insert(row).select().single();
+      return created ? normStatus(created as Record<string, unknown>) : null;
+    },
+
+    async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as ShopPhotoReportUpdate;
+      const { data: updated } = await sb.from('shop_photo_reports').update(row).eq('id', where.id).select().single();
+      return updated ? normStatus(updated as Record<string, unknown>) : null;
+    },
+
+    async delete({ where }: { where: { id: string } }) {
+      const sb = createAdminClient();
+      await sb.from('shop_photo_reports').delete().eq('id', where.id);
     },
   },
 

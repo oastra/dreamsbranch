@@ -16,6 +16,7 @@ import {
   Home,
   Info,
   HandCoins,
+  ShoppingBag,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -40,6 +41,7 @@ const navItems = [
   { label: "Home Page", href: "/admin/home-settings", icon: Home },
   { label: "About Page", href: "/admin/about-settings", icon: Info },
   { label: "Campaigns Page", href: "/admin/campaigns-settings", icon: HandCoins },
+  { label: "Shop Photo Reports", href: "/admin/shop-photo-reports", icon: ShoppingBag },
 ];
 
 const superAdminItems = [

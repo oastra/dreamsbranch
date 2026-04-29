@@ -412,7 +412,7 @@ export default async function EventsPage({
   return (
     <>
       {/* ── Page hero ────────────────────────────────────────────── */}
-      <section className="bg-white py-8 lg:py-16">
+      <section className=" py-8 lg:py-16">
         <div className="container-page">
           <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2 lg:items-center lg:gap-10">
             {/* Title — centered on mobile/tablet, left in left column on desktop */}

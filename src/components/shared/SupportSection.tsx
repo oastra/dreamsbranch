@@ -43,7 +43,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
           >
             <h3 className={titleCls}>{t("subscription")}</h3>
             <p className={descCls}>{t("subscription_desc")}</p>
-            <CursorDonateIcon size={64} className={iconCls} />
+            <CursorDonateIcon size={48} className={iconCls} />
           </Link>
 
           {/* Title tile — desktop only (mobile/tablet show the title above the grid). */}
@@ -63,7 +63,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
           >
             <h3 className={titleCls}>{t("donate")}</h3>
             <p className={descCls}>{t("donate_desc")}</p>
-            <DonateIcon size={64} className={iconCls} />
+            <DonateIcon size={48} className={iconCls} />
           </Link>
 
           {/* Магазин — base: full-width row.  md: col 1 row-span 2.  lg: cols 2-3 row 2. */}
@@ -73,7 +73,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
           >
             <h3 className={titleCls}>{t("shop")}</h3>
             <p className={descCls}>{t("shop_desc")}</p>
-            <BasketDonateIcon size={80} className={iconCls} />
+            <BasketDonateIcon size={64} className={iconCls} />
           </Link>
 
           {/* Right column row 2 on lg — stacks Діями + Аукціон vertically inside one grid cell */}
@@ -85,7 +85,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
             >
               <h3 className={titleCls}>{t("volunteer")}</h3>
               <p className={descCls}>{t("volunteer_desc")}</p>
-              <Support2Icon size={64} className={iconCls} />
+              <Support2Icon size={48} className={iconCls} />
             </Link>
 
             {/* Аукціон та лотерея */}
@@ -95,7 +95,7 @@ export async function SupportSection({ locale }: SupportSectionProps) {
             >
               <h3 className={titleCls}>{t("auction")}</h3>
               <p className={descCls}>{t("auction_desc")}</p>
-              <LotteryIcon size={64} className={iconCls} />
+              <LotteryIcon size={48} className={iconCls} />
             </Link>
           </div>
         </div>

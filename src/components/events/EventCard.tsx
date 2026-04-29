@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ArrowRightUp from "../icons/ArrowRightUp";
+import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
 
 export interface EventCardProps {
   slug: string;
@@ -72,9 +73,7 @@ export function EventCard({
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           ) : (
-            <div className="flex h-full items-center justify-center">
-              <div className="h-14 w-14 rounded-full bg-secondary-40 opacity-60" />
-            </div>
+            <ImagePlaceholder size="sm" />
           )}
         </div>
 

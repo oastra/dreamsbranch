@@ -28,7 +28,9 @@ export function AboutForm({ settings }: Props) {
   const [transparencyValue, setTransparencyValue] = useState(
     settings?.transparency_value ?? '',
   );
-  const [faqItems, setFaqItems] = useState<FaqItem[]>(settings?.faq_items ?? []);
+  const [faqItems, setFaqItems] = useState<FaqItem[]>(
+    (settings?.faq_items ?? []) as unknown as FaqItem[],
+  );
 
   function addFaq() {
     setFaqItems([...faqItems, { q_ua: '', a_ua: '', q_en: '', a_en: '' }]);

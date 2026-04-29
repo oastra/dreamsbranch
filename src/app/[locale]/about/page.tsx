@@ -47,7 +47,7 @@ export default async function Page({
         }))
       : [{ src: "/images/about/about-team.webp", alt: "Dreams Branch team" }];
 
-  const dbFaq: FaqItem[] = settings?.faq_items ?? [];
+  const dbFaq: FaqItem[] = (settings?.faq_items ?? []) as unknown as FaqItem[];
   const faqItems =
     dbFaq.length > 0
       ? dbFaq.map((it) => ({

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
 
 export interface CampaignCardProps {
   slug: string;
@@ -43,9 +44,7 @@ export function CampaignCard({
             className="object-cover"
           />
         ) : (
-          <div className="flex h-full items-center justify-center">
-            <div className="h-14 w-14 rounded-full bg-secondary-40 opacity-60" />
-          </div>
+          <ImagePlaceholder size="sm" />
         )}
       </div>
 

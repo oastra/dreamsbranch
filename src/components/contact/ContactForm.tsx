@@ -93,7 +93,11 @@ export function ContactForm() {
             <FormItem>
               <FormLabel>{t('email')}</FormLabel>
               <FormControl>
-                <Input type="email" className="bg-white" {...field} />
+                <Input
+                  type="email"
+                  className="h-12 rounded-full bg-white px-5"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

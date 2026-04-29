@@ -89,6 +89,50 @@
     "contact_title": "Contact us",
     "contact_description": "If you have questions, want to become a partner, or volunteer in our projects — fill out the form and we will get in touch."
   },
+  "shop": {
+    "title": "What we do together",
+    "description": "We came together to share with you a piece of Ukrainian warmth. This is not just a fair or a sale — it's our way of saying \"thank you\" to our defenders.",
+    "cta": "Our offerings",
+    "profit_notice": "100% of profits go toward equipment, tactical medicine, and protection for soldiers of the Armed Forces of Ukraine.",
+    "offerings": {
+      "title": "Our offerings",
+      "description": "We create handmade goods, decor, and authentic dishes that turn your support into real help for the Ukrainian Armed Forces. Every purchase is your contribution to victory",
+      "handmade": "Handmade",
+      "from_ukraine": "From Ukraine",
+      "ukrainian_cuisine": "Ukrainian cuisine",
+      "catering": "Catering"
+    },
+    "sections": {
+      "handmade_title": "Handmade goods",
+      "from_ukraine_title": "From Ukraine with love",
+      "cuisine_title": "Ukrainian cuisine"
+    },
+    "all_items": "All items",
+    "show_more": "Show more",
+    "add_to_cart": "Add to cart",
+    "filters_aria": "Filter by category",
+    "no_products": "No products yet",
+    "photo_reports": {
+      "title": "Thank you for your support",
+      "subtitle": "Last month, thanks to your purchases, we bought:",
+      "all_reports": "All reports",
+      "prev": "Previous report",
+      "next": "Next report"
+    },
+    "catering": {
+      "title": "Catering",
+      "description": "We turn your celebration, corporate event or family gathering into a warm occasion with Ukrainian character.",
+      "what_we_offer": "What we offer:",
+      "item_appetizers": "Traditional buffet appetizers",
+      "item_hot": "Hot dishes",
+      "item_sweet": "Sweet boxes",
+      "item_custom": "Custom menu",
+      "cta": "Learn more",
+      "image_alt": "Ukrainian catering dishes"
+    },
+    "contact_title": "Contact us",
+    "contact_description": "If you have questions, want to become a partner, or volunteer in our projects — fill out the form and we will get in touch."
+  },
   "donation": {
     "choose_amount": "Choose donation amount:",
     "custom": "Other",

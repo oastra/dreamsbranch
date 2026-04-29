@@ -46,7 +46,8 @@ export function Header() {
   const navItems = NAV_ITEMS.map((item) => ({ ...item, label: t(item.key) }));
 
   return (
-    <header className=" mb-5 z-50 bg-white border border-border">
+    <header className="z-50 mb-5">
+      <div className="bg-white border border-border">
       <div className="container-page">
         <div className="flex items-center justify-between h-16 lg:h-22">
           {/* Logo */}
@@ -142,21 +143,22 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile support CTA — only when menu closed (drawer has its own) */}
-        {!mobileOpen && (
-          <div className="lg:hidden pb-3">
-            <Link href="/campaigns" className="block">
-              <Button
-                variant="default"
-                size="lg"
-                className="rounded-full w-full h-11"
-              >
-                {t("support")}
-              </Button>
-            </Link>
-          </div>
-        )}
       </div>
+      </div>
+
+      {/* Mobile support CTA — fixed-width blue banner centered under the header */}
+      {!mobileOpen && (
+        <div className="lg:hidden flex justify-center">
+          <Link href="/campaigns" className="block w-[329px] max-w-full">
+            <button
+              type="button"
+              className="w-full h-10 bg-secondary text-white text-body-md font-bold rounded-b-[2.5rem] transition-colors hover:bg-brand-blue-dark"
+            >
+              {t("support")}
+            </button>
+          </Link>
+        </div>
+      )}
 
       {/* Mobile menu */}
       {mobileOpen && (

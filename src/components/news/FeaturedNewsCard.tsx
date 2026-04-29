@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 
 export interface FeaturedNewsCardProps {
   slug: string;
@@ -72,7 +73,7 @@ export function FeaturedNewsCard({
             priority
           />
         ) : (
-          <div className="absolute inset-0 bg-[repeating-conic-gradient(#e9e9ea_0%_25%,#f5f5f6_0%_50%)] bg-[length:40px_40px]" />
+          <ImagePlaceholder size="md" />
         )}
         <span className="absolute bottom-4 left-4 inline-flex h-9 items-center justify-center rounded-full bg-secondary px-5 text-body-sm font-medium text-white md:bottom-6 md:left-6">
           {tagNewsLabel}

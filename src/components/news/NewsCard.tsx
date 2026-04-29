@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import ArrowRightUpIcon from '@/components/icons/ArrowRightUp';
+import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 
 export interface NewsCardProps {
   slug: string;
@@ -70,7 +71,7 @@ export function NewsCard({
             className="object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-[repeating-conic-gradient(#e9e9ea_0%_25%,#f5f5f6_0%_50%)] bg-[length:32px_32px]" />
+          <ImagePlaceholder size="sm" />
         )}
         <span className="absolute bottom-4 left-4 inline-flex h-9 items-center justify-center rounded-full bg-primary px-5 text-body-sm font-medium text-text-strong">
           {categoryLabel}

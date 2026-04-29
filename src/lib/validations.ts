@@ -48,6 +48,25 @@ export const articleSchema = z.object({
 });
 export type ArticleInput = z.infer<typeof articleSchema>;
 
+export const shopPhotoReportImageSchema = z.object({
+  url: z.string().min(1),
+  kind: z.enum(['product', 'proof', 'chat']),
+  position: z.coerce.number().int().min(0).default(0),
+  captionUa: z.string().optional(),
+  captionEn: z.string().optional(),
+});
+
+export const shopPhotoReportSchema = z.object({
+  slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
+  titleUa: z.string().min(1, 'Title (UA) is required'),
+  titleEn: z.string().min(1, 'Title (EN) is required'),
+  reportDate: z.string().min(1, 'Report date is required'),
+  images: z.array(shopPhotoReportImageSchema).default([]),
+  status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
+  sortOrder: z.coerce.number().int().default(0),
+});
+export type ShopPhotoReportInput = z.infer<typeof shopPhotoReportSchema>;
+
 export const reportSchema = z.object({
   year: z.coerce.number().int().min(2020).max(2030),
   titleUa: z.string().min(1),
