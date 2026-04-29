@@ -10,7 +10,15 @@ export type MockShopProduct = Pick<
   | "price_amount"
   | "price_currency"
   | "cover_image"
+  | "description_ua"
+  | "description_en"
+  | "gallery_images"
 > & { category_slug: string | null };
+
+const DESC_UA =
+  "Елегантний виріб ручної роботи з високоякісних матеріалів. Поєднує народні мотиви з сучасним стилем, тонка робота майстра та надійна фурнітура.";
+const DESC_EN =
+  "An elegant handmade piece crafted from high-quality materials. Combines folk motifs with a modern style — fine craftsmanship and reliable hardware.";
 
 export type MockShopCategory = Pick<
   ShopCategory,
@@ -35,7 +43,13 @@ export const MOCK_SHOP_CATEGORIES: MockShopCategory[] = [
   { section: "cuisine",      slug: "mlyntsi",    name_ua: "Млинці",          name_en: "Mlyntsi" },
 ];
 
-export const MOCK_SHOP_PRODUCTS: MockShopProduct[] = [
+type RawMockShopProduct = Omit<
+  MockShopProduct,
+  "description_ua" | "description_en" | "gallery_images"
+> &
+  Partial<Pick<MockShopProduct, "description_ua" | "description_en" | "gallery_images">>;
+
+const RAW_MOCK_SHOP_PRODUCTS: RawMockShopProduct[] = [
   // Handmade
   { id: "h1",  slug: "beaded-flower-necklace", section: "handmade", title_ua: "Намисто з бісеру",   title_en: "Beaded necklace",  price_amount: 45, price_currency: "AUD", cover_image: null, category_slug: "jewelry" },
   { id: "h2",  slug: "pink-quartz-beads",      section: "handmade", title_ua: "Намисто з кварцу",   title_en: "Quartz beads",     price_amount: 60, price_currency: "AUD", cover_image: null, category_slug: "jewelry" },
@@ -62,6 +76,13 @@ export const MOCK_SHOP_PRODUCTS: MockShopProduct[] = [
   { id: "c3", slug: "holubtsi-classic", section: "cuisine", title_ua: "Голубці класичні",     title_en: "Classic holubtsi", price_amount: 22, price_currency: "AUD", cover_image: null, category_slug: "holubtsi" },
   { id: "c4", slug: "mlyntsi-cheese",   section: "cuisine", title_ua: "Млинці з сиром",       title_en: "Cheese mlyntsi",   price_amount: 14, price_currency: "AUD", cover_image: null, category_slug: "mlyntsi" },
 ];
+
+export const MOCK_SHOP_PRODUCTS: MockShopProduct[] = RAW_MOCK_SHOP_PRODUCTS.map((p) => ({
+  ...p,
+  description_ua: p.description_ua ?? DESC_UA,
+  description_en: p.description_en ?? DESC_EN,
+  gallery_images: p.gallery_images ?? [],
+}));
 
 export const MOCK_SHOP_PHOTO_REPORTS: MockShopPhotoReport[] = [
   {
