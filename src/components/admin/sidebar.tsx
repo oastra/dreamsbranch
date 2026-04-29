@@ -17,6 +17,8 @@ import {
   Info,
   HandCoins,
   ShoppingBag,
+  Star,
+  ExternalLink,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -42,6 +44,7 @@ const navItems = [
   { label: "About Page", href: "/admin/about-settings", icon: Info },
   { label: "Campaigns Page", href: "/admin/campaigns-settings", icon: HandCoins },
   { label: "Shop Photo Reports", href: "/admin/shop-photo-reports", icon: ShoppingBag },
+  { label: "Shop Reviews", href: "/admin/shop-reviews", icon: Star },
 ];
 
 const superAdminItems = [
@@ -88,6 +91,17 @@ export function AdminSidebar({ user }: { user: AdminUser }) {
       </div>
 
       <nav className="flex-1 p-4 space-y-1">
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-body font-medium text-secondary hover:bg-secondary-10 transition-colors"
+        >
+          <ExternalLink className="w-5 h-5 shrink-0" />
+          View site
+        </a>
+        <div className="my-2 border-t border-border" />
+
         {navItems.map((item) => {
           const Icon = item.icon;
           return (

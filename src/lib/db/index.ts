@@ -26,6 +26,8 @@ import type {
   ShopProductUpdate,
   ShopPhotoReportInsert,
   ShopPhotoReportUpdate,
+  ShopReviewInsert,
+  ShopReviewUpdate,
 } from '@/types/database';
 
 // ─── Enum helpers ─────────────────────────────────────────────────────────────
@@ -608,6 +610,60 @@ export const db = {
     async delete({ where }: { where: { id: string } }) {
       const sb = createAdminClient();
       await sb.from('shop_photo_reports').delete().eq('id', where.id);
+    },
+  },
+
+  // ── shop_reviews ─────────────────────────────────────────────────────────────
+  shopReview: {
+    async count({ where = {} }: { where?: Record<string, unknown> } = {}) {
+      const sb = createAdminClient();
+      let q = sb.from('shop_reviews').select('*', { count: 'exact', head: true });
+      q = applyWhere(q, where);
+      const { count } = await q;
+      return count ?? 0;
+    },
+
+    async findMany({
+      where = {},
+      skip,
+      take,
+    }: { where?: Record<string, unknown>; skip?: number; take?: number } = {}) {
+      const sb = createAdminClient();
+      let q = sb
+        .from('shop_reviews')
+        .select('*')
+        .order('sort_order')
+        .order('created_at', { ascending: false });
+      q = applyWhere(q, where);
+      if (skip !== undefined && take !== undefined) q = q.range(skip, skip + take - 1);
+      else if (take) q = q.limit(take);
+      const { data } = await q;
+      return (data ?? []).map(r => normStatus(r as Record<string, unknown>));
+    },
+
+    async findUnique({ where }: { where: { id: string } }) {
+      const sb = createAdminClient();
+      const { data } = await sb.from('shop_reviews').select('*').eq('id', where.id).maybeSingle();
+      return data ? normStatus(data as Record<string, unknown>) : null;
+    },
+
+    async create({ data }: { data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as ShopReviewInsert;
+      const { data: created } = await sb.from('shop_reviews').insert(row).select().single();
+      return created ? normStatus(created as Record<string, unknown>) : null;
+    },
+
+    async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as ShopReviewUpdate;
+      const { data: updated } = await sb.from('shop_reviews').update(row).eq('id', where.id).select().single();
+      return updated ? normStatus(updated as Record<string, unknown>) : null;
+    },
+
+    async delete({ where }: { where: { id: string } }) {
+      const sb = createAdminClient();
+      await sb.from('shop_reviews').delete().eq('id', where.id);
     },
   },
 

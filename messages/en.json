@@ -112,6 +112,30 @@
     "add_to_cart": "Add to cart",
     "filters_aria": "Filter by category",
     "no_products": "No products yet",
+    "catalog": {
+      "breadcrumb_home": "Home",
+      "breadcrumb_shop": "Shop",
+      "products_count": "{count, plural, one {# product} other {# products}}",
+      "search_placeholder": "Search products",
+      "sort_button": "Sort by price",
+      "sort_aria_asc": "Sort by price: low to high",
+      "sort_aria_desc": "Sort by price: high to low",
+      "empty_title": "No products in this category yet",
+      "empty_description": "Check back soon or browse the rest of the shop.",
+      "empty_cta": "Back to shop",
+      "hero_image_alt": "{name} category collage"
+    },
+    "other_categories": {
+      "title": "Other categories",
+      "description": "Taste of home, warmth of hand-crafted work, a shared mission.\nWe've gathered the best: from traditional dishes to modern services."
+    },
+    "reviews": {
+      "title": "Reviews from our donors",
+      "description": "Thank you for your reviews and your care for our shared cause.\nTogether we are turning creativity into real help for Ukraine.",
+      "prev_aria": "Previous review",
+      "next_aria": "Next review",
+      "rating_aria": "{rating} out of 5 stars"
+    },
     "photo_reports": {
       "title": "Thank you for your support",
       "subtitle": "Last month, thanks to your purchases, we bought:",

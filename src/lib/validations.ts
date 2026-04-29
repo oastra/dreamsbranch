@@ -67,6 +67,20 @@ export const shopPhotoReportSchema = z.object({
 });
 export type ShopPhotoReportInput = z.infer<typeof shopPhotoReportSchema>;
 
+export const shopReviewSchema = z.object({
+  nameUa: z.string().min(1, 'Name (UA) is required'),
+  nameEn: z.string().min(1, 'Name (EN) is required'),
+  roleUa: z.string().optional(),
+  roleEn: z.string().optional(),
+  quoteUa: z.string().min(1, 'Quote (UA) is required'),
+  quoteEn: z.string().min(1, 'Quote (EN) is required'),
+  rating: z.coerce.number().int().min(1).max(5).default(5),
+  avatar: z.string().optional(),
+  status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
+  sortOrder: z.coerce.number().int().default(0),
+});
+export type ShopReviewInput = z.infer<typeof shopReviewSchema>;
+
 export const reportSchema = z.object({
   year: z.coerce.number().int().min(2020).max(2030),
   titleUa: z.string().min(1),

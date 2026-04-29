@@ -17,7 +17,7 @@ export function ContactSection({ title, description }: ContactSectionProps) {
   return (
     <section className="section">
       <div className="container-page">
-        <div className="-mx-5 overflow-hidden bg-secondary-10 p-6 sm:-mx-8 sm:p-8 lg:mx-0 lg:rounded-[40px] lg:p-0">
+        <div className="-mx-5 overflow-hidden bg-secondary/20 p-6 sm:-mx-8 sm:p-8 lg:mx-0 lg:rounded-[40px] lg:p-0">
           {/* Heading — mobile/tablet only */}
           <div className="mb-6 lg:hidden">{heading}</div>
 

@@ -21,69 +21,13 @@ import type {
   ShopProduct,
   ShopSection,
 } from "@/types/database";
+import {
+  MOCK_SHOP_CATEGORIES,
+  MOCK_SHOP_PRODUCTS,
+  MOCK_SHOP_PHOTO_REPORTS,
+} from "@/lib/mocks/shop";
 
 const HERO_SLIDES = [{ src: "/images/shop/varenuky.webp", alt: "" }];
-
-// ─── Mock data (shown when Supabase returns no products) ─────────────────────
-
-type MockProduct = Pick<
-  ShopProduct,
-  | "id"
-  | "slug"
-  | "section"
-  | "title_ua"
-  | "title_en"
-  | "price_amount"
-  | "price_currency"
-  | "cover_image"
-> & { category_slug: string | null };
-
-const MOCK_CATEGORIES: Array<Pick<ShopCategory, "section" | "slug" | "name_ua" | "name_en">> = [
-  { section: "handmade",     slug: "jewelry",    name_ua: "Прикраси",        name_en: "Jewelry" },
-  { section: "handmade",     slug: "dolls",      name_ua: "Ляльки",          name_en: "Dolls" },
-  { section: "handmade",     slug: "home",       name_ua: "Для дому",        name_en: "For home" },
-  { section: "handmade",     slug: "gifts",      name_ua: "На подарунок",    name_en: "Gifts" },
-  { section: "from_ukraine", slug: "souvenirs",  name_ua: "Сувеніри",        name_en: "Souvenirs" },
-  { section: "from_ukraine", slug: "vyshyvanky", name_ua: "Вишиванки",       name_en: "Embroidered" },
-  { section: "from_ukraine", slug: "gifts",      name_ua: "На подарунок",    name_en: "Gifts" },
-  { section: "cuisine",      slug: "varenyky",   name_ua: "Вареники",        name_en: "Varenyky" },
-  { section: "cuisine",      slug: "holubtsi",   name_ua: "Домашні голубці", name_en: "Holubtsi" },
-  { section: "cuisine",      slug: "mlyntsi",    name_ua: "Млинці",          name_en: "Mlyntsi" },
-];
-
-const MOCK_PRODUCTS: MockProduct[] = [
-  // Handmade
-  { id: "h1", slug: "beaded-flower-necklace", section: "handmade", title_ua: "Намисто з бісеру",  title_en: "Beaded necklace",  price_amount: 45, price_currency: "AUD", cover_image: null, category_slug: "jewelry" },
-  { id: "h2", slug: "pink-quartz-beads",      section: "handmade", title_ua: "Намисто з кварцу",  title_en: "Quartz beads",     price_amount: 60, price_currency: "AUD", cover_image: null, category_slug: "jewelry" },
-  { id: "h3", slug: "yellow-bead-earrings",   section: "handmade", title_ua: "Сережки з бісеру",  title_en: "Beaded earrings",  price_amount: 25, price_currency: "AUD", cover_image: null, category_slug: "jewelry" },
-  { id: "h4", slug: "purple-stone-necklace",  section: "handmade", title_ua: "Намисто з каменю",  title_en: "Stone necklace",   price_amount: 70, price_currency: "AUD", cover_image: null, category_slug: "gifts" },
-  // From Ukraine
-  { id: "u1", slug: "embroidered-kerchief",   section: "from_ukraine", title_ua: "Вишита хустка",      title_en: "Embroidered kerchief", price_amount: 35, price_currency: "AUD", cover_image: null, category_slug: "vyshyvanky" },
-  { id: "u2", slug: "ukrainian-souvenir-set", section: "from_ukraine", title_ua: "Сувенірний набір",   title_en: "Souvenir set",         price_amount: 50, price_currency: "AUD", cover_image: null, category_slug: "souvenirs" },
-  { id: "u3", slug: "gift-box-ukraine",       section: "from_ukraine", title_ua: "Подарунковий набір", title_en: "Gift box",             price_amount: 80, price_currency: "AUD", cover_image: null, category_slug: "gifts" },
-  { id: "u4", slug: "magnet-collection",      section: "from_ukraine", title_ua: "Колекція магнітів",  title_en: "Magnet collection",    price_amount: 20, price_currency: "AUD", cover_image: null, category_slug: "souvenirs" },
-  // Cuisine
-  { id: "c1", slug: "varenyky-cherry",  section: "cuisine", title_ua: "Вареники з вишнею",    title_en: "Cherry varenyky",  price_amount: 18, price_currency: "AUD", cover_image: "/images/shop/varenuky.webp", category_slug: "varenyky" },
-  { id: "c2", slug: "varenyky-potato",  section: "cuisine", title_ua: "Вареники з картоплею", title_en: "Potato varenyky",  price_amount: 16, price_currency: "AUD", cover_image: "/images/shop/varenuky.webp", category_slug: "varenyky" },
-  { id: "c3", slug: "holubtsi-classic", section: "cuisine", title_ua: "Голубці класичні",     title_en: "Classic holubtsi", price_amount: 22, price_currency: "AUD", cover_image: null, category_slug: "holubtsi" },
-  { id: "c4", slug: "mlyntsi-cheese",   section: "cuisine", title_ua: "Млинці з сиром",       title_en: "Cheese mlyntsi",   price_amount: 14, price_currency: "AUD", cover_image: null, category_slug: "mlyntsi" },
-];
-
-const MOCK_PHOTO_REPORTS: Array<Pick<ShopPhotoReport, "slug" | "title_ua" | "title_en" | "images">> = [
-  {
-    slug: "ecoflow-delta-3-april-2026",
-    title_ua: "EcoFlow Delta 3 1500",
-    title_en: "EcoFlow Delta 3 1500",
-    images: [
-      { url: "/images/photoReport/product-01.webp", kind: "product", position: 1 },
-      { url: "/images/photoReport/product-02.webp", kind: "product", position: 2 },
-      { url: "/images/photoReport/product-03.webp", kind: "product", position: 3 },
-      { url: "/images/photoReport/proof-01.webp",   kind: "proof",   position: 1 },
-      { url: "/images/photoReport/proof-02.webp",   kind: "proof",   position: 2 },
-      { url: "/images/photoReport/chat-01.webp",    kind: "chat",    position: 1 },
-    ],
-  },
-];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -163,9 +107,9 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
     // DB unreachable — fall through to mocks
   }
 
-  if (products.length === 0) products = MOCK_PRODUCTS;
-  if (categories.length === 0) categories = MOCK_CATEGORIES;
-  if (photoReports.length === 0) photoReports = MOCK_PHOTO_REPORTS;
+  if (products.length === 0) products = MOCK_SHOP_PRODUCTS;
+  if (categories.length === 0) categories = MOCK_SHOP_CATEGORIES;
+  if (photoReports.length === 0) photoReports = MOCK_SHOP_PHOTO_REPORTS;
 
   const reportTitleKey = locale === "ua" ? "title_ua" : "title_en";
   const photoReportCards: PhotoReportCardData[] = photoReports.map((r) => ({
@@ -262,7 +206,7 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             <CategoryCard
               title={t("shop.offerings.handmade")}
-              href={`/${locale}/shop#handmade`}
+              href={`/${locale}/shop/handmade`}
               bgClass="bg-[#FCF3C3]"
               hoverBgClass="hover:bg-[#FFF0A2]"
               activeBgClass="active:bg-[#FFE664]"
@@ -270,7 +214,7 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
             />
             <CategoryCard
               title={t("shop.offerings.from_ukraine")}
-              href={`/${locale}/shop#from-ukraine`}
+              href={`/${locale}/shop/from-ukraine`}
               bgClass="bg-[#BDD8F7]"
               hoverBgClass="hover:bg-[#93C3FA]"
               activeBgClass="active:bg-[#5DA4F5]"
@@ -278,7 +222,7 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
             />
             <CategoryCard
               title={t("shop.offerings.ukrainian_cuisine")}
-              href={`/${locale}/shop#cuisine`}
+              href={`/${locale}/shop/cuisine`}
               bgClass="bg-[#CBFACF]"
               hoverBgClass="hover:bg-[#9FEEA5]"
               activeBgClass="active:bg-[#68EC73]"
@@ -286,7 +230,7 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
             />
             <CategoryCard
               title={t("shop.offerings.catering")}
-              href={`/${locale}/shop#catering`}
+              href={`/${locale}/shop/catering`}
               bgClass="bg-[#DBDDFF]"
               hoverBgClass="hover:bg-[#B3B6F6]"
               activeBgClass="active:bg-[#B3B6F6]"
@@ -339,16 +283,7 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
       />
 
 
-      <PhotoReportSection
-        id="photo-reports"
-        title={t("shop.photo_reports.title")}
-        subtitle={t("shop.photo_reports.subtitle")}
-        allReportsLabel={t("shop.photo_reports.all_reports")}
-        allReportsHref={`/${locale}/reports`}
-        reports={photoReportCards}
-        prevLabel={t("shop.photo_reports.prev")}
-        nextLabel={t("shop.photo_reports.next")}
-      />
+      
 
       <CateringSection
         id="catering"
@@ -365,6 +300,17 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
         ctaHref={`/${locale}/contact?topic=catering`}
         imageSrc="/images/shop/catering.webp"
         imageAlt={t("shop.catering.image_alt")}
+      />
+
+      <PhotoReportSection
+        id="photo-reports"
+        title={t("shop.photo_reports.title")}
+        subtitle={t("shop.photo_reports.subtitle")}
+        allReportsLabel={t("shop.photo_reports.all_reports")}
+        allReportsHref={`/${locale}/reports`}
+        reports={photoReportCards}
+        prevLabel={t("shop.photo_reports.prev")}
+        nextLabel={t("shop.photo_reports.next")}
       />
       <SupportSection locale={locale} />
 

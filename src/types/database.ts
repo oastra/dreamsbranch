@@ -607,6 +607,54 @@ export type Database = {
           },
         ]
       }
+      shop_reviews: {
+        Row: {
+          avatar: string | null
+          created_at: string
+          id: string
+          name_en: string
+          name_ua: string
+          quote_en: string
+          quote_ua: string
+          rating: number
+          role_en: string | null
+          role_ua: string | null
+          sort_order: number
+          status: Database["public"]["Enums"]["content_status"]
+          updated_at: string
+        }
+        Insert: {
+          avatar?: string | null
+          created_at?: string
+          id?: string
+          name_en: string
+          name_ua: string
+          quote_en: string
+          quote_ua: string
+          rating?: number
+          role_en?: string | null
+          role_ua?: string | null
+          sort_order?: number
+          status?: Database["public"]["Enums"]["content_status"]
+          updated_at?: string
+        }
+        Update: {
+          avatar?: string | null
+          created_at?: string
+          id?: string
+          name_en?: string
+          name_ua?: string
+          quote_en?: string
+          quote_ua?: string
+          rating?: number
+          role_en?: string | null
+          role_ua?: string | null
+          sort_order?: number
+          status?: Database["public"]["Enums"]["content_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -811,6 +859,10 @@ export type ShopCategoryUpdate = Database["public"]["Tables"]["shop_categories"]
 export type ShopProduct        = Database["public"]["Tables"]["shop_products"]["Row"]
 export type ShopProductInsert  = Database["public"]["Tables"]["shop_products"]["Insert"]
 export type ShopProductUpdate  = Database["public"]["Tables"]["shop_products"]["Update"]
+
+export type ShopReview         = Database["public"]["Tables"]["shop_reviews"]["Row"]
+export type ShopReviewInsert   = Database["public"]["Tables"]["shop_reviews"]["Insert"]
+export type ShopReviewUpdate   = Database["public"]["Tables"]["shop_reviews"]["Update"]
 
 export type ShopPhotoReportImageKind = "product" | "proof" | "chat"
 
