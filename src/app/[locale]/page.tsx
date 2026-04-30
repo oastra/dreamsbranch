@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
 
@@ -27,12 +28,12 @@ export default function HomePage() {
               <a href="#campaigns" className="btn-secondary">
                 {t("hero.cta_campaigns")}
               </a>
-              <a
-                href="#donate"
+              <Link
+                href="/donate"
                 className="btn bg-white text-brand-blue hover:bg-gray-100"
               >
                 {t("hero.cta_donate")}
-              </a>
+              </Link>
             </div>
           </div>
           <HeroCarousel slides={HERO_SLIDES} />

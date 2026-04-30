@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import { EventCard } from '@/components/events/EventCard';
 import { ShareSection } from '@/components/shared/ShareSection';
+import { VolunteerCTA } from '@/components/shared/VolunteerCTA';
 import { ContactSection } from '@/components/contact/ContactSection';
 import type { Event } from '@/types/database';
 
@@ -385,35 +386,13 @@ export default async function EventDetailPage({
 
       {/* ── Volunteer CTA (active only) ──────────────────────────── */}
       {!isArchived && event.show_volunteer_cta && (
-        <section className="bg-white pb-16">
-          <div className="container-page">
-            <div className="overflow-hidden rounded-[40px] bg-secondary">
-              <div className="grid grid-cols-1 items-center lg:grid-cols-[1fr_1.5fr]">
-                {/* Image */}
-                <div className="relative min-h-[200px] lg:min-h-70">
-                  <Image
-                    src="/images/events/events.webp"
-                    alt={t('events.volunteer_cta_title')}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 40vw"
-                  />
-                </div>
-                {/* Content */}
-                <div className="p-8 text-white lg:p-12">
-                  <h3 className="text-h3 mb-3 font-medium">{t('events.volunteer_cta_title')}</h3>
-                  <p className="mb-6 text-body text-white/80">{t('events.volunteer_cta_desc')}</p>
-                  <Link
-                    href={`/${locale}/contact`}
-                    className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-2.5 text-body font-medium text-text-strong transition-opacity hover:opacity-90"
-                  >
-                    {t('events.volunteer_cta_btn')}
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <VolunteerCTA
+          title={t('shared.volunteer_cta.title')}
+          description={t('shared.volunteer_cta.description')}
+          ctaLabel={t('shared.volunteer_cta.cta')}
+          ctaHref={`/${locale}/contact`}
+          imageAlt={t('shared.volunteer_cta.image_alt')}
+        />
       )}
 
       {/* ── Financial report (archived only) ─────────────────────── */}

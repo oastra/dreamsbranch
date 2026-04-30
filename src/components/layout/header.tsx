@@ -91,7 +91,7 @@ export function Header() {
               <FacebookIcon className="w-6 h-6 text-grey-100" />
             </Link>
 
-            <Link href="/campaigns">
+            <Link href="/donate">
               <Button
                 variant="default"
                 size="lg"
@@ -149,7 +149,7 @@ export function Header() {
       {/* Mobile support CTA — fixed-width blue banner centered under the header */}
       {!mobileOpen && (
         <div className="lg:hidden flex justify-center">
-          <Link href="/campaigns" className="block w-[329px] max-w-full">
+          <Link href="/donate" className="block w-[329px] max-w-full">
             <button
               type="button"
               className="w-full h-10 bg-secondary text-white text-body-md font-bold rounded-b-[2.5rem] transition-colors hover:bg-brand-blue-dark"

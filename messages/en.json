@@ -189,6 +189,51 @@
     "contact_title": "Contact us",
     "contact_description": "If you have questions, want to become a partner, or volunteer in our projects — fill out the form and we will get in touch."
   },
+  "donate": {
+    "eyebrow": "Dreams branch of UWAA",
+    "title": "Support our projects",
+    "description": "Your support lets us act fast — from buying medical supplies to organising humanitarian missions. Choose a one-time donation, a monthly subscription, or visit our shop. Any help is invaluable.",
+    "frequency_once": "One-time",
+    "frequency_monthly": "Monthly",
+    "amount_label": "Donation amount",
+    "amount_currency": "AUD",
+    "preset_aria": "Add ${value} AUD",
+    "monthly_label": "Monthly automatic payment",
+    "monthly_cancel_note": "You can cancel your monthly contribution at any time",
+    "fast_pay_title": "Quick checkout",
+    "fast_pay_paypal_aria": "Pay with PayPal",
+    "fast_pay_apple_aria": "Pay with Apple Pay",
+    "fast_pay_google_aria": "Pay with Google Pay",
+    "card_section_title": "Pay by card",
+    "card_form_title": "Enter your card details",
+    "card_name_label": "Name on card",
+    "card_name_placeholder": "Olivia Rhye",
+    "card_expiry_label": "Expiry",
+    "card_expiry_placeholder": "06 / 2024",
+    "card_number_label": "Card number",
+    "card_number_placeholder": "1234 1234 1234 1234",
+    "card_cvv_label": "CVV",
+    "card_cvv_placeholder": "•••",
+    "submit": "Donate",
+    "cancel": "Cancel",
+    "faq": {
+      "title": "Frequently asked questions",
+      "q1": "What payment methods do you accept?",
+      "a1": "We accept Visa and Mastercard, as well as PayPal, Apple Pay and Google Pay.",
+      "q2": "Is there a fee on donations?",
+      "a2": "Payment providers charge a small processing fee. We do everything we can to make sure as much of your contribution as possible reaches our projects.",
+      "q3": "How does a monthly donation work?",
+      "a3": "You choose an amount and we automatically charge it to your card each month. You can cancel the subscription at any time.",
+      "q4": "How can I cancel or change the amount of my subscription?",
+      "a4": "You can do this at any time via the link in your confirmation email, or by writing to us. No commitments and no hidden conditions.",
+      "q5": "Where can I see reports on how the money is used?",
+      "a5": "All financial reports are published in the Reports section of our site. We update the information on how funds are used regularly."
+    },
+    "contact_section": {
+      "title": "Get in touch",
+      "description": "If you have questions, want to become a partner, or volunteer in our projects — fill out the form and we will get in touch."
+    }
+  },
   "donation": {
     "choose_amount": "Choose donation amount:",
     "custom": "Other",
@@ -393,6 +438,14 @@
     "not_found": "Page not found",
     "not_found_description": "The page you are looking for does not exist or has been moved.",
     "coming_soon": "This section is coming soon."
+  },
+  "shared": {
+    "volunteer_cta": {
+      "title": "Become a foundation volunteer",
+      "description": "Fill out the form if you'd like to volunteer with our foundation and join our projects. Each one is a chance to find something meaningful for yourself while making a real difference for others.",
+      "cta": "I want to help",
+      "image_alt": "Hands holding a heart with the Ukrainian flag and a dove"
+    }
   },
   "notFound": {
     "title": "Page not found",

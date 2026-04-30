@@ -129,7 +129,7 @@ export function Footer() {
 
           {/* Support button */}
           <div className="shrink-0">
-            <Link href="/campaigns">
+            <Link href="/donate">
               <Button
                 variant="secondary"
                 size="lg"

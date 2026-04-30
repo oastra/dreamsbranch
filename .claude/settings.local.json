@@ -159,7 +159,10 @@
       "Bash(grep -E \"\\\\.\\(tsx|ts|jsx|js\\)$\")",
       "Bash(find /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/lib/validations* -type f)",
       "Bash(grep -n \"^      [a-z_]*: {$\" /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/types/database.ts)",
-      "Bash(file /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/public/images/shop/catering.*)"
+      "Bash(file /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/public/images/shop/catering.*)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(echo \"tsc=$?\")",
+      "Bash(echo \"lint=$?\")"
     ]
   }
 }
