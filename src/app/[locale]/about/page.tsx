@@ -6,6 +6,7 @@ import {
   MaskedImageCarousel,
   type CarouselSlide,
 } from "@/components/shared/MaskedImageCarousel";
+import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { ReportsBanner } from "@/components/shared/ReportsBanner";
 import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
 import { SectionHeading } from "@/components/shared/SectionHeading";
@@ -431,37 +432,10 @@ export default async function Page({
             {t("faq.title")}
           </SectionHeading>
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {faqItems.map(({ q, a }, i) => (
-              <details
-                key={i}
-                className="group h-fit rounded-2xl border border-border bg-white px-6 py-5 open:border-secondary-10 open:bg-secondary-10"
-              >
-                <summary className="flex min-h-16.5 cursor-pointer list-none items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-small font-medium text-white">
-                      {i + 1}
-                    </span>
-                    <span className="text-h3 text-text-strong">{q}</span>
-                  </div>
-                  <svg
-                    className="h-5 w-5 shrink-0 text-text-secondary transition-transform group-open:rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </summary>
-                <p className="mt-4 pl-12 text-body text-text-secondary">{a}</p>
-              </details>
-            ))}
-          </div>
+          <FaqAccordion
+            items={faqItems.map(({ q, a }) => ({ question: q, answer: a }))}
+            numberStyle="plain"
+          />
         </div>
       </section>
 

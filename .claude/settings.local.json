@@ -162,7 +162,11 @@
       "Bash(file /Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/public/images/shop/catering.*)",
       "Bash(echo \"exit=$?\")",
       "Bash(echo \"tsc=$?\")",
-      "Bash(echo \"lint=$?\")"
+      "Bash(echo \"lint=$?\")",
+      "Bash(grep -nB1 -A15 \"summary\" \"/Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/app/[locale]/donate/page.tsx\")",
+      "Bash(ps -p 44725 -o pid,command)",
+      "Bash(kill 44725)",
+      "Bash(grep -nB1 -A8 \"<DescriptionPanel\" \"/Users/olha_chernysh/Documents/FREELANCE/Projects/dreams_branch/www-dreamsbranch/src/app/[locale]/campaigns/[slug]/page.tsx\")"
     ]
   }
 }

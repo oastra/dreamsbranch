@@ -1,11 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { db } from '@/lib/db';
 import { NewsCard } from '@/components/news/NewsCard';
 import { ContactSection } from '@/components/contact/ContactSection';
+import { Breadcrumb } from '@/components/shared/Breadcrumb';
 import { ShareSection } from '@/components/shared/ShareSection';
 import type { NewsArticle } from '@/types/database';
 
@@ -419,17 +419,13 @@ export default async function NewsArticlePage({
       {/* ── Breadcrumb ───────────────────────────────────────────── */}
       <section className="border-b border-border bg-white py-3">
         <div className="container-page flex flex-wrap items-center justify-between gap-2">
-          <nav className="flex items-center gap-1 text-body-sm text-text-secondary">
-            <Link href={`/${locale}`} className="hover:text-secondary">
-              {t('news.breadcrumb_home')}
-            </Link>
-            <span className="text-text-secondary/50">&rarr;</span>
-            <Link href={`/${locale}/news`} className="hover:text-secondary">
-              {t('news.breadcrumb_news')}
-            </Link>
-            <span className="text-text-secondary/50">&rarr;</span>
-            <span className="text-text-strong line-clamp-1 max-w-[300px]">{title}</span>
-          </nav>
+          <Breadcrumb
+            crumbs={[
+              { label: t('news.breadcrumb_home'), href: `/${locale}` },
+              { label: t('news.breadcrumb_news'), href: `/${locale}/news` },
+            ]}
+            current={title}
+          />
           <span className="text-body-sm text-text-secondary">{publishDate}</span>
         </div>
       </section>

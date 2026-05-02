@@ -1,11 +1,8 @@
-import Link from "next/link";
+import { Breadcrumb, type Crumb } from "@/components/shared/Breadcrumb";
 import { ProductGallery } from "./ProductGallery";
 import { ProductBuyPanel } from "./ProductBuyPanel";
 
-type BreadcrumbCrumb = {
-  label: string;
-  href: string;
-};
+type BreadcrumbCrumb = Crumb;
 
 type BuyPanelLabels = React.ComponentProps<typeof ProductBuyPanel>["labels"];
 
@@ -40,25 +37,12 @@ export function ProductHero({
     <section className="pt-6 pb-10 sm:pt-8 lg:pt-10 lg:pb-14">
       <div className="container-page">
         {/* ── Breadcrumb ─────────────────────────────────────── */}
-        <nav
-          aria-label={breadcrumb.ariaLabel}
-          className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-body-sm text-text-secondary lg:mb-8"
-        >
-          {breadcrumb.crumbs.map((crumb) => (
-            <span key={crumb.href} className="flex items-center gap-2">
-              <Link
-                href={crumb.href}
-                className="transition-colors hover:text-secondary"
-              >
-                {crumb.label}
-              </Link>
-              <span aria-hidden className="text-text-secondary/60">
-                &rarr;
-              </span>
-            </span>
-          ))}
-          <span className="text-text-strong">{breadcrumb.current}</span>
-        </nav>
+        <Breadcrumb
+          crumbs={breadcrumb.crumbs}
+          current={breadcrumb.current}
+          ariaLabel={breadcrumb.ariaLabel}
+          className="mb-6 lg:mb-8"
+        />
 
         {/* ── Hero grid ──────────────────────────────────────── */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">

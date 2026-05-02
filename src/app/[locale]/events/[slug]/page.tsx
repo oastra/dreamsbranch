@@ -1,10 +1,10 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { db } from '@/lib/db';
 import { EventCard } from '@/components/events/EventCard';
+import { Breadcrumb } from '@/components/shared/Breadcrumb';
 import { ShareSection } from '@/components/shared/ShareSection';
 import { VolunteerCTA } from '@/components/shared/VolunteerCTA';
 import { ContactSection } from '@/components/contact/ContactSection';
@@ -242,17 +242,13 @@ export default async function EventDetailPage({
       {/* ── Breadcrumb ───────────────────────────────────────────── */}
       <section className="border-b border-border bg-white py-3">
         <div className="container-page">
-          <nav className="flex flex-wrap items-center gap-1 text-body-sm text-text-secondary">
-            <Link href={`/${locale}`} className="hover:text-secondary">
-              {t('events.breadcrumb_home')}
-            </Link>
-            <span className="text-text-secondary/50">&rarr;</span>
-            <Link href={`/${locale}/events`} className="hover:text-secondary">
-              {t('events.breadcrumb_events')}
-            </Link>
-            <span className="text-text-secondary/50">&rarr;</span>
-            <span className="text-text-strong">{title}</span>
-          </nav>
+          <Breadcrumb
+            crumbs={[
+              { label: t('events.breadcrumb_home'), href: `/${locale}` },
+              { label: t('events.breadcrumb_events'), href: `/${locale}/events` },
+            ]}
+            current={title}
+          />
 
           {/* Tags */}
           <div className="mt-3 flex flex-wrap gap-2">

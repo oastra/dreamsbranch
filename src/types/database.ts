@@ -91,6 +91,8 @@ export type Database = {
           id: string
           preset_amounts: number[]
           published_at: string | null
+          short_description_en: string | null
+          short_description_ua: string | null
           slug: string
           sort_order: number
           status: Database["public"]["Enums"]["content_status"]
@@ -111,6 +113,8 @@ export type Database = {
           id?: string
           preset_amounts?: number[]
           published_at?: string | null
+          short_description_en?: string | null
+          short_description_ua?: string | null
           slug: string
           sort_order?: number
           status?: Database["public"]["Enums"]["content_status"]
@@ -131,6 +135,8 @@ export type Database = {
           id?: string
           preset_amounts?: number[]
           published_at?: string | null
+          short_description_en?: string | null
+          short_description_ua?: string | null
           slug?: string
           sort_order?: number
           status?: Database["public"]["Enums"]["content_status"]

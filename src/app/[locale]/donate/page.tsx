@@ -4,6 +4,7 @@ import { ContactSection } from "@/components/contact/ContactSection";
 import { CardPaymentCard } from "@/components/donate/CardPaymentCard";
 import { DonatePageHeader } from "@/components/donate/DonatePageHeader";
 import { DonationFormCard } from "@/components/donate/DonationFormCard";
+import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { VolunteerCTA } from "@/components/shared/VolunteerCTA";
 
@@ -94,41 +95,12 @@ export default async function DonatePage({
             {t("donate.faq.title")}
           </SectionHeading>
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <details
-                key={n}
-                className="group h-fit rounded-2xl border border-border bg-white px-6 py-5 open:border-secondary-10 open:bg-secondary-10"
-              >
-                <summary className="flex min-h-16.5 cursor-pointer list-none items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-small font-medium text-white">
-                      {String(n).padStart(2, "0")}
-                    </span>
-                    <span className="text-h3 text-text-strong">
-                      {t(`donate.faq.q${n}`)}
-                    </span>
-                  </div>
-                  <svg
-                    className="h-5 w-5 shrink-0 text-text-secondary transition-transform group-open:rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </summary>
-                <p className="mt-4 pl-12 text-body text-text-secondary">
-                  {t(`donate.faq.a${n}`)}
-                </p>
-              </details>
-            ))}
-          </div>
+          <FaqAccordion
+            items={[1, 2, 3, 4, 5].map((n) => ({
+              question: t(`donate.faq.q${n}`),
+              answer: t(`donate.faq.a${n}`),
+            }))}
+          />
         </div>
       </section>
 

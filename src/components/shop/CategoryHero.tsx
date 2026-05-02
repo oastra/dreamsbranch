@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
 
 export type CategoryHeroCollage = {
   left: string | null;
@@ -33,20 +33,14 @@ export function CategoryHero({
     <section className="pt-6 pb-8 sm:pt-8 lg:pt-10 lg:pb-12">
       <div className="container-page">
         {/* Breadcrumb */}
-        <nav
-          aria-label="Breadcrumb"
-          className="mb-6 flex flex-wrap items-center gap-2 text-body-sm text-text-secondary lg:mb-8"
-        >
-          <Link href={`/${locale}`} className="transition-colors hover:text-secondary">
-            {breadcrumbHomeLabel}
-          </Link>
-          <span aria-hidden className="text-text-secondary/60">&rarr;</span>
-          <Link href={`/${locale}/shop`} className="transition-colors hover:text-secondary">
-            {breadcrumbShopLabel}
-          </Link>
-          <span aria-hidden className="text-text-secondary/60">&rarr;</span>
-          <span className="text-text-strong">{title}</span>
-        </nav>
+        <Breadcrumb
+          crumbs={[
+            { label: breadcrumbHomeLabel, href: `/${locale}` },
+            { label: breadcrumbShopLabel, href: `/${locale}/shop` },
+          ]}
+          current={title}
+          className="mb-6 lg:mb-8"
+        />
 
         {/*
           Mobile (default):  1 column  — vyshyvanka • title • threads
