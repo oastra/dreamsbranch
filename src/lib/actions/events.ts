@@ -13,14 +13,14 @@ function toSnake(input: Record<string, unknown>) {
     description_en: input.descriptionEn ?? null,
     cover_image: input.coverImage ?? null,
     gallery_images: input.galleryImages ?? [],
-    date: input.date instanceof Date ? input.date.toISOString().split('T')[0] : input.date,
+    event_date: input.date instanceof Date ? input.date.toISOString().split('T')[0] : input.date,
     start_time: input.startTime ?? null,
     end_time: input.endTime ?? null,
     location: input.location ?? null,
     location_map_url: input.locationMapUrl || null,
     tags: input.tags ?? [],
     status: (input.status as string).toLowerCase(),
-    volunteer_cta: input.volunteerCta ?? false,
+    show_volunteer_cta: input.volunteerCta ?? false,
     financial_report: input.financialReport ?? null,
   };
 }

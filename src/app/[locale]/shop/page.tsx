@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { db } from "@/lib/db";
-import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
-import { MaskedImageCarousel } from "@/components/shared/MaskedImageCarousel";
+import { PageHeroWithCarousel } from "@/components/shared/PageHeroWithCarousel";
 import { InfoBanner } from "@/components/shared/InfoBanner";
 import { CategoryCard } from "@/components/shop/CategoryCard";
 import { ProductSection } from "@/components/shop/ProductSection";
@@ -152,39 +151,20 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
 
-      <section className="py-8 sm:py-12 lg:py-16">
-        <div className="container-page">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-stretch lg:gap-12 xl:gap-16">
-            <PageHeroHeading
-              title={t("shop.title")}
-              className="text-center lg:col-start-1 lg:row-start-1 lg:self-end lg:text-left"
-              titleClassName="mb-title-gap"
-            />
+      <PageHeroWithCarousel title={t("shop.title")} slides={HERO_SLIDES}>
+        <div className="flex flex-col items-center gap-8 lg:items-start">
+          <p className="max-w-xl text-center text-body whitespace-pre-line text-text-primary lg:text-left">
+            {t("shop.description")}
+          </p>
 
-            <div className="aspect-[716/500] lg:aspect-auto lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full">
-              <MaskedImageCarousel
-                slides={HERO_SLIDES}
-                aspectRatio={null}
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="h-full"
-              />
-            </div>
-
-            <div className="flex flex-col items-center gap-8 lg:col-start-1 lg:row-start-2 lg:items-start lg:self-start">
-              <p className="max-w-xl text-center text-body whitespace-pre-line text-text-primary lg:text-left">
-                {t("shop.description")}
-              </p>
-
-              <Link
-                href={`/${locale}/shop#offerings`}
-                className="inline-flex h-[54px] min-w-[240px] items-center justify-center rounded-full bg-secondary px-10 text-body font-medium text-white transition-opacity hover:opacity-90"
-              >
-                {t("shop.cta")}
-              </Link>
-            </div>
-          </div>
+          <Link
+            href={`/${locale}/shop#offerings`}
+            className="inline-flex h-[54px] min-w-[240px] items-center justify-center rounded-full bg-secondary px-10 text-body font-medium text-white transition-opacity hover:opacity-90"
+          >
+            {t("shop.cta")}
+          </Link>
         </div>
-      </section>
+      </PageHeroWithCarousel>
 
       <section className="px-5 sm:px-0">
         <div className="sm:container-page sm:max-w-none sm:px-0">

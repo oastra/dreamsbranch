@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ArrowRightUp from "../icons/ArrowRightUp";
 import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
+import { EventBadges } from "./EventBadges";
 
 export interface EventCardProps {
   slug: string;
@@ -36,30 +37,17 @@ export function EventCard({
         </p>
       )}
 
-      {/* Tags — min-height reserves space for two rows so images align across cards */}
-      <div className="mt-4 flex min-h-18.5 flex-wrap content-start gap-2">
-        {isArchived ? (
-          <span className="inline-flex items-center rounded-full bg-grey-40 px-4 py-1.5 text-body-sm font-medium text-text-secondary">
-            {tagLabels.archived}
-          </span>
-        ) : (
-          <>
-            <span className="inline-flex items-center rounded-full bg-[#3DC472] px-4 py-1.5 text-body-sm font-medium text-white">
-              {tagLabels.active}
-            </span>
-            {tags.includes("looking_for_partners") && (
-              <span className="inline-flex items-center rounded-full bg-secondary px-4 py-1.5 text-body-sm font-medium text-white">
-                {tagLabels.looking_for_partners}
-              </span>
-            )}
-            {tags.includes("looking_for_volunteers") && (
-              <span className="inline-flex items-center rounded-full bg-primary px-4 py-1.5 text-body-sm font-medium text-text-strong">
-                {tagLabels.looking_for_volunteers}
-              </span>
-            )}
-          </>
-        )}
-      </div>
+      <EventBadges
+        isArchived={isArchived}
+        tags={tags}
+        labels={{
+          active: tagLabels.active,
+          archived: tagLabels.archived,
+          looking_for_partners: tagLabels.looking_for_partners,
+          looking_for_volunteers: tagLabels.looking_for_volunteers,
+        }}
+        className="mt-4 min-h-18.5 content-start"
+      />
 
       {/* Image with arrow overlay — mt-auto pins the image to the bottom for consistent alignment */}
       <div className="relative mt-auto pt-5">

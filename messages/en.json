@@ -74,9 +74,9 @@
     "breadcrumb_campaigns": "Fundraising",
     "campaign_active": "Fundraising active",
     "campaign_closed": "Fundraising closed",
-    "faq_title": "FAQ",
+    "faq_title": "Common Questions",
     "tab_description": "Description",
-    "tab_faq": "FAQ",
+    "tab_faq": "Common Questions",
     "share_title": "Share this campaign",
     "copy_link": "Copy link",
     "copy_link_short": "copy link",
@@ -221,8 +221,10 @@
     "card_cvv_placeholder": "•••",
     "submit": "Donate",
     "cancel": "Cancel",
+    "success_thank_you": "Thank you for your support!",
+    "success_image_alt": "Thank you for your support",
     "faq": {
-      "title": "Frequently asked questions",
+      "title": "Common Questions",
       "q1": "What payment methods do you accept?",
       "a1": "We accept Visa and Mastercard, as well as PayPal, Apple Pay and Google Pay.",
       "q2": "Is there a fee on donations?",
@@ -273,7 +275,29 @@
     "charity_event": "Charity event",
     "what_will_be": "What will be at the event",
     "who_can_join": "Who can join",
-    "why_come": "Why you should come",
+    "why_come": "Why you should come:",
+    "info_what_items": [
+      "sale of hot, freshly grilled sausages",
+      "opportunity to make a charitable donation",
+      "a friendly atmosphere",
+      "a chance to connect, support one another and spend time meaningfully"
+    ],
+    "info_who_intro": "Anyone willing can join:",
+    "info_who_items": [
+      "members of the community",
+      "friends and families",
+      "students, schoolchildren, workers",
+      "everyone who wants to support the Ukrainian military",
+      "Come on your own, with friends or with family."
+    ],
+    "info_who_outro": "Even a small contribution matters.",
+    "info_why_items": [
+      "do a good deed",
+      "support the Armed Forces of Ukraine",
+      "spend time in a pleasant atmosphere",
+      "enjoy delicious hot sausages"
+    ],
+    "info_cta": "Together we can do more. Come along, invite your friends and join our charity event.",
     "copy_link": "Copy link",
     "share": "Share via:",
     "volunteer_cta_title": "Become a fund volunteer",
@@ -414,7 +438,7 @@
       "cta": "View reports"
     },
     "faq": {
-      "title": "Frequently Asked Questions",
+      "title": "Common Questions",
       "q1": "What do you do?",
       "a1": "We are a volunteer organisation affiliated with the Union of Ukrainian Women of Australia. We raise funds for the Armed Forces, run cultural events, and unite Ukrainians in Sydney.",
       "q2": "Who do you help?",

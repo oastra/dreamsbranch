@@ -129,11 +129,11 @@ export function AboutForm({ settings }: Props) {
         </div>
       </div>
 
-      {/* FAQ */}
+      {/* Common Questions */}
       <div className="bg-white rounded-xl border border-border p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-body font-semibold">FAQ</h2>
+            <h2 className="text-body font-semibold">Common Questions</h2>
             <p className="text-caption text-text-tertiary">
               Question & answer pairs in Ukrainian and English.
             </p>

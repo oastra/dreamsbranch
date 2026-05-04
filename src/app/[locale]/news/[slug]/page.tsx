@@ -6,6 +6,7 @@ import { db } from '@/lib/db';
 import { NewsCard } from '@/components/news/NewsCard';
 import { ContactSection } from '@/components/contact/ContactSection';
 import { Breadcrumb } from '@/components/shared/Breadcrumb';
+import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 import { ShareSection } from '@/components/shared/ShareSection';
 import type { NewsArticle } from '@/types/database';
 
@@ -45,6 +46,10 @@ const MOCK_ARTICLE: ArticleDetail = {
         ],
       },
       {
+        type: 'image',
+        attrs: { src: '/images/events/hands-with-heart.webp', alt: 'Protest' },
+      },
+      {
         type: 'paragraph',
         content: [
           {
@@ -52,6 +57,10 @@ const MOCK_ARTICLE: ArticleDetail = {
             text: 'В останні тижні в найбільших містах світу — від Канберри та Сіднея до Вашингтона й Берліна — відбулися масові акції протесту. Тисячі людей виступили проти політичного тиску на Україну з метою змусити її до територіальних поступок або відмови від суверенітету.',
           },
         ],
+      },
+      {
+        type: 'image',
+        attrs: { src: '/images/events/events.webp', alt: 'Community gathering' },
       },
       {
         type: 'heading',
@@ -139,6 +148,10 @@ const MOCK_ARTICLE: ArticleDetail = {
         ],
       },
       {
+        type: 'image',
+        attrs: { src: '/images/events/hands-with-heart.webp', alt: 'Protest' },
+      },
+      {
         type: 'paragraph',
         content: [
           {
@@ -146,6 +159,10 @@ const MOCK_ARTICLE: ArticleDetail = {
             text: 'In recent weeks, mass protests have taken place in major cities around the world — from Canberra and Sydney to Washington and Berlin. Thousands of people spoke out against political pressure on Ukraine to force it into territorial concessions or abandonment of sovereignty.',
           },
         ],
+      },
+      {
+        type: 'image',
+        attrs: { src: '/images/events/events.webp', alt: 'Community gathering' },
       },
       {
         type: 'heading',
@@ -225,7 +242,7 @@ const MOCK_ARTICLE: ArticleDetail = {
   tags: [],
   is_featured: false,
   status: 'published',
-  published_at: '2026-02-18T10:00:00Z',
+  published_at: '2026-02-16T10:00:00Z',
 };
 
 const MOCK_RELATED: ArticleDetail[] = [
@@ -289,28 +306,43 @@ function renderRichText(doc: unknown): React.ReactNode[] {
   const root = doc as { content?: TiptapNode[] };
   if (!root.content) return [];
 
+  let imageCount = 0;
   return root.content.map((node, i) => {
     switch (node.type) {
       case 'heading': {
         const level = (node.attrs?.level as number) ?? 3;
         const text = renderInline(node.content);
-        if (level === 2) return <h2 key={i} className="text-h2 mt-8 mb-4 text-text-strong">{text}</h2>;
-        return <h3 key={i} className="text-h3 mt-6 mb-3 text-text-strong">{text}</h3>;
+        if (level === 2) return <h2 key={i} className="mt-8 mb-4 text-h2 font-bold text-text-strong">{text}</h2>;
+        return <h3 key={i} className="mt-8 mb-4 text-h3 font-bold text-text-strong lg:text-[24px]">{text}</h3>;
       }
       case 'paragraph':
-        return <p key={i} className="text-body mb-4 text-text-primary leading-relaxed">{renderInline(node.content)}</p>;
-      case 'image':
+        return <p key={i} className="mb-5 text-body leading-relaxed text-text-primary">{renderInline(node.content)}</p>;
+      case 'image': {
+        imageCount += 1;
+        // First image renders full-width hero. Subsequent images float
+        // left so the surrounding paragraphs wrap around them on tablet+.
+        const isHero = imageCount === 1;
+        if (isHero) {
+          return (
+            <div key={i} className="relative my-8 aspect-[16/8] w-full overflow-hidden rounded-2xl bg-secondary-10 lg:my-10">
+              {node.attrs?.src ? (
+                <Image src={node.attrs.src as string} alt={(node.attrs?.alt as string) ?? ''} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 1200px" />
+              ) : (
+                <ImagePlaceholder size="md" />
+              )}
+            </div>
+          );
+        }
         return (
-          <div key={i} className="relative my-6 aspect-video overflow-hidden rounded-xl">
-            <Image
-              src={node.attrs?.src as string}
-              alt={(node.attrs?.alt as string) ?? ''}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 720px"
-            />
+          <div key={i} className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
+            {node.attrs?.src ? (
+              <Image src={node.attrs.src as string} alt={(node.attrs?.alt as string) ?? ''} fill className="object-cover" sizes="(max-width: 768px) 100vw, 45vw" />
+            ) : (
+              <ImagePlaceholder size="md" />
+            )}
           </div>
         );
+      }
       default:
         return null;
     }
@@ -416,61 +448,38 @@ export default async function NewsArticlePage({
 
   return (
     <>
-      {/* ── Breadcrumb ───────────────────────────────────────────── */}
-      <section className="border-b border-border bg-white py-3">
-        <div className="container-page flex flex-wrap items-center justify-between gap-2">
-          <Breadcrumb
-            crumbs={[
-              { label: t('news.breadcrumb_home'), href: `/${locale}` },
-              { label: t('news.breadcrumb_news'), href: `/${locale}/news` },
-            ]}
-            current={title}
-          />
-          <span className="text-body-sm text-text-secondary">{publishDate}</span>
-        </div>
-      </section>
-
-      {/* ── Article content ──────────────────────────────────────── */}
-      <article className="section bg-white pt-8">
+      {/* ── Article header + body ────────────────────────────────── */}
+      <article className="bg-white pt-6 pb-10 lg:pt-10 lg:pb-16">
         <div className="container-page">
-          <div className="mx-auto max-w-3xl">
-            {/* Title */}
-            <h1 className="text-h2 mb-6 text-text-strong lg:text-[40px] lg:leading-[120%]">
-              {title}
-            </h1>
-
-            {/* Cover image */}
-            {article.cover_image && (
-              <div className="relative mb-8 aspect-video overflow-hidden rounded-2xl">
-                <Image
-                  src={article.cover_image}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 720px"
-                />
-              </div>
-            )}
-
-            {/* Placeholder image if no cover */}
-            {!article.cover_image && (
-              <div className="mb-8 flex aspect-video items-center justify-center overflow-hidden rounded-2xl bg-secondary-10">
-                <div className="h-20 w-20 rounded-full bg-secondary-40 opacity-60" />
-              </div>
-            )}
-
-            {/* Body (rich text) */}
-            <div className="prose-custom">
-              {renderRichText(body)}
-            </div>
-
-            {/* ── Share section ─────────────────────────────────── */}
-            <ShareSection
-              copyLinkLabel={t('news.copy_link')}
-              shareLabel={t('news.share')}
+          {/* Breadcrumb + date row */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <Breadcrumb
+              crumbs={[
+                { label: t('news.breadcrumb_home'), href: `/${locale}` },
+                { label: t('news.breadcrumb_news'), href: `/${locale}/news` },
+              ]}
+              current={title}
             />
+            <span className="text-body-sm text-text-secondary">{publishDate}</span>
           </div>
+
+          {/* Title */}
+          <h1 className="mt-6 mb-6 text-[24px] font-bold leading-[120%] text-text-strong md:text-[28px] lg:mt-8 lg:mb-8 lg:text-[40px] lg:leading-[110%]">
+            {title}
+          </h1>
+
+          {/* Body (rich text — first image renders as full-width hero,
+              subsequent images float left so paragraphs wrap around them) */}
+          <div className="text-body text-text-primary">
+            {renderRichText(body)}
+            <div className="clear-both" />
+          </div>
+
+          {/* ── Share section ─────────────────────────────────── */}
+          <ShareSection
+            copyLinkLabel={t('news.copy_link')}
+            shareLabel={t('news.share')}
+          />
         </div>
       </article>
 

@@ -6,8 +6,7 @@ import { ArchivedCampaignsList } from "@/components/campaigns/ArchivedCampaignsL
 import { SupportSection } from "@/components/shared/SupportSection";
 import { ReportsBanner } from "@/components/shared/ReportsBanner";
 import { ContactSection } from "@/components/contact/ContactSection";
-import { MaskedImageCarousel } from "@/components/shared/MaskedImageCarousel";
-import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
+import { PageHeroWithCarousel } from "@/components/shared/PageHeroWithCarousel";
 import type {
   CampaignsPageSettings,
   DeliveredItem,
@@ -102,70 +101,46 @@ export default async function CampaignsPage({
   return (
     <>
       {/* ── Page hero ────────────────────────────────────────────── */}
-      <section className="py-8 sm:py-12 lg:py-16">
-        <div className="container-page">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-stretch lg:gap-12 xl:gap-16">
-            {/* Eyebrow + title — centered on mobile/tablet, left-aligned on desktop */}
-            <PageHeroHeading
-              title={t("campaigns.title")}
-              className="text-center lg:col-start-1 lg:row-start-1 lg:self-end lg:text-left"
-              titleClassName="mb-title-gap"
-            />
+      <PageHeroWithCarousel title={t("campaigns.title")} slides={heroSlides}>
+        <p className="text-body mb-6 max-w-xl whitespace-pre-line text-text-primary lg:mb-8">
+          {t("campaigns.description")}
+        </p>
 
-            {/* Carousel — aspect-ratio on mobile, fills the left-column height on desktop */}
-            <div className="aspect-[716/500] lg:aspect-auto lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full">
-              <MaskedImageCarousel
-                slides={heroSlides}
-                aspectRatio={null}
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="h-full"
-              />
-            </div>
+        <p className="text-body-sm mb-3 font-semibold uppercase tracking-wide text-text-strong">
+          {t("campaigns.recently_delivered")}
+        </p>
 
-            {/* Description + recently delivered */}
-            <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
-              <p className="text-body mb-6 max-w-xl whitespace-pre-line text-text-primary lg:mb-8">
-                {t("campaigns.description")}
-              </p>
+        {/* Cards: horizontal scroll on mobile, 3-col grid on tablet+ */}
+        <div className="-mx-5 flex gap-3 overflow-x-auto px-5 pb-1 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0">
+          {deliveredItems.map((item) => (
+            <div
+              key={item.label}
+              className={`relative h-[193px] w-[220px] shrink-0 overflow-hidden rounded-2xl ${item.bg} sm:h-[192px] sm:w-full sm:max-w-[183px] lg:max-w-[196px]`}
+            >
+              {/* Image fills the card (above the bottom label strip) */}
+              <div className="absolute inset-x-0 top-0 bottom-12">
+                <Image
+                  src={item.image}
+                  alt=""
+                  fill
+                  sizes="(max-width: 640px) 220px, (max-width: 1024px) 183px, 196px"
+                  className="object-contain p-2 pl-10 sm:pl-12 lg:pl-14"
+                />
+              </div>
 
-              <p className="text-body-sm mb-3 font-semibold uppercase tracking-wide text-text-strong">
-                {t("campaigns.recently_delivered")}
-              </p>
+              {/* Number — top-left, overlays the image */}
+              <span className="absolute left-3 top-2 z-10 text-[36px] font-semibold leading-none text-text-strong sm:left-4 sm:top-3 sm:text-[40px] lg:text-[44px]">
+                {item.count}
+              </span>
 
-              {/* Cards: horizontal scroll on mobile, 3-col grid on tablet+ */}
-              <div className="-mx-5 flex gap-3 overflow-x-auto px-5 pb-1 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0">
-                {deliveredItems.map((item) => (
-                  <div
-                    key={item.label}
-                    className={`relative h-[193px] w-[220px] shrink-0 overflow-hidden rounded-2xl ${item.bg} sm:h-[192px] sm:w-full sm:max-w-[183px] lg:max-w-[196px]`}
-                  >
-                    {/* Image fills the card (above the bottom label strip) */}
-                    <div className="absolute inset-x-0 top-0 bottom-12">
-                      <Image
-                        src={item.image}
-                        alt=""
-                        fill
-                        sizes="(max-width: 640px) 220px, (max-width: 1024px) 183px, 196px"
-                        className="object-contain p-2 pl-10 sm:pl-12 lg:pl-14"
-                      />
-                    </div>
-
-                    {/* Number — top-left, overlays the image */}
-                    <span className="absolute left-3 top-2 z-10 text-[36px] font-semibold leading-none text-text-strong sm:left-4 sm:top-3 sm:text-[40px] lg:text-[44px]">
-                      {item.count}
-                    </span>
-
-                    {/* Bottom label strip — full-width, 48px tall */}
-                    <div className="absolute inset-x-0 bottom-0 flex h-12 items-center justify-center bg-secondary text-body font-medium text-white">
-                      {item.label}
-                    </div>
-                  </div>
-                ))}
+              {/* Bottom label strip — full-width, 48px tall */}
+              <div className="absolute inset-x-0 bottom-0 flex h-12 items-center justify-center bg-secondary text-body font-medium text-white">
+                {item.label}
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      </section>
+      </PageHeroWithCarousel>
 
       {/* ── Active campaigns ─────────────────────────────────────── */}
       <section className="section">

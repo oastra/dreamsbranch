@@ -24,7 +24,7 @@ export function CampaignTabs({
       {/* Tabs sit inside their own light-blue capsule, separate from the
           content below. Active = filled blue, idle = soft yellow. */}
       <div className="rounded-[20px] bg-secondary-10 p-3 sm:p-4">
-        <div role="tablist" className="flex flex-wrap ">
+        <div role="tablist" className="flex flex-wrap gap-3 lg:gap-0">
           <TabButton
             isActive={active === "description"}
             onClick={() => setActive("description")}
@@ -60,7 +60,7 @@ function TabButton({
       role="tab"
       aria-selected={isActive}
       onClick={onClick}
-      className={`rounded-t-lg rounded-b-none px-6 py-2 text-body-sm font-medium transition-colors sm:px-8 sm:py-2.5 ${
+      className={`rounded-full px-6 py-2 text-body font-medium transition-colors sm:px-8 sm:py-2.5 lg:rounded-t-lg lg:rounded-b-none ${
         isActive
           ? "bg-secondary text-white"
           : "bg-[#FFEF99] text-text-strong hover:opacity-90"

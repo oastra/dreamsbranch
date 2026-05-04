@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ContactSection } from "@/components/contact/ContactSection";
 import { CardPaymentCard } from "@/components/donate/CardPaymentCard";
 import { DonatePageHeader } from "@/components/donate/DonatePageHeader";
+import { DonationCardsWithSuccess } from "@/components/donate/DonationCardsWithSuccess";
 import { DonationFormCard } from "@/components/donate/DonationFormCard";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { SectionHeading } from "@/components/shared/SectionHeading";
@@ -40,42 +41,48 @@ export default async function DonatePage({
 
       <section className="pb-12 sm:pb-16 lg:pb-20">
         <div className="container-page">
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-8">
-            <DonationFormCard
-              labels={{
-                frequencyOnce: t("donate.frequency_once"),
-                frequencyMonthly: t("donate.frequency_monthly"),
-                amountLabel: t("donate.amount_label"),
-                amountCurrency: t("donate.amount_currency"),
-                presetAriaTemplate: t("donate.preset_aria", {
-                  value: "{value}",
-                }),
-                monthlyLabel: t("donate.monthly_label"),
-                monthlyCancelNote: t("donate.monthly_cancel_note"),
-                fastPayTitle: t("donate.fast_pay_title"),
-                fastPayPaypalAria: t("donate.fast_pay_paypal_aria"),
-                fastPayAppleAria: t("donate.fast_pay_apple_aria"),
-                fastPayGoogleAria: t("donate.fast_pay_google_aria"),
-              }}
-            />
-
-            <CardPaymentCard
-              labels={{
-                sectionTitle: t("donate.card_section_title"),
-                formTitle: t("donate.card_form_title"),
-                nameLabel: t("donate.card_name_label"),
-                namePlaceholder: t("donate.card_name_placeholder"),
-                expiryLabel: t("donate.card_expiry_label"),
-                expiryPlaceholder: t("donate.card_expiry_placeholder"),
-                numberLabel: t("donate.card_number_label"),
-                numberPlaceholder: t("donate.card_number_placeholder"),
-                cvvLabel: t("donate.card_cvv_label"),
-                cvvPlaceholder: t("donate.card_cvv_placeholder"),
-                submit: t("donate.submit"),
-                cancel: t("donate.cancel"),
-              }}
-            />
-          </div>
+          <DonationCardsWithSuccess
+            successImage="/images/thank_you.webp"
+            successImageAlt={t("donate.success_image_alt")}
+            thankYouLabel={t("donate.success_thank_you")}
+            formCard={
+              <DonationFormCard
+                labels={{
+                  frequencyOnce: t("donate.frequency_once"),
+                  frequencyMonthly: t("donate.frequency_monthly"),
+                  amountLabel: t("donate.amount_label"),
+                  amountCurrency: t("donate.amount_currency"),
+                  presetAriaTemplate: t("donate.preset_aria", {
+                    value: "{value}",
+                  }),
+                  monthlyLabel: t("donate.monthly_label"),
+                  monthlyCancelNote: t("donate.monthly_cancel_note"),
+                  fastPayTitle: t("donate.fast_pay_title"),
+                  fastPayPaypalAria: t("donate.fast_pay_paypal_aria"),
+                  fastPayAppleAria: t("donate.fast_pay_apple_aria"),
+                  fastPayGoogleAria: t("donate.fast_pay_google_aria"),
+                }}
+              />
+            }
+            paymentCard={
+              <CardPaymentCard
+                labels={{
+                  sectionTitle: t("donate.card_section_title"),
+                  formTitle: t("donate.card_form_title"),
+                  nameLabel: t("donate.card_name_label"),
+                  namePlaceholder: t("donate.card_name_placeholder"),
+                  expiryLabel: t("donate.card_expiry_label"),
+                  expiryPlaceholder: t("donate.card_expiry_placeholder"),
+                  numberLabel: t("donate.card_number_label"),
+                  numberPlaceholder: t("donate.card_number_placeholder"),
+                  cvvLabel: t("donate.card_cvv_label"),
+                  cvvPlaceholder: t("donate.card_cvv_placeholder"),
+                  submit: t("donate.submit"),
+                  cancel: t("donate.cancel"),
+                }}
+              />
+            }
+          />
         </div>
       </section>
 

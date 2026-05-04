@@ -9,7 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
+import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
 import { createEvent, updateEvent } from '@/lib/actions/events';
+
+type LineItem = { label: string; amount: number };
+type FinancialReport = { income: LineItem[]; expenses: LineItem[]; profit: number };
+
+const EMPTY_LINE: LineItem = { label: '', amount: 0 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function EventForm({ event }: { event?: Record<string, any> }) {
@@ -17,22 +23,47 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
   const isEdit = !!event?.id;
   const [saving, setSaving] = useState(false);
 
+  const initialReport: FinancialReport = (event?.financial_report as FinancialReport) ?? {
+    income: [{ ...EMPTY_LINE }],
+    expenses: [{ ...EMPTY_LINE }],
+    profit: 0,
+  };
+
   const [form, setForm] = useState({
     titleUa: event?.title_ua ?? '',
     titleEn: event?.title_en ?? '',
     slug: event?.slug ?? '',
-    descriptionUa: event?.description_ua ?? '',
-    descriptionEn: event?.description_en ?? '',
+    descriptionUa: typeof event?.description_ua === 'string' ? event.description_ua : '',
+    descriptionEn: typeof event?.description_en === 'string' ? event.description_en : '',
     coverImage: event?.cover_image ?? '',
-    date: event?.date ? String(event.date).split('T')[0] : '',
+    galleryImages: (event?.gallery_images ?? []) as string[],
+    date: event?.event_date ? String(event.event_date).split('T')[0] : event?.date ? String(event.date).split('T')[0] : '',
     startTime: event?.start_time ?? '',
     endTime: event?.end_time ?? '',
     location: event?.location ?? '',
     locationMapUrl: event?.location_map_url ?? '',
     status: event?.status ?? 'DRAFT',
-    volunteerCta: event?.volunteer_cta ?? false,
+    volunteerCta: event?.show_volunteer_cta ?? event?.volunteer_cta ?? false,
     tags: (event?.tags ?? []) as string[],
+    financialReport: initialReport,
   });
+
+  function setLine(kind: 'income' | 'expenses', index: number, key: 'label' | 'amount', value: string) {
+    setForm(f => {
+      const list = [...f.financialReport[kind]];
+      list[index] = { ...list[index], [key]: key === 'amount' ? Number(value) : value };
+      return { ...f, financialReport: { ...f.financialReport, [kind]: list } };
+    });
+  }
+  function addLine(kind: 'income' | 'expenses') {
+    setForm(f => ({ ...f, financialReport: { ...f.financialReport, [kind]: [...f.financialReport[kind], { ...EMPTY_LINE }] } }));
+  }
+  function removeLine(kind: 'income' | 'expenses', index: number) {
+    setForm(f => ({ ...f, financialReport: { ...f.financialReport, [kind]: f.financialReport[kind].filter((_, i) => i !== index) } }));
+  }
+  function setProfit(value: string) {
+    setForm(f => ({ ...f, financialReport: { ...f.financialReport, profit: Number(value) } }));
+  }
 
   function set(key: string, value: unknown) {
     setForm(f => ({ ...f, [key]: value }));
@@ -52,7 +83,15 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    const payload = { ...form, date: new Date(form.date) };
+    // Only include the financial report when at least one income line was filled.
+    const reportFilled =
+      form.financialReport.income.some((l) => l.label.trim() || l.amount) ||
+      form.financialReport.expenses.some((l) => l.label.trim() || l.amount);
+    const payload = {
+      ...form,
+      date: new Date(form.date),
+      financialReport: reportFilled ? form.financialReport : undefined,
+    };
     const result = isEdit ? await updateEvent(event.id, payload) : await createEvent(payload);
     setSaving(false);
     if (result.success) {
@@ -104,7 +143,21 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
           <Label>Slug *</Label>
           <Input value={form.slug} onChange={e => set('slug', e.target.value)} placeholder="event-name" required />
         </div>
-        <ImageUpload value={form.coverImage} onChange={url => set('coverImage', url ?? '')} folder="events" label="Cover image" />
+        <ImageUpload
+          value={form.coverImage}
+          onChange={url => set('coverImage', url ?? '')}
+          folder="events"
+          label="Cover image (.webp, ~16:9)"
+        />
+
+        <MultiImageUpload
+          value={form.galleryImages}
+          onChange={urls => set('galleryImages', urls)}
+          folder="events"
+          label="Gallery images (archived events) — up to 6 photos"
+          requirements=".webp, ~1:1 (square). First two appear next to the financial card; the rest fill the row below."
+          minImages={0}
+        />
 
         <div>
           <Label>Tags</Label>
@@ -143,6 +196,55 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
         </label>
       </div>
 
+      {/* ── Financial report — only used when status = ARCHIVED ───── */}
+      <div className="bg-white rounded-xl border border-border p-6 space-y-4">
+        <div>
+          <h2 className="text-body font-semibold">Financial report</h2>
+          <p className="mt-1 text-xs text-text-secondary">
+            Only shown on the public page when status = <strong>Archived</strong>. Leave blank to hide. Each line: a label (the same string is shown to UA + EN visitors) and a numeric amount in AUD. Use <code>+$890 - PayPal збір</code> style labels.
+          </p>
+        </div>
+
+        {(['income', 'expenses'] as const).map((kind) => (
+          <div key={kind} className="space-y-2">
+            <Label>{kind === 'income' ? 'Income lines' : 'Expense lines'}</Label>
+            {form.financialReport[kind].map((line, i) => (
+              <div key={i} className="grid grid-cols-[1fr_140px_auto] gap-2">
+                <Input
+                  placeholder={kind === 'income' ? "$2 938 - cash" : "-$1 411,60 - оренда будинку"}
+                  value={line.label}
+                  onChange={(e) => setLine(kind, i, 'label', e.target.value)}
+                />
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={line.amount || ''}
+                  onChange={(e) => setLine(kind, i, 'amount', e.target.value)}
+                />
+                <Button type="button" variant="outline" onClick={() => removeLine(kind, i)} className="px-3">
+                  ✕
+                </Button>
+              </div>
+            ))}
+            <Button type="button" variant="outline" onClick={() => addLine(kind)} className="rounded-full">
+              + Add {kind === 'income' ? 'income' : 'expense'} line
+            </Button>
+          </div>
+        ))}
+
+        <div className="max-w-xs">
+          <Label>Profit (AUD)</Label>
+          <Input
+            type="number"
+            step="0.01"
+            value={form.financialReport.profit || ''}
+            onChange={(e) => setProfit(e.target.value)}
+            placeholder="0.00"
+          />
+        </div>
+      </div>
+
       <div className="bg-white rounded-xl border border-border p-6">
         <h2 className="text-body font-semibold mb-4">Content</h2>
         <BilingualTabs
@@ -154,7 +256,8 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
               </div>
               <div>
                 <Label>Description (UA)</Label>
-                <Textarea rows={5} value={form.descriptionUa} onChange={e => set('descriptionUa', e.target.value)} />
+                <p className="mb-1 text-xs text-text-secondary">Plain text. Separate paragraphs with a blank line.</p>
+                <Textarea rows={6} value={form.descriptionUa} onChange={e => set('descriptionUa', e.target.value)} />
               </div>
             </>
           }
@@ -166,7 +269,8 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
               </div>
               <div>
                 <Label>Description (EN)</Label>
-                <Textarea rows={5} value={form.descriptionEn} onChange={e => set('descriptionEn', e.target.value)} />
+                <p className="mb-1 text-xs text-text-secondary">Plain text. Separate paragraphs with a blank line.</p>
+                <Textarea rows={6} value={form.descriptionEn} onChange={e => set('descriptionEn', e.target.value)} />
               </div>
             </>
           }

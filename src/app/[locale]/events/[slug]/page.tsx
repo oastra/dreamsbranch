@@ -4,15 +4,17 @@ import { notFound } from 'next/navigation';
 
 import { db } from '@/lib/db';
 import { EventCard } from '@/components/events/EventCard';
+import { EventBadges } from '@/components/events/EventBadges';
+import { EventInfoBlocks } from '@/components/events/EventInfoBlocks';
+import { RelatedEventsCarousel } from '@/components/events/RelatedEventsCarousel';
 import { Breadcrumb } from '@/components/shared/Breadcrumb';
+import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 import { ShareSection } from '@/components/shared/ShareSection';
 import { VolunteerCTA } from '@/components/shared/VolunteerCTA';
 import { ContactSection } from '@/components/contact/ContactSection';
 import type { Event } from '@/types/database';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-
-type InfoBlock = { title: string; content: string[] };
 
 type FinancialReport = {
   income: { label: string; amount: number }[];
@@ -72,7 +74,7 @@ const MOCK_ACTIVE_EVENT: Event = {
     { title: 'Who can join', content: ['Everyone is welcome!', 'children and teenagers', 'families and couples', 'anyone who wants to support the Armed Forces', 'Every contribution, no matter how small, matters.'] },
     { title: 'Why you should come', content: ['delicious food for a good cause', 'support the Armed Forces of Ukraine', 'spend time in a friendly environment', 'enjoy great community spirit'] },
   ] as unknown as Event['info_blocks_en'],
-  cover_image: null,
+  cover_image: '/images/events/events.webp',
   gallery_images: [],
   event_date: '2026-02-16',
   start_time: '12:00',
@@ -94,27 +96,40 @@ const MOCK_ARCHIVED_EVENT: Event = {
   slug: 'bunnings-ashfield-dec',
   status: 'archived',
   event_date: '2025-12-15',
-  gallery_images: [],
+  gallery_images: [
+    '/images/events/events.webp',
+    '/images/events/hands-with-heart.webp',
+    '/images/photoReport/product-01.webp',
+    '/images/photoReport/product-02.webp',
+    '/images/photoReport/product-03.webp',
+    '/images/photoReport/proof-01.webp',
+  ],
   financial_report: {
     income: [
-      { label: '$2 928 coin', amount: 2928 },
-      { label: '$3 295,07 EFTPOS п\'ятниця', amount: 3295.07 },
-      { label: '$11 626,73 EFTPOS субота', amount: 11626.73 },
-      { label: '$689 онлайну', amount: 689 },
+      { label: '$2 938-cash', amount: 2938 },
+      { label: "$3 249,57-EFTPOS п'ятниця", amount: 3249.57 },
+      { label: '$11 628,73-EFTPOS субота', amount: 11628.73 },
+      { label: '$680-розмінка', amount: 680 },
     ],
     expenses: [
-      { label: '$13 334 витрати (ЄЛТН-зетінки)', amount: 13334 },
-      { label: '$1 411,10 закупки Буннінгс', amount: 1411.10 },
-      { label: '$869 Русяль або не потрібно', amount: 869 },
-      { label: '$2 204 контуна нашу на маркет', amount: 2204 },
+      { label: '-$3 334- витрати ($784-пампушки)', amount: 3334 },
+      { label: '-$1 411,60- оренда будинку', amount: 1411.60 },
+      { label: '+$890-PayPal збір на потреби', amount: -890 },
+      { label: '-$2 264-вартість місця на маркеті', amount: 2264 },
     ],
-    profit: 11018.70,
+    profit: 11016.70,
     note: undefined,
   } as unknown as Event['financial_report'],
   show_volunteer_cta: false,
 };
 
-const MOCK_RELATED: Event[] = [MOCK_ACTIVE_EVENT];
+const MOCK_RELATED: Event[] = [
+  { ...MOCK_ACTIVE_EVENT, id: 'mock-r1', slug: 'bunnings-kirrawee', title_ua: 'Bunnings Kirrawee', title_en: 'Bunnings Kirrawee' },
+  { ...MOCK_ACTIVE_EVENT, id: 'mock-r2', slug: 'bunnings-padstow', title_ua: 'Bunnings Padstow', title_en: 'Bunnings Padstow' },
+  { ...MOCK_ACTIVE_EVENT, id: 'mock-r3', slug: 'bunnings-castle-hill-apr', title_ua: 'Bunnings Castle Hill', title_en: 'Bunnings Castle Hill' },
+  { ...MOCK_ACTIVE_EVENT, id: 'mock-r4', slug: 'bunnings-ryde-apr', title_ua: 'Bunnings Ryde', title_en: 'Bunnings Ryde' },
+  { ...MOCK_ACTIVE_EVENT, id: 'mock-r5', slug: 'stand-with-ukraine-rally-apr', title_ua: 'Stand with Ukraine — Rally', title_en: 'Stand with Ukraine — Rally' },
+];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -127,7 +142,19 @@ type TiptapNode = {
 };
 
 function renderRichText(doc: unknown): React.ReactNode[] {
-  if (!doc || typeof doc !== 'object') return [];
+  if (!doc) return [];
+  // Plain string from textarea — split on blank lines into paragraphs.
+  if (typeof doc === 'string') {
+    return doc
+      .split(/\n\s*\n/)
+      .filter((p) => p.trim().length > 0)
+      .map((para, i) => (
+        <p key={i} className="mb-4 text-body leading-relaxed text-text-primary">
+          {para.trim()}
+        </p>
+      ));
+  }
+  if (typeof doc !== 'object') return [];
   const root = doc as { content?: TiptapNode[] };
   if (!root.content) return [];
 
@@ -202,7 +229,7 @@ export default async function EventDetailPage({
 
     const fetchedRelated = await db.event.findMany({
       where: { status: 'ACTIVE' },
-      take: 4,
+      take: 12,
     });
     related = (fetchedRelated as unknown as Event[]).filter((e) => e.slug !== slug);
   } catch {
@@ -218,29 +245,28 @@ export default async function EventDetailPage({
   if (!event) notFound();
 
   if (related.length === 0) {
-    related = MOCK_RELATED.filter((e) => e.slug !== slug).slice(0, 4);
+    related = MOCK_RELATED.filter((e) => e.slug !== slug);
   }
 
   const titleKey = locale === 'ua' ? 'title_ua' : 'title_en';
   const descKey = locale === 'ua' ? 'description_ua' : 'description_en';
-  const infoKey = locale === 'ua' ? 'info_blocks_ua' : 'info_blocks_en';
 
   const title = event[titleKey];
   const isArchived = event.status === 'archived';
-  const infoBlocks = (event[infoKey] as unknown as InfoBlock[]) ?? [];
   const financialReport = event.financial_report as unknown as FinancialReport | null;
 
   const tagLabels = {
     active: t('events.tag_active'),
     archive: t('events.archive'),
+    archived: t('events.tag_archived'),
     looking_for_partners: t('events.tag_looking_for_partners'),
     looking_for_volunteers: t('events.tag_looking_for_volunteers'),
   };
 
   return (
     <>
-      {/* ── Breadcrumb ───────────────────────────────────────────── */}
-      <section className="border-b border-border bg-white py-3">
+      {/* ── Breadcrumb + badges + title + cover + meta ───────────── */}
+      <section className="bg-white pt-6 pb-2 lg:pt-8">
         <div className="container-page">
           <Breadcrumb
             crumbs={[
@@ -250,29 +276,24 @@ export default async function EventDetailPage({
             current={title}
           />
 
-          {/* Tags */}
-          <div className="mt-3 flex flex-wrap gap-2">
-            {!isArchived && <span className="badge-active">{tagLabels.active}</span>}
-            {isArchived && <span className="badge-archived">{tagLabels.archive}</span>}
-            {event.tags.includes('looking_for_partners') && (
-              <span className="badge bg-accent-2 text-secondary">{tagLabels.looking_for_partners}</span>
-            )}
-            {event.tags.includes('looking_for_volunteers') && (
-              <span className="badge bg-accent-4 text-text-strong">{tagLabels.looking_for_volunteers}</span>
-            )}
-          </div>
-        </div>
-      </section>
+          <EventBadges
+            isArchived={isArchived}
+            tags={event.tags}
+            labels={{
+              active: tagLabels.active,
+              archived: tagLabels.archived,
+              looking_for_partners: tagLabels.looking_for_partners,
+              looking_for_volunteers: tagLabels.looking_for_volunteers,
+            }}
+            className="mt-4"
+          />
 
-      {/* ── Title + Cover ────────────────────────────────────────── */}
-      <section className="bg-white pt-8">
-        <div className="container-page">
-          <h1 className="text-h2 mb-6 text-text-strong lg:text-[40px] lg:leading-[120%]">
+          <h1 className="mt-4 mb-6 text-h2 font-bold text-text-strong lg:mt-6 lg:mb-8 lg:text-[56px] lg:leading-[110%]">
             {title}
           </h1>
 
           {/* Cover image */}
-          <div className="relative mb-6 aspect-video overflow-hidden rounded-2xl bg-secondary-10">
+          <div className="relative mb-6 aspect-[1280/620] overflow-hidden rounded-2xl bg-secondary-10 lg:mb-8">
             {event.cover_image ? (
               <Image
                 src={event.cover_image}
@@ -283,36 +304,32 @@ export default async function EventDetailPage({
                 sizes="(max-width: 768px) 100vw, 1200px"
               />
             ) : (
-              <div className="flex h-full items-center justify-center">
-                <div className="h-20 w-20 rounded-full bg-secondary-40 opacity-60" />
-              </div>
+              <ImagePlaceholder size="md" />
             )}
           </div>
 
           {/* Date/time + Location bar */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl bg-primary-20 p-5">
-              <p className="text-caption mb-1 uppercase tracking-wide text-text-secondary">
-                {t('events.date_time')}
-              </p>
-              <p className="text-body font-medium text-text-strong">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-6">
+            <div className="rounded-2xl bg-secondary-10 p-6 text-center lg:p-8">
+              <p className="text-body text-text-secondary">{t('events.date_time')}</p>
+              <p className="mt-3 text-[20px] font-bold leading-tight text-text-strong lg:text-[24px]">
                 {formatDate(event.event_date, locale)}
               </p>
-              <p className="text-body-sm text-text-secondary">
+              <p className="mt-3 text-[20px] font-bold leading-tight text-text-strong lg:text-[24px]">
                 {formatTime(event.start_time, event.end_time)}
               </p>
             </div>
-            <div className="rounded-2xl bg-primary-20 p-5">
-              <p className="text-caption mb-1 uppercase tracking-wide text-text-secondary">
-                {t('events.location')}
+            <div className="rounded-2xl bg-secondary-10 p-6 text-center lg:p-8">
+              <p className="text-body text-text-secondary">{t('events.location')}</p>
+              <p className="mt-3 text-[20px] font-bold leading-tight text-text-strong lg:text-[24px]">
+                {event.location}
               </p>
-              <p className="text-body font-medium text-text-strong">{event.location}</p>
               {event.location_map_url && (
                 <a
                   href={event.location_map_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-body-sm text-secondary underline"
+                  className="mt-3 inline-block text-body-sm text-text-secondary underline transition-colors hover:text-secondary"
                 >
                   {t('events.view_map')}
                 </a>
@@ -325,52 +342,34 @@ export default async function EventDetailPage({
       {/* ── Description section ──────────────────────────────────── */}
       <section className="section bg-white">
         <div className="container-page">
-          <h2 className="text-h2 mb-8 text-text-strong">
+          <h2 className="mb-8 text-center text-h2 font-bold text-text-strong lg:mb-12 lg:text-[40px]">
             {t('events.charity_event')} &laquo;{title}&raquo;
           </h2>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.2fr]">
-            {/* Left: event image */}
-            <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-secondary-10">
-              {event.cover_image ? (
+          <div className="prose-custom text-body text-text-primary">
+            {/* Floated cover so the description text wraps around it on
+                desktop / tablet, then stacks on mobile via float-none. */}
+            {event.cover_image ? (
+              <div className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
                 <Image
                   src={event.cover_image}
                   alt={title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  sizes="(max-width: 768px) 100vw, 45vw"
                 />
-              ) : (
-                <div className="flex h-full items-center justify-center">
-                  <div className="h-16 w-16 rounded-full bg-secondary-40 opacity-60" />
-                </div>
-              )}
-            </div>
-
-            {/* Right: rich text description */}
-            <div className="prose-custom">
-              {renderRichText(event[descKey])}
-            </div>
+              </div>
+            ) : (
+              <div className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
+                <ImagePlaceholder size="md" />
+              </div>
+            )}
+            {renderRichText(event[descKey])}
+            <div className="clear-both" />
           </div>
 
-          {/* Info blocks (3 columns) */}
-          {infoBlocks.length > 0 && (
-            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {infoBlocks.map((block, i) => (
-                <div key={i} className="rounded-2xl bg-primary-20 p-6">
-                  <h3 className="text-h4 mb-3 text-text-strong">{block.title}</h3>
-                  <ul className="space-y-1.5 text-body-sm text-text-secondary">
-                    {block.content.map((item, j) => (
-                      <li key={j} className="flex gap-2">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Static info blocks — same content on every event (active + archived) */}
+          <EventInfoBlocks />
 
           {/* Share */}
           <ShareSection
@@ -393,108 +392,109 @@ export default async function EventDetailPage({
 
       {/* ── Financial report (archived only) ─────────────────────── */}
       {isArchived && financialReport && (
-        <section className="section bg-bg">
+        <section className="section bg-white">
           <div className="container-page">
-            <h2 className="text-h2 mb-8 text-center text-text-strong">
+            <h2 className="mb-8 text-center text-h2 font-bold text-text-strong lg:mb-12 lg:text-[40px]">
               {t('events.reports')}
             </h2>
 
-            <div className="mx-auto max-w-3xl">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {/* Gallery placeholder / images */}
-                <div className="space-y-3">
-                  {event.gallery_images.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-2">
-                      {event.gallery_images.map((img, i) => (
-                        <div key={i} className="relative aspect-square overflow-hidden rounded-xl">
-                          <Image src={img} alt={`Gallery ${i + 1}`} fill className="object-cover" sizes="200px" />
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex aspect-4/3 items-center justify-center rounded-xl bg-secondary-10">
-                      <div className="h-16 w-16 rounded-full bg-secondary-40 opacity-60" />
-                    </div>
-                  )}
-                </div>
-
-                {/* Financial data */}
-                <div className="rounded-2xl bg-white p-6">
-                  <h3 className="text-h4 mb-4 text-text-strong">{t('events.we_raised')}</h3>
-                  <div className="space-y-2 text-body-sm">
-                    {financialReport.income.map((item, i) => (
-                      <div key={`i-${i}`} className="flex justify-between">
-                        <span className="text-text-secondary">{item.label}</span>
-                        <span className="font-medium text-text-strong">${item.amount.toLocaleString()}</span>
-                      </div>
-                    ))}
-                    <div className="my-3 border-t border-border" />
-                    {financialReport.expenses.map((item, i) => (
-                      <div key={`e-${i}`} className="flex justify-between">
-                        <span className="text-text-secondary">{item.label}</span>
-                        <span className="font-medium text-text-strong">-${item.amount.toLocaleString()}</span>
-                      </div>
-                    ))}
-                    <div className="my-3 border-t border-border" />
-                    <div className="flex justify-between text-body font-medium">
-                      <span className="text-text-strong">{t('events.profit')}:</span>
-                      <span className="text-secondary">${financialReport.profit.toLocaleString()}</span>
-                    </div>
+            {/* Desktop (lg+): 2 photos + financial card on top row.
+                Tablet/mobile: financial card alone full-width — photos below. */}
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
+              {/* Two photos — desktop only, left of the card */}
+              <div className="hidden grid-cols-2 gap-4 lg:grid lg:gap-6">
+                {event.gallery_images.slice(0, 2).map((img, i) => (
+                  <div key={`top-${i}`} className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10">
+                    <Image src={img} alt={`${title} — ${i + 1}`} fill className="object-cover" sizes="25vw" />
                   </div>
-                </div>
+                ))}
               </div>
 
-              {/* Gallery grid (if images) */}
-              {event.gallery_images.length > 4 && (
-                <div className="mt-6 grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
-                  {event.gallery_images.slice(4).map((img, i) => (
-                    <div key={i} className="relative aspect-square overflow-hidden rounded-lg">
-                      <Image src={img} alt={`Gallery ${i + 5}`} fill className="object-cover" sizes="120px" />
+              <div className="rounded-2xl bg-secondary-10 p-6 sm:p-8 lg:p-10">
+                <h3 className="mb-6 text-center text-h3 font-bold text-text-strong sm:text-left lg:text-right">
+                  {t('events.we_raised')}
+                </h3>
+                <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                  <ul className="list-disc space-y-2 pl-5 text-body text-text-strong marker:text-text-strong">
+                    {financialReport.income.map((item, i) => (
+                      <li key={`i-${i}`}>{item.label}</li>
+                    ))}
+                  </ul>
+                  <ul className="space-y-2 text-body text-text-strong">
+                    {financialReport.expenses.map((item, i) => (
+                      <li key={`e-${i}`}>{item.label}</li>
+                    ))}
+                  </ul>
+                </div>
+                <p className="mt-6 text-right text-h3 font-semibold text-text-strong">
+                  {t('events.profit')}: ${financialReport.profit.toLocaleString(locale === 'ua' ? 'uk-UA' : 'en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+
+            {/* Photos below the card.
+                Mobile: horizontal scroll-snap (one + peek of next).
+                Tablet: 2-up grid.
+                Desktop (lg+): 4-up grid using gallery images 2..6
+                  (the first two are already shown above the card). */}
+            {event.gallery_images.length > 0 && (
+              <>
+                {/* mobile carousel */}
+                <div className="-mx-5 mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  {event.gallery_images.map((img, i) => (
+                    <div
+                      key={`m-${i}`}
+                      className="relative aspect-square w-[85%] shrink-0 snap-start overflow-hidden rounded-2xl bg-secondary-10"
+                    >
+                      <Image src={img} alt={`${title} — ${i + 1}`} fill className="object-cover" sizes="85vw" />
                     </div>
                   ))}
                 </div>
-              )}
 
-              {/* Thank you */}
-              <p className="mt-10 text-center text-h3 italic text-text-strong">
-                {t('events.thank_you')}
-              </p>
-            </div>
+                {/* tablet — 2 photos side by side */}
+                <div className="mt-4 hidden grid-cols-2 gap-4 sm:grid lg:hidden">
+                  {event.gallery_images.slice(0, 2).map((img, i) => (
+                    <div key={`t-${i}`} className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10">
+                      <Image src={img} alt={`${title} — ${i + 1}`} fill className="object-cover" sizes="50vw" />
+                    </div>
+                  ))}
+                </div>
+
+                {/* desktop — 4 more photos under the top row */}
+                {event.gallery_images.length > 2 && (
+                  <div className="mt-6 hidden grid-cols-4 gap-6 lg:grid">
+                    {event.gallery_images.slice(2, 6).map((img, i) => (
+                      <div key={`d-${i}`} className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10">
+                        <Image src={img} alt={`${title} — ${i + 3}`} fill className="object-cover" sizes="25vw" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+
+            <p className="mt-10 text-center text-h3 font-medium text-text-strong lg:mt-14">
+              {t('events.thank_you')}
+            </p>
           </div>
         </section>
       )}
 
       {/* ── More events ──────────────────────────────────────────── */}
       {related.length > 0 && (
-        <section className="section bg-bg">
-          <div className="container-page">
-            <div className="mb-8 flex items-center justify-between">
-              <h2 className="text-h2 text-text-strong">{t('events.more_events')}</h2>
-              <div className="flex gap-2">
-                <button className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-secondary text-white">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
-                </button>
-                <button className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-secondary text-white">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {related.slice(0, 4).map((ev) => (
-                <EventCard
-                  key={ev.id}
-                  slug={ev.slug}
-                  locale={locale}
-                  title={ev[titleKey]}
-                  coverImage={ev.cover_image}
-                  tags={ev.tags}
-                  tagLabels={tagLabels}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
+        <RelatedEventsCarousel title={t('events.more_events')}>
+          {related.map((ev) => (
+            <EventCard
+              key={ev.id}
+              slug={ev.slug}
+              locale={locale}
+              title={ev[titleKey]}
+              coverImage={ev.cover_image}
+              tags={ev.tags}
+              tagLabels={tagLabels}
+            />
+          ))}
+        </RelatedEventsCarousel>
       )}
 
       {/* ── Contact form ─────────────────────────────────────────── */}

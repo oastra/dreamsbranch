@@ -101,7 +101,7 @@ body {
   }
 
   .section {
-    @apply py-17.5 md:py-22.5 lg:py-25;
+    @apply py-10 md:py-14 lg:py-25;
   }
 
   .page-header {

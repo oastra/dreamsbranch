@@ -440,10 +440,10 @@ export default async function CampaignDetailPage({
       </section>
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section className=" pb-10 lg:pb-6">
+      {/* Mobile/tablet: full-bleed background. Desktop: rounded card inside container. */}
+      <section className="bg-secondary-20 pb-10 lg:bg-transparent lg:pb-6">
         <div className="container-page">
-          {/* Rounded card with text + image */}
-          <div className=" bg-secondary-20 p-5 sm:p-8 lg:rounded-4xl lg:p-10">
+          <div className="py-5 sm:py-8 lg:rounded-4xl lg:bg-secondary-20 lg:p-10">
             <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[1fr_auto] lg:gap-10">
               {/* Left: badge + title + short description.
                   Mobile centers the text; tablet+ left-aligns. */}
@@ -484,10 +484,14 @@ export default async function CampaignDetailPage({
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Progress row — sits flush below the rounded card.
+      {/* Progress row — sits flush below the rounded card.
               Mobile stacks eyebrow above amount inside each column;
               tablet+ inlines them. */}
+      <section className="pb-6">
+        <div className="container-page">
           <div className="mt-8 lg:mt-10">
             <div className="grid grid-cols-3 items-baseline gap-2 px-1 sm:px-2">
               {/* Raised */}
