@@ -53,3 +53,11 @@ export async function deleteEvent(id: string) {
   revalidatePath('/admin/events');
   return { success: true };
 }
+
+export async function setEventStatus(id: string, status: 'DRAFT' | 'ACTIVE' | 'ARCHIVED') {
+  await requireAdmin();
+  const result = await db.event.update({ where: { id }, data: { status } });
+  if (!result) return { success: false, error: 'Failed to update status' };
+  revalidatePath('/admin/events');
+  return { success: true };
+}
