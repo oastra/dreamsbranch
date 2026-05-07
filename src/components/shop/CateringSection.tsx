@@ -33,8 +33,8 @@ export function CateringSection({
       <div className="container-page">
         <div className="rounded-3xl bg-secondary-10 p-6 sm:p-8 lg:p-12">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-center lg:gap-12">
-            {/* Image — top on mobile/tablet, right on desktop */}
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl lg:order-2 lg:aspect-square">
+            {/* Image — top on mobile/tablet, left on desktop */}
+            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl lg:aspect-square">
               <Image
                 src={imageSrc}
                 alt={imageAlt}
@@ -44,11 +44,11 @@ export function CateringSection({
               />
             </div>
 
-            {/* Content — below image on mobile/tablet, left on desktop */}
-            <div className="flex flex-col gap-5 lg:order-1 lg:gap-6">
+            {/* Content — below image on mobile/tablet, right on desktop */}
+            <div className="flex flex-col gap-5 lg:gap-6">
               <h2
                 id={id ? `${id}-title` : undefined}
-                className="text-h2 text-center font-semibold text-text-strong lg:text-left"
+                className="text-h2 text-center font-semibold text-text-strong"
               >
                 {title}
               </h2>
