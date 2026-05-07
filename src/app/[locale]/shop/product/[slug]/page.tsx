@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { db } from "@/lib/db";
+import { resolveLocaleSlug } from "@/lib/slug";
 import { ContactSection } from "@/components/contact/ContactSection";
 import { OtherCategoriesSection } from "@/components/shop/OtherCategoriesSection";
 import { ProductHero } from "@/components/shop/ProductHero";
@@ -50,30 +51,40 @@ type ProductDetail = Pick<
   | "gallery_images"
 >;
 
-async function loadProduct(slug: string): Promise<ProductDetail | null> {
+async function loadProduct(
+  slug: string,
+  locale: string,
+): Promise<{ product: ProductDetail | null; redirectTo: string | null }> {
   try {
-    const product = (await db.shopProduct.findUnique({
-      where: { slug },
-    })) as unknown as ProductDetail | null;
-    if (product) return product;
+    const { row, redirectTo } = await resolveLocaleSlug(
+      db.shopProduct,
+      slug,
+      locale,
+      `/${locale}/shop/product`,
+    );
+    if (redirectTo) return { product: null, redirectTo };
+    if (row) return { product: row as unknown as ProductDetail, redirectTo: null };
   } catch {
     // DB unreachable — fall through to mock lookup.
   }
 
   const mock = MOCK_SHOP_PRODUCTS.find((p) => p.slug === slug);
-  if (!mock) return null;
+  if (!mock) return { product: null, redirectTo: null };
   return {
-    id: mock.id,
-    slug: mock.slug,
-    section: mock.section,
-    title_ua: mock.title_ua,
-    title_en: mock.title_en,
-    description_ua: mock.description_ua,
-    description_en: mock.description_en,
-    price_amount: mock.price_amount,
-    price_currency: mock.price_currency,
-    cover_image: mock.cover_image,
-    gallery_images: mock.gallery_images,
+    product: {
+      id: mock.id,
+      slug: mock.slug,
+      section: mock.section,
+      title_ua: mock.title_ua,
+      title_en: mock.title_en,
+      description_ua: mock.description_ua,
+      description_en: mock.description_en,
+      price_amount: mock.price_amount,
+      price_currency: mock.price_currency,
+      cover_image: mock.cover_image,
+      gallery_images: mock.gallery_images,
+    },
+    redirectTo: null,
   };
 }
 
@@ -160,7 +171,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const product = await loadProduct(slug);
+  const { product } = await loadProduct(slug, locale);
   if (!product) return {};
   const isUA = locale === "ua";
   const title = isUA ? product.title_ua : product.title_en;
@@ -186,7 +197,8 @@ export default async function ShopProductPage({
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const product = await loadProduct(slug);
+  const { product, redirectTo } = await loadProduct(slug, locale);
+  if (redirectTo) redirect(redirectTo);
   if (!product) notFound();
 
   const t = await getTranslations({ locale });

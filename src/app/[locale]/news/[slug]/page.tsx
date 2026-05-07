@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { resolveLocaleSlug } from '@/lib/slug';
 
 import { db } from '@/lib/db';
 import { NewsCard } from '@/components/news/NewsCard';
@@ -408,8 +409,14 @@ export default async function NewsArticlePage({
   let related: ArticleDetail[] = [];
 
   try {
-    const fetched = await db.newsArticle.findUnique({ where: { slug } });
-    if (fetched) article = fetched as unknown as ArticleDetail;
+    const { row, redirectTo } = await resolveLocaleSlug(
+      db.newsArticle,
+      slug,
+      locale,
+      `/${locale}/news`,
+    );
+    if (redirectTo) redirect(redirectTo);
+    if (row) article = row as unknown as ArticleDetail;
 
     const fetchedRelated = await db.newsArticle.findMany({
       where: { status: 'PUBLISHED' },

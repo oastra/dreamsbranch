@@ -164,11 +164,13 @@ export const db = {
       return (data ?? []).map(r => normStatus(r as Record<string, unknown>));
     },
 
-    async findUnique({ where }: { where: { id?: string; slug?: string } }) {
+    async findUnique({ where }: { where: { id?: string; slug?: string; slugUa?: string; slugEn?: string } }) {
       const sb = createAdminClient();
       let q = sb.from('campaigns').select('*');
-      if (where.id)   q = q.eq('id', where.id);
-      if (where.slug) q = q.eq('slug', where.slug);
+      if (where.id)     q = q.eq('id', where.id);
+      if (where.slugUa) q = q.eq('slug_ua', where.slugUa);
+      if (where.slugEn) q = q.eq('slug_en', where.slugEn);
+      if (where.slug)   q = q.eq('slug', where.slug);
       const { data } = await q.maybeSingle();
       return data ? normStatus(data as Record<string, unknown>) : null;
     },
@@ -254,11 +256,13 @@ export const db = {
       return (data ?? []).map(r => normStatus(r as Record<string, unknown>));
     },
 
-    async findUnique({ where }: { where: { id?: string; slug?: string } }) {
+    async findUnique({ where }: { where: { id?: string; slug?: string; slugUa?: string; slugEn?: string } }) {
       const sb = createAdminClient();
       let q = sb.from('events').select('*');
-      if (where.id)   q = q.eq('id', where.id);
-      if (where.slug) q = q.eq('slug', where.slug);
+      if (where.id)     q = q.eq('id', where.id);
+      if (where.slugUa) q = q.eq('slug_ua', where.slugUa);
+      if (where.slugEn) q = q.eq('slug_en', where.slugEn);
+      if (where.slug)   q = q.eq('slug', where.slug);
       const { data } = await q.maybeSingle();
       return data ? normStatus(data as Record<string, unknown>) : null;
     },
@@ -303,11 +307,13 @@ export const db = {
       return (data ?? []).map(r => normStatus(r as Record<string, unknown>));
     },
 
-    async findUnique({ where }: { where: { id?: string; slug?: string } }) {
+    async findUnique({ where }: { where: { id?: string; slug?: string; slugUa?: string; slugEn?: string } }) {
       const sb = createAdminClient();
       let q = sb.from('news_articles').select('*');
-      if (where.id)   q = q.eq('id', where.id);
-      if (where.slug) q = q.eq('slug', where.slug);
+      if (where.id)     q = q.eq('id', where.id);
+      if (where.slugUa) q = q.eq('slug_ua', where.slugUa);
+      if (where.slugEn) q = q.eq('slug_en', where.slugEn);
+      if (where.slug)   q = q.eq('slug', where.slug);
       const { data } = await q.maybeSingle();
       return data ? normStatus(data as Record<string, unknown>) : null;
     },
@@ -527,11 +533,13 @@ export const db = {
       return (data ?? []).map(r => normStatus(r as Record<string, unknown>));
     },
 
-    async findUnique({ where }: { where: { id?: string; slug?: string } }) {
+    async findUnique({ where }: { where: { id?: string; slug?: string; slugUa?: string; slugEn?: string } }) {
       const sb = createAdminClient();
       let q = sb.from('shop_products').select('*');
-      if (where.id)   q = q.eq('id', where.id);
-      if (where.slug) q = q.eq('slug', where.slug);
+      if (where.id)     q = q.eq('id', where.id);
+      if (where.slugUa) q = q.eq('slug_ua', where.slugUa);
+      if (where.slugEn) q = q.eq('slug_en', where.slugEn);
+      if (where.slug)   q = q.eq('slug', where.slug);
       const { data } = await q.maybeSingle();
       return data ? normStatus(data as Record<string, unknown>) : null;
     },

@@ -1,8 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { resolveLocaleSlug } from "@/lib/slug";
 import { EventCard } from "@/components/events/EventCard";
 import { EventBadges } from "@/components/events/EventBadges";
 import { EventInfoBlocks } from "@/components/events/EventInfoBlocks";
@@ -415,8 +416,14 @@ export default async function EventDetailPage({
   let related: Event[] = [];
 
   try {
-    const fetched = await db.event.findUnique({ where: { slug } });
-    if (fetched) event = fetched as unknown as Event;
+    const { row, redirectTo } = await resolveLocaleSlug(
+      db.event,
+      slug,
+      locale,
+      `/${locale}/events`,
+    );
+    if (redirectTo) redirect(redirectTo);
+    if (row) event = row as unknown as Event;
 
     const fetchedRelated = await db.event.findMany({
       where: { status: "ACTIVE" },

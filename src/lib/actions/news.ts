@@ -8,7 +8,9 @@ function toSnake(input: Record<string, unknown>) {
   return {
     title_ua: input.titleUa,
     title_en: input.titleEn,
-    slug: input.slug,
+    slug: input.slugEn,
+    slug_ua: input.slugUa,
+    slug_en: input.slugEn,
     body_ua: input.bodyUa ?? null,
     body_en: input.bodyEn ?? null,
     cover_image: input.coverImage ?? null,

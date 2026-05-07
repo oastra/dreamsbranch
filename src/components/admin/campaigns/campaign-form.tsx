@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
 import { createCampaign, updateCampaign } from '@/lib/actions/campaigns';
+import { slugify } from '@/lib/slug';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
@@ -20,7 +21,8 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
   const [form, setForm] = useState({
     titleUa: campaign?.title_ua ?? '',
     titleEn: campaign?.title_en ?? '',
-    slug: campaign?.slug ?? '',
+    slugUa: campaign?.slug_ua ?? campaign?.slug ?? '',
+    slugEn: campaign?.slug_en ?? campaign?.slug ?? '',
     descriptionUa: campaign?.description_ua ?? '',
     descriptionEn: campaign?.description_en ?? '',
     coverImage: campaign?.cover_image ?? '',
@@ -30,7 +32,6 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
   });
 
   function set(key: string, value: unknown) { setForm(f => ({ ...f, [key]: value })); }
-  function autoSlug(title: string) { return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -78,9 +79,17 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
             />
           </div>
         </div>
-        <div>
-          <Label>Slug *</Label>
-          <Input value={form.slug} onChange={e => set('slug', e.target.value)} placeholder="campaign-name" required />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <Label>Slug (UA) *</Label>
+            <Input value={form.slugUa} onChange={e => set('slugUa', e.target.value)} placeholder="kampaniia" required />
+            <p className="text-xs text-text-secondary mt-1">URL: /ua/campaigns/{form.slugUa || '...'}</p>
+          </div>
+          <div>
+            <Label>Slug (EN) *</Label>
+            <Input value={form.slugEn} onChange={e => set('slugEn', e.target.value)} placeholder="campaign-name" required />
+            <p className="text-xs text-text-secondary mt-1">URL: /en/campaigns/{form.slugEn || '...'}</p>
+          </div>
         </div>
         <ImageUpload value={form.coverImage} onChange={url => set('coverImage', url ?? '')} folder="campaigns" label="Cover image" />
       </div>
@@ -92,7 +101,7 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (UA) *</Label>
-                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!isEdit && !form.slug) set('slug', autoSlug(e.target.value)); }} required />
+                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!isEdit && !form.slugUa) set('slugUa', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (UA)</Label>
@@ -104,7 +113,7 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (EN) *</Label>
-                <Input value={form.titleEn} onChange={e => set('titleEn', e.target.value)} required />
+                <Input value={form.titleEn} onChange={e => { set('titleEn', e.target.value); if (!isEdit && !form.slugEn) set('slugEn', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (EN)</Label>

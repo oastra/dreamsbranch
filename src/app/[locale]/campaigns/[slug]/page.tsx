@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { resolveLocaleSlug } from "@/lib/slug";
 import React from "react";
 
 import { db } from "@/lib/db";
@@ -304,9 +305,15 @@ export default async function CampaignDetailPage({
   let relatedCampaigns: Campaign[] = [];
 
   try {
-    const fetched = await db.campaign.findUnique({ where: { slug } });
-    if (fetched) {
-      campaign = fetched as unknown as Campaign;
+    const { row, redirectTo } = await resolveLocaleSlug(
+      db.campaign,
+      slug,
+      locale,
+      `/${locale}/campaigns`,
+    );
+    if (redirectTo) redirect(redirectTo);
+    if (row) {
+      campaign = row as unknown as Campaign;
 
       // Fetch recent donors for this campaign — 10 so the inline list shows
       // 5 and the "Подивитись більше" side panel can surface the next 5.

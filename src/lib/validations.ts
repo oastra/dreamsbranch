@@ -3,7 +3,8 @@ import { z } from 'zod';
 export const campaignSchema = z.object({
   titleUa: z.string().min(1, 'Title (UA) is required'),
   titleEn: z.string().min(1, 'Title (EN) is required'),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
+  slugUa: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
+  slugEn: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
   descriptionUa: z.any().optional(),
   descriptionEn: z.any().optional(),
   coverImage: z.string().optional(),
@@ -17,7 +18,8 @@ export type CampaignInput = z.infer<typeof campaignSchema>;
 export const eventSchema = z.object({
   titleUa: z.string().min(1),
   titleEn: z.string().min(1),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/),
+  slugUa: z.string().min(1).regex(/^[a-z0-9-]+$/),
+  slugEn: z.string().min(1).regex(/^[a-z0-9-]+$/),
   descriptionUa: z.any().optional(),
   descriptionEn: z.any().optional(),
   coverImage: z.string().optional(),
@@ -37,7 +39,8 @@ export type EventInput = z.infer<typeof eventSchema>;
 export const articleSchema = z.object({
   titleUa: z.string().min(1),
   titleEn: z.string().min(1),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/),
+  slugUa: z.string().min(1).regex(/^[a-z0-9-]+$/),
+  slugEn: z.string().min(1).regex(/^[a-z0-9-]+$/),
   bodyUa: z.any().optional(),
   bodyEn: z.any().optional(),
   coverImage: z.string().optional(),

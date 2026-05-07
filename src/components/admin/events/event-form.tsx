@@ -11,6 +11,7 @@ import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
 import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
 import { createEvent, updateEvent } from '@/lib/actions/events';
+import { slugify } from '@/lib/slug';
 
 type LineItem = { label: string; amount: number };
 type FinancialReport = { income: LineItem[]; expenses: LineItem[]; profit: number };
@@ -32,7 +33,8 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
   const [form, setForm] = useState({
     titleUa: event?.title_ua ?? '',
     titleEn: event?.title_en ?? '',
-    slug: event?.slug ?? '',
+    slugUa: event?.slug_ua ?? event?.slug ?? '',
+    slugEn: event?.slug_en ?? event?.slug ?? '',
     descriptionUa: typeof event?.description_ua === 'string' ? event.description_ua : '',
     descriptionEn: typeof event?.description_en === 'string' ? event.description_en : '',
     coverImage: event?.cover_image ?? '',
@@ -76,9 +78,6 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
     }));
   }
 
-  function autoSlug(title: string) {
-    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -139,9 +138,17 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
             <Input value={form.locationMapUrl} onChange={e => set('locationMapUrl', e.target.value)} placeholder="https://maps.google.com/..." />
           </div>
         </div>
-        <div>
-          <Label>Slug *</Label>
-          <Input value={form.slug} onChange={e => set('slug', e.target.value)} placeholder="event-name" required />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <Label>Slug (UA) *</Label>
+            <Input value={form.slugUa} onChange={e => set('slugUa', e.target.value)} placeholder="podiia" required />
+            <p className="text-xs text-text-secondary mt-1">URL: /ua/events/{form.slugUa || '...'}</p>
+          </div>
+          <div>
+            <Label>Slug (EN) *</Label>
+            <Input value={form.slugEn} onChange={e => set('slugEn', e.target.value)} placeholder="event-name" required />
+            <p className="text-xs text-text-secondary mt-1">URL: /en/events/{form.slugEn || '...'}</p>
+          </div>
         </div>
         <ImageUpload
           value={form.coverImage}
@@ -252,7 +259,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (UA) *</Label>
-                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!isEdit && !form.slug) set('slug', autoSlug(e.target.value)); }} required />
+                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!isEdit && !form.slugUa) set('slugUa', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (UA)</Label>
@@ -265,7 +272,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (EN) *</Label>
-                <Input value={form.titleEn} onChange={e => set('titleEn', e.target.value)} required />
+                <Input value={form.titleEn} onChange={e => { set('titleEn', e.target.value); if (!isEdit && !form.slugEn) set('slugEn', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (EN)</Label>

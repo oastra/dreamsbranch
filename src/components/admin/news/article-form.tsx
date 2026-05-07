@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
 import { createArticle, updateArticle } from '@/lib/actions/news';
+import { slugify } from '@/lib/slug';
 
 const CATEGORIES = ['Fundraising', 'Events', 'Announcements', 'Reports', 'News', 'Other'];
 
@@ -22,7 +23,8 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
   const [form, setForm] = useState({
     titleUa: article?.title_ua ?? '',
     titleEn: article?.title_en ?? '',
-    slug: article?.slug ?? '',
+    slugUa: article?.slug_ua ?? article?.slug ?? '',
+    slugEn: article?.slug_en ?? article?.slug ?? '',
     bodyUa: article?.body_ua ?? '',
     bodyEn: article?.body_en ?? '',
     coverImage: article?.cover_image ?? '',
@@ -32,11 +34,14 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
   });
 
   function set(key: string, value: unknown) { setForm(f => ({ ...f, [key]: value })); }
-  function autoSlug(title: string) { return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
 
   function handleTitleUaChange(value: string) {
     set('titleUa', value);
-    if (!isEdit || !form.slug) set('slug', autoSlug(value));
+    if (!isEdit && !form.slugUa) set('slugUa', slugify(value));
+  }
+  function handleTitleEnChange(value: string) {
+    set('titleEn', value);
+    if (!isEdit && !form.slugEn) set('slugEn', slugify(value));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -58,9 +63,17 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           <Input value={form.titleUa} onChange={e => handleTitleUaChange(e.target.value)} required />
         </div>
 
-        <div>
-          <Label>Slug *</Label>
-          <Input value={form.slug} onChange={e => set('slug', e.target.value)} placeholder="article-name" required />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <Label>Slug (UA) *</Label>
+            <Input value={form.slugUa} onChange={e => set('slugUa', e.target.value)} placeholder="stattia" required />
+            <p className="text-xs text-text-secondary mt-1">URL: /ua/news/{form.slugUa || '...'}</p>
+          </div>
+          <div>
+            <Label>Slug (EN) *</Label>
+            <Input value={form.slugEn} onChange={e => set('slugEn', e.target.value)} placeholder="article-name" required />
+            <p className="text-xs text-text-secondary mt-1">URL: /en/news/{form.slugEn || '...'}</p>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -108,7 +121,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (EN) *</Label>
-                <Input value={form.titleEn} onChange={e => set('titleEn', e.target.value)} required />
+                <Input value={form.titleEn} onChange={e => handleTitleEnChange(e.target.value)} required />
               </div>
               <div>
                 <Label>Body (EN)</Label>
