@@ -1,7 +1,8 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
-import { Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,37 +22,56 @@ interface Contact {
   created_at: string;
 }
 
-type ReadFilter = 'ALL' | 'UNREAD' | 'READ';
+const TAGS = ['GENERAL', 'CATERING', 'VOLUNTEER'];
 
-export function ContactsTable({ contacts }: { contacts: Contact[] }) {
+interface Props {
+  contacts: Contact[];
+  page: number;
+  perPage: number;
+  total: number;
+  totalAll: number;
+  totalUnread: number;
+  statusFilter: string;
+  tagFilter: string;
+}
+
+export function ContactsTable({
+  contacts,
+  page,
+  perPage,
+  total,
+  totalAll,
+  totalUnread,
+  statusFilter,
+  tagFilter,
+}: Props) {
+  const router = useRouter();
+  const sp = useSearchParams();
+  const [, startTransition] = useTransition();
   const [marking, setMarking] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  const [readFilter, setReadFilter] = useState<ReadFilter>('ALL');
-  const [tagFilter, setTagFilter] = useState<string>('ALL');
 
-  const tagOptions = useMemo(() => {
-    const set = new Set<string>();
-    for (const c of contacts) if (c.tag) set.add(c.tag);
-    return Array.from(set).sort();
-  }, [contacts]);
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return contacts.filter((c) => {
-      if (readFilter === 'UNREAD' && c.is_read) return false;
-      if (readFilter === 'READ' && !c.is_read) return false;
-      if (tagFilter !== 'ALL' && c.tag !== tagFilter) return false;
-      if (!q) return true;
-      const hay = `${c.name} ${c.email} ${c.message}`.toLowerCase();
-      return hay.includes(q);
+  function pushParams(updates: Record<string, string | null>) {
+    const next = new URLSearchParams(sp.toString());
+    for (const [k, v] of Object.entries(updates)) {
+      if (v === null || v === 'ALL' || v === '') next.delete(k);
+      else next.set(k, v);
+    }
+    startTransition(() => {
+      router.push(`?${next.toString()}`);
     });
-  }, [contacts, search, readFilter, tagFilter]);
+  }
 
-  const counts = useMemo(() => {
-    let unread = 0;
-    for (const c of contacts) if (!c.is_read) unread++;
-    return { all: contacts.length, unread, read: contacts.length - unread };
-  }, [contacts]);
+  const visible = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return contacts;
+    return contacts.filter((c) =>
+      `${c.name} ${c.email} ${c.message}`.toLowerCase().includes(q),
+    );
+  }, [contacts, search]);
+
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
+  const totalRead = totalAll - totalUnread;
 
   async function handleMarkRead(id: string) {
     setMarking(id);
@@ -68,29 +88,33 @@ export function ContactsTable({ contacts }: { contacts: Contact[] }) {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search name, email or message"
+            placeholder="Search this page"
             className="pl-8"
           />
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Tabs value={readFilter} onValueChange={(v) => setReadFilter(v as ReadFilter)}>
+          <Tabs
+            value={statusFilter}
+            onValueChange={(v) => pushParams({ status: v, page: null })}
+          >
             <TabsList>
-              <TabsTrigger value="ALL">All ({counts.all})</TabsTrigger>
-              <TabsTrigger value="UNREAD">Unread ({counts.unread})</TabsTrigger>
-              <TabsTrigger value="READ">Read ({counts.read})</TabsTrigger>
+              <TabsTrigger value="ALL">All ({totalAll})</TabsTrigger>
+              <TabsTrigger value="UNREAD">Unread ({totalUnread})</TabsTrigger>
+              <TabsTrigger value="READ">Read ({totalRead})</TabsTrigger>
             </TabsList>
           </Tabs>
-          {tagOptions.length > 0 && (
-            <Select value={tagFilter} onValueChange={(v) => setTagFilter(v ?? 'ALL')}>
-              <SelectTrigger className="h-8 min-w-[10rem]"><SelectValue placeholder="Tag" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">All tags</SelectItem>
-                {tagOptions.map((t) => (
-                  <SelectItem key={t} value={t}>{t}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
+          <Select
+            value={tagFilter}
+            onValueChange={(v) => pushParams({ tag: v ?? 'ALL', page: null })}
+          >
+            <SelectTrigger className="h-8 min-w-[10rem]"><SelectValue placeholder="Tag" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All tags</SelectItem>
+              {TAGS.map((t) => (
+                <SelectItem key={t} value={t}>{t}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -107,14 +131,14 @@ export function ContactsTable({ contacts }: { contacts: Contact[] }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.length === 0 && (
+            {visible.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} className="text-center text-text-secondary py-8">
-                  {contacts.length === 0 ? 'No messages yet' : 'No messages match your filters'}
+                  {total === 0 ? 'No messages match your filters' : 'No messages on this page match your search'}
                 </TableCell>
               </TableRow>
             )}
-            {filtered.map((c) => (
+            {visible.map((c) => (
               <TableRow key={c.id} className={cn(!c.is_read && 'bg-brand-blue-light/30')}>
                 <TableCell className="text-text-secondary text-body-sm">{new Date(c.created_at).toLocaleDateString('en-AU')}</TableCell>
                 <TableCell className="font-medium">
@@ -139,11 +163,32 @@ export function ContactsTable({ contacts }: { contacts: Contact[] }) {
         </Table>
       </div>
 
-      {contacts.length > 0 && (
-        <p className="text-xs text-text-secondary mt-3">
-          Showing {filtered.length} of {contacts.length}
+      <div className="mt-3 flex items-center justify-between">
+        <p className="text-xs text-text-secondary">
+          {total === 0
+            ? 'No results'
+            : `Showing ${(page - 1) * perPage + 1}–${Math.min(page * perPage, total)} of ${total}`}
         </p>
-      )}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page <= 1}
+            onClick={() => pushParams({ page: String(page - 1) })}
+          >
+            <ChevronLeft className="w-4 h-4" /> Prev
+          </Button>
+          <span className="text-xs text-text-secondary">Page {page} of {totalPages}</span>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page >= totalPages}
+            onClick={() => pushParams({ page: String(page + 1) })}
+          >
+            Next <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
     </>
   );
 }
