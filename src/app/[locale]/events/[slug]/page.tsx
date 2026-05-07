@@ -593,69 +593,73 @@ export default async function EventDetailPage({
         />
       )}
 
-      {/* ── Financial report (archived only) ─────────────────────── */}
-      {isArchived && financialReport && (
+      {/* ── Archived event report: financial card + photos ─────────
+          Show whenever the event is archived AND has a financial
+          report or gallery photos. Either piece is rendered on its
+          own, so a gallery without a report still appears. */}
+      {isArchived &&
+        (financialReport || event.gallery_images.length > 0) && (
         <section className="section">
           <div className="container-page">
             <h2 className="mb-8 text-center text-h2 font-bold text-text-strong lg:mb-12 lg:text-[40px]">
               {t("events.reports")}
             </h2>
 
-            {/* Desktop (lg+): 2 photos + financial card on top row.
-                Tablet/mobile: financial card alone full-width — photos below. */}
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
-              {/* Two photos — desktop only, left of the card */}
-              <div className="hidden grid-cols-2 gap-4 lg:grid lg:gap-6">
-                {event.gallery_images.slice(0, 2).map((img, i) => (
-                  <div
-                    key={`top-${i}`}
-                    className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10"
-                  >
-                    <Image
-                      src={img}
-                      alt={`${title} — ${i + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="25vw"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <div className="rounded-2xl bg-secondary-10 p-6 sm:p-8 lg:p-10">
-                <h3 className="mb-6 text-center text-h3 font-bold text-text-strong sm:text-left lg:text-right">
-                  {t("events.we_raised")}
-                </h3>
-                <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-                  <ul className="list-disc space-y-2 pl-5 text-body text-text-strong marker:text-text-strong">
-                    {financialReport.income.map((item, i) => (
-                      <li key={`i-${i}`}>{item.label}</li>
-                    ))}
-                  </ul>
-                  <ul className="space-y-2 text-body text-text-strong">
-                    {financialReport.expenses.map((item, i) => (
-                      <li key={`e-${i}`}>{item.label}</li>
-                    ))}
-                  </ul>
+            {/* Financial card — desktop top row pairs it with first 2 photos.
+                Tablet/mobile: card alone full-width. Hidden when no report. */}
+            {financialReport && (
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
+                <div className="hidden grid-cols-2 gap-4 lg:grid lg:gap-6">
+                  {event.gallery_images.slice(0, 2).map((img, i) => (
+                    <div
+                      key={`top-${i}`}
+                      className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10"
+                    >
+                      <Image
+                        src={img}
+                        alt={`${title} — ${i + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="25vw"
+                      />
+                    </div>
+                  ))}
                 </div>
-                <p className="mt-6 text-right text-h3 font-semibold text-text-strong">
-                  {t("events.profit")}: $
-                  {financialReport.profit.toLocaleString(
-                    locale === "ua" ? "uk-UA" : "en-AU",
-                    { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-                  )}
-                </p>
-              </div>
-            </div>
 
-            {/* Photos below the card.
-                Mobile: horizontal scroll-snap (one + peek of next).
-                Tablet: 2-up grid.
-                Desktop (lg+): 4-up grid using gallery images 2..6
-                  (the first two are already shown above the card). */}
+                <div className="rounded-2xl bg-secondary-10 p-6 sm:p-8 lg:p-10">
+                  <h3 className="mb-6 text-center text-h3 font-bold text-text-strong sm:text-left lg:text-right">
+                    {t("events.we_raised")}
+                  </h3>
+                  <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                    <ul className="list-disc space-y-2 pl-5 text-body text-text-strong marker:text-text-strong">
+                      {financialReport.income.map((item, i) => (
+                        <li key={`i-${i}`}>{item.label}</li>
+                      ))}
+                    </ul>
+                    <ul className="space-y-2 text-body text-text-strong">
+                      {financialReport.expenses.map((item, i) => (
+                        <li key={`e-${i}`}>{item.label}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <p className="mt-6 text-right text-h3 font-semibold text-text-strong">
+                    {t("events.profit")}: $
+                    {financialReport.profit.toLocaleString(
+                      locale === "ua" ? "uk-UA" : "en-AU",
+                      { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+                    )}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Photos.
+                Mobile: horizontal scroll-snap. Tablet: 2-up grid.
+                Desktop: when financial card is shown, photos 3..6 sit
+                under it (the first 2 are next to the card). When no
+                card, all photos sit in a single 4-up grid. */}
             {event.gallery_images.length > 0 && (
               <>
-                {/* mobile carousel */}
                 <div className="-mx-5 mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {event.gallery_images.map((img, i) => (
                     <div
@@ -673,7 +677,6 @@ export default async function EventDetailPage({
                   ))}
                 </div>
 
-                {/* tablet — 2 photos side by side */}
                 <div className="mt-4 hidden grid-cols-2 gap-4 sm:grid lg:hidden">
                   {event.gallery_images.slice(0, 2).map((img, i) => (
                     <div
@@ -691,25 +694,43 @@ export default async function EventDetailPage({
                   ))}
                 </div>
 
-                {/* desktop — 4 more photos under the top row */}
-                {event.gallery_images.length > 2 && (
-                  <div className="mt-6 hidden grid-cols-4 gap-6 lg:grid">
-                    {event.gallery_images.slice(2, 6).map((img, i) => (
-                      <div
-                        key={`d-${i}`}
-                        className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10"
-                      >
-                        <Image
-                          src={img}
-                          alt={`${title} — ${i + 3}`}
-                          fill
-                          className="object-cover"
-                          sizes="25vw"
-                        />
+                {financialReport
+                  ? event.gallery_images.length > 2 && (
+                      <div className="mt-6 hidden grid-cols-4 gap-6 lg:grid">
+                        {event.gallery_images.slice(2, 6).map((img, i) => (
+                          <div
+                            key={`d-${i}`}
+                            className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10"
+                          >
+                            <Image
+                              src={img}
+                              alt={`${title} — ${i + 3}`}
+                              fill
+                              className="object-cover"
+                              sizes="25vw"
+                            />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    )
+                  : (
+                      <div className="mt-6 hidden grid-cols-4 gap-6 lg:grid">
+                        {event.gallery_images.slice(0, 8).map((img, i) => (
+                          <div
+                            key={`d-${i}`}
+                            className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10"
+                          >
+                            <Image
+                              src={img}
+                              alt={`${title} — ${i + 1}`}
+                              fill
+                              className="object-cover"
+                              sizes="25vw"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
               </>
             )}
 
