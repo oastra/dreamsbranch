@@ -446,7 +446,7 @@ export default async function EventDetailPage({
   const descKey = locale === "ua" ? "description_ua" : "description_en";
 
   const title = event[titleKey];
-  const isArchived = event.status === "archived";
+  const isArchived = String(event.status).toUpperCase() === "ARCHIVED";
   const financialReport =
     event.financial_report as unknown as FinancialReport | null;
 
@@ -589,6 +589,7 @@ export default async function EventDetailPage({
           ctaLabel={t("shared.volunteer_cta.cta")}
           ctaHref={`/${locale}/contact`}
           imageAlt={t("shared.volunteer_cta.image_alt")}
+          className="lg:!pb-0 lg:!h-auto"
         />
       )}
 
