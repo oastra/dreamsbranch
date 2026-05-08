@@ -63,7 +63,7 @@ export function ShareSection({
   return (
     <section
       aria-label={ariaLabel}
-      className="mt-12 flex flex-col items-stretch gap-4 rounded-2xl bg-secondary-10 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6 lg:px-8"
+      className="mt-10 flex flex-col items-stretch gap-4 rounded-2xl bg-secondary-10 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6 md:mt-14 lg:mt-25 lg:px-8"
     >
       <Button
         type="button"
