@@ -64,6 +64,7 @@ export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSe
         shape="pill"
         onClick={copy}
         aria-live="polite"
+        className="w-full sm:w-[280px]"
       >
         {copied ? (
           <>
