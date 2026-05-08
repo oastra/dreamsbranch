@@ -57,7 +57,7 @@ export function EventsList({
 
   // ── State, persisted in the URL so back-navigation restores it ──────────
   const filterParam = sp.get('filter') as Filter | null;
-  const filter: Filter = FILTERS.includes(filterParam as Filter) ? (filterParam as Filter) : 'active';
+  const filter: Filter = FILTERS.includes(filterParam as Filter) ? (filterParam as Filter) : 'all';
 
   const monthParam = sp.get('month');
   const visibleParam = Number(sp.get('visible'));
@@ -111,7 +111,7 @@ export function EventsList({
 
   function changeFilter(next: Filter) {
     pushUrl({
-      filter: next === 'active' ? null : next,
+      filter: next === 'all' ? null : next,
       visible: null,
     });
   }
