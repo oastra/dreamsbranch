@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { db } from "@/lib/db";
@@ -446,24 +447,26 @@ export default async function EventsPage({
       {/* ── Upcoming events ─────────────────────────────────────── */}
       <section className="section">
         <div className="container-page">
-          <EventsList
-            locale={locale}
-            title={t("events.upcoming")}
-            events={listItems}
-            tagLabels={tagLabels}
-            labels={{
-              all: t("events.all"),
-              active: t("events.active"),
-              archive: t("events.archive"),
-              showMore: t("events.show_more"),
-              noEvents: t("events.no_events"),
-              dateTime: t("events.date_time"),
-              location: t("events.location"),
-              viewMap: t("events.view_map"),
-              learnMore: t("events.learn_more"),
-              join: t("events.join"),
-            }}
-          />
+          <Suspense fallback={null}>
+            <EventsList
+              locale={locale}
+              title={t("events.upcoming")}
+              events={listItems}
+              tagLabels={tagLabels}
+              labels={{
+                all: t("events.all"),
+                active: t("events.active"),
+                archive: t("events.archive"),
+                showMore: t("events.show_more"),
+                noEvents: t("events.no_events"),
+                dateTime: t("events.date_time"),
+                location: t("events.location"),
+                viewMap: t("events.view_map"),
+                learnMore: t("events.learn_more"),
+                join: t("events.join"),
+              }}
+            />
+          </Suspense>
         </div>
       </section>
 

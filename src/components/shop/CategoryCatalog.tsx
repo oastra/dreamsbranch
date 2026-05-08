@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowDownNarrowWide, ArrowDownWideNarrow } from "lucide-react";
 import { ProductCard, type ProductCardProduct } from "./ProductCard";
 import { FilterPills, type FilterOption } from "./FilterPills";
@@ -50,9 +51,15 @@ export function CategoryCatalog({
   emptyCtaLabel,
   emptyCtaHref,
 }: Props) {
-  const [activeCategory, setActiveCategory] = useState<string>(ALL_VALUE);
-  const [sort, setSort] = useState<Sort>("asc");
-  const [visible, setVisible] = useState<number>(PAGE_SIZE);
+  const router = useRouter();
+  const pathname = usePathname();
+  const sp = useSearchParams();
+
+  // ── State derived from the URL so back-navigation restores it ──────────
+  const activeCategory = sp.get("cat") || ALL_VALUE;
+  const sort: Sort = sp.get("sort") === "desc" ? "desc" : "asc";
+  const visibleParam = Number(sp.get("visible"));
+  const visible = Number.isFinite(visibleParam) && visibleParam > 0 ? visibleParam : PAGE_SIZE;
 
   const filterOptions: FilterOption[] = useMemo(
     () => [{ value: ALL_VALUE, label: allLabel }, ...categories],
@@ -72,14 +79,32 @@ export function CategoryCatalog({
   const shown = items.slice(0, visible);
   const hasMore = visible < items.length;
 
+  function pushUrl(updates: Record<string, string | null>) {
+    const next = new URLSearchParams(sp.toString());
+    for (const [k, v] of Object.entries(updates)) {
+      if (v === null || v === "") next.delete(k);
+      else next.set(k, v);
+    }
+    const qs = next.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }
+
   function handleFilterChange(next: string) {
-    setActiveCategory(next);
-    setVisible(PAGE_SIZE);
+    pushUrl({
+      cat: next === ALL_VALUE ? null : next,
+      visible: null,
+    });
   }
 
   function toggleSort() {
-    setSort((current) => (current === "asc" ? "desc" : "asc"));
-    setVisible(PAGE_SIZE);
+    pushUrl({
+      sort: sort === "asc" ? "desc" : null,
+      visible: null,
+    });
+  }
+
+  function showMore() {
+    pushUrl({ visible: String(visible + PAGE_SIZE) });
   }
 
   const SortIcon = sort === "asc" ? ArrowDownNarrowWide : ArrowDownWideNarrow;
@@ -134,7 +159,7 @@ export function CategoryCatalog({
               <div className="mt-8 flex justify-center sm:mt-10">
                 <button
                   type="button"
-                  onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                  onClick={showMore}
                   className="inline-flex h-12 min-w-[200px] items-center justify-center rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90"
                 >
                   {showMoreLabel}

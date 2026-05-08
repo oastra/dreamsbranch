@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
@@ -208,22 +209,24 @@ export default async function ShopCategoryPage({
         </div>
       </section>
 
-      <CategoryCatalog
-        locale={locale}
-        products={catalogProducts}
-        categories={catalogCategories}
-        allLabel={t("shop.all_items")}
-        showMoreLabel={t("shop.show_more")}
-        addLabel={t("shop.add_to_cart")}
-        filtersAriaLabel={t("shop.filters_aria")}
-        sortButtonLabel={t("shop.catalog.sort_button")}
-        sortAriaAsc={t("shop.catalog.sort_aria_asc")}
-        sortAriaDesc={t("shop.catalog.sort_aria_desc")}
-        emptyTitle={t("shop.catalog.empty_title")}
-        emptyDescription={t("shop.catalog.empty_description")}
-        emptyCtaLabel={t("shop.catalog.empty_cta")}
-        emptyCtaHref={`/${locale}/shop`}
-      />
+      <Suspense fallback={null}>
+        <CategoryCatalog
+          locale={locale}
+          products={catalogProducts}
+          categories={catalogCategories}
+          allLabel={t("shop.all_items")}
+          showMoreLabel={t("shop.show_more")}
+          addLabel={t("shop.add_to_cart")}
+          filtersAriaLabel={t("shop.filters_aria")}
+          sortButtonLabel={t("shop.catalog.sort_button")}
+          sortAriaAsc={t("shop.catalog.sort_aria_asc")}
+          sortAriaDesc={t("shop.catalog.sort_aria_desc")}
+          emptyTitle={t("shop.catalog.empty_title")}
+          emptyDescription={t("shop.catalog.empty_description")}
+          emptyCtaLabel={t("shop.catalog.empty_cta")}
+          emptyCtaHref={`/${locale}/shop`}
+        />
+      </Suspense>
 
       <OtherCategoriesSection
         locale={locale}

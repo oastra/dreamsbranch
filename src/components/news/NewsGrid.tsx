@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { NewsCard, type NewsCardProps } from '@/components/news/NewsCard';
 
 const PAGE_SIZE = 4;
@@ -17,9 +17,21 @@ interface Props {
 }
 
 export function NewsGrid({ locale, items, brandLabel, showMoreLabel }: Props) {
-  const [visible, setVisible] = useState(PAGE_SIZE);
+  const router = useRouter();
+  const pathname = usePathname();
+  const sp = useSearchParams();
+
+  const visibleParam = Number(sp.get('visible'));
+  const visible = Number.isFinite(visibleParam) && visibleParam > 0 ? visibleParam : PAGE_SIZE;
+
   const shown = items.slice(0, visible);
   const hasMore = visible < items.length;
+
+  function showMore() {
+    const next = new URLSearchParams(sp.toString());
+    next.set('visible', String(visible + PAGE_SIZE));
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+  }
 
   return (
     <div className="rounded-3xl bg-secondary-10 p-4 sm:p-6 lg:p-10">
@@ -43,7 +55,7 @@ export function NewsGrid({ locale, items, brandLabel, showMoreLabel }: Props) {
         <div className="mt-6 flex justify-center lg:mt-10">
           <button
             type="button"
-            onClick={() => setVisible((v) => v + PAGE_SIZE)}
+            onClick={showMore}
             className="inline-flex h-[52px] items-center justify-center rounded-full bg-secondary px-10 text-body font-medium text-white transition-opacity hover:opacity-90 lg:h-[54px]"
           >
             {showMoreLabel}

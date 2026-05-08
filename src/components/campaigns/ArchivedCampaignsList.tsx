@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CampaignCard, type CampaignCardProps } from "./CampaignCard";
 
 const INITIAL_COUNT = 3;
@@ -23,10 +23,22 @@ type Props = {
 };
 
 export function ArchivedCampaignsList({ campaigns, cardProps, moreLabel }: Props) {
-  const [visible, setVisible] = useState(INITIAL_COUNT);
+  const router = useRouter();
+  const pathname = usePathname();
+  const sp = useSearchParams();
+
+  const visibleParam = Number(sp.get("archived"));
+  const visible =
+    Number.isFinite(visibleParam) && visibleParam > 0 ? visibleParam : INITIAL_COUNT;
 
   const shown = campaigns.slice(0, visible);
   const hasMore = visible < campaigns.length;
+
+  function showMore() {
+    const next = new URLSearchParams(sp.toString());
+    next.set("archived", String(visible + PAGE_SIZE));
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+  }
 
   return (
     <>
@@ -49,7 +61,7 @@ export function ArchivedCampaignsList({ campaigns, cardProps, moreLabel }: Props
         <div className="mt-10 flex justify-center">
           <button
             type="button"
-            onClick={() => setVisible((v) => v + PAGE_SIZE)}
+            onClick={showMore}
             className="btn-primary"
           >
             {moreLabel}

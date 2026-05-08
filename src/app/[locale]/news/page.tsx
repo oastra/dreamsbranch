@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { CalendarArrowUp } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
@@ -286,20 +287,22 @@ export default async function NewsPage({
       {rest.length > 0 && (
         <section className="section pt-0">
           <div className="container-page">
-            <NewsGrid
-              locale={locale}
-              brandLabel="Dreams branch of UWAA"
-              showMoreLabel={t('news.show_more')}
-              items={rest.map<NewsGridItem>((article) => ({
-                id: article.id,
-                slug: article.slug,
-                title: article[titleKey],
-                description: extractPlainText(article[bodyKey]),
-                coverImage: article.cover_image,
-                categoryLabel: getCategoryLabel(article.category, t),
-                publishedAt: article.published_at,
-              }))}
-            />
+            <Suspense fallback={null}>
+              <NewsGrid
+                locale={locale}
+                brandLabel="Dreams branch of UWAA"
+                showMoreLabel={t('news.show_more')}
+                items={rest.map<NewsGridItem>((article) => ({
+                  id: article.id,
+                  slug: article.slug,
+                  title: article[titleKey],
+                  description: extractPlainText(article[bodyKey]),
+                  coverImage: article.cover_image,
+                  categoryLabel: getCategoryLabel(article.category, t),
+                  publishedAt: article.published_at,
+                }))}
+              />
+            </Suspense>
           </div>
         </section>
       )}

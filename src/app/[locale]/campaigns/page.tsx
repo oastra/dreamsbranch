@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { db } from "@/lib/db";
@@ -182,18 +183,20 @@ export default async function CampaignsPage({
           <h2 className="text-h2 mb-8 text-text-strong">
             {t("campaigns.archived")}
           </h2>
-          <ArchivedCampaignsList
-            campaigns={archived.map((c) => ({
-              id: c.id,
-              slug: c.slug,
-              title: c[titleKey],
-              coverImage: c.cover_image,
-              goalAmount: Number(c.goal_amount),
-              currentAmount: Number(c.current_amount),
-            }))}
-            cardProps={cardProps}
-            moreLabel={t("campaigns.more")}
-          />
+          <Suspense fallback={null}>
+            <ArchivedCampaignsList
+              campaigns={archived.map((c) => ({
+                id: c.id,
+                slug: c.slug,
+                title: c[titleKey],
+                coverImage: c.cover_image,
+                goalAmount: Number(c.goal_amount),
+                currentAmount: Number(c.current_amount),
+              }))}
+              cardProps={cardProps}
+              moreLabel={t("campaigns.more")}
+            />
+          </Suspense>
         </div>
       </section>
 
