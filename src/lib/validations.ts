@@ -23,6 +23,7 @@ export const eventSchema = z.object({
   descriptionUa: z.any().optional(),
   descriptionEn: z.any().optional(),
   coverImage: z.string().optional(),
+  secondaryImage: z.string().optional(),
   galleryImages: z.array(z.string()).optional(),
   date: z.coerce.date(),
   startTime: z.string().optional(),

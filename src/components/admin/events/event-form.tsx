@@ -38,6 +38,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
     descriptionUa: typeof event?.description_ua === 'string' ? event.description_ua : '',
     descriptionEn: typeof event?.description_en === 'string' ? event.description_en : '',
     coverImage: event?.cover_image ?? '',
+    secondaryImage: event?.secondary_image ?? '',
     galleryImages: (event?.gallery_images ?? []) as string[],
     date: event?.event_date ? String(event.event_date).split('T')[0] : event?.date ? String(event.date).split('T')[0] : '',
     startTime: event?.start_time ?? '',
@@ -154,7 +155,14 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
           value={form.coverImage}
           onChange={url => set('coverImage', url ?? '')}
           folder="events"
-          label="Cover image (.webp, ~16:9)"
+          label="Cover image — large hero (.webp, ~16:9)"
+        />
+
+        <ImageUpload
+          value={form.secondaryImage}
+          onChange={url => set('secondaryImage', url ?? '')}
+          folder="events"
+          label="Secondary image — smaller, shown next to the description (.webp, ~4:3). Leave empty to reuse the cover image."
         />
 
         <MultiImageUpload

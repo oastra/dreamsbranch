@@ -556,23 +556,28 @@ export default async function EventDetailPage({
           </h2>
 
           <div className="prose-custom text-body text-text-primary">
-            {/* Floated cover so the description text wraps around it on
-                desktop / tablet, then stacks on mobile via float-none. */}
-            {event.cover_image ? (
-              <div className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
-                <Image
-                  src={event.cover_image}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 45vw"
-                />
-              </div>
-            ) : (
-              <div className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
-                <ImagePlaceholder size="md" />
-              </div>
-            )}
+            {/* Floated secondary image — falls back to the cover when not set.
+                Wraps with description on tablet+, stacks on mobile. */}
+            {(() => {
+              const floatedImage =
+                (event as Event & { secondary_image?: string | null }).secondary_image ||
+                event.cover_image;
+              return floatedImage ? (
+                <div className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
+                  <Image
+                    src={floatedImage}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 45vw"
+                  />
+                </div>
+              ) : (
+                <div className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
+                  <ImagePlaceholder size="md" />
+                </div>
+              );
+            })()}
             {renderRichText(event[descKey])}
             <div className="clear-both" />
           </div>

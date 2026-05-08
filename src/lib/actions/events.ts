@@ -14,6 +14,7 @@ function toSnake(input: Record<string, unknown>) {
     description_ua: input.descriptionUa ?? null,
     description_en: input.descriptionEn ?? null,
     cover_image: input.coverImage ?? null,
+    secondary_image: input.secondaryImage ?? null,
     gallery_images: input.galleryImages ?? [],
     event_date: input.date instanceof Date ? input.date.toISOString().split('T')[0] : input.date,
     start_time: input.startTime ?? null,

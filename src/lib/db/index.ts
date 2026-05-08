@@ -98,30 +98,35 @@ function normTag(row: Record<string, unknown>) {
   return { ...row, tag: fromDb(row.tag as string) };
 }
 
-// Retry a Supabase write without the slug_ua/slug_en columns when those
-// columns don't exist in the target table. Lets the per-locale-slug code
-// run safely on a database where the migration hasn't been applied yet.
-function isMissingPerLocaleSlugError(err: { code?: string; message?: string } | null): boolean {
-  if (!err) return false;
-  if (err.code === '42703') return true;
-  return /column .*slug_(ua|en).* does not exist/i.test(err.message ?? '');
-}
+// Retry a Supabase write while transparently dropping any column the
+// target table doesn't have yet. Lets new optional columns ship before
+// their migration has been applied without breaking existing writes —
+// each unknown column is stripped on the next attempt and we keep going
+// until the write succeeds or fails for an unrelated reason.
+type DbErr = { code?: string; message?: string } | null;
 
-function stripPerLocaleSlugs(row: Record<string, unknown>): Record<string, unknown> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { slug_ua, slug_en, ...rest } = row;
-  return rest;
+function getMissingColumn(err: DbErr): string | null {
+  if (!err || err.code !== '42703') return null;
+  const m = /column .*?"?(\w+)"?.* does not exist/i.exec(err.message ?? '');
+  return m?.[1] ?? null;
 }
 
 async function writeWithSlugFallback<T>(
-  attempt: (row: Record<string, unknown>) => PromiseLike<{ data: T | null; error: { code?: string; message?: string } | null }>,
+  attempt: (row: Record<string, unknown>) => PromiseLike<{ data: T | null; error: DbErr }>,
   row: Record<string, unknown>,
   context: string,
 ): Promise<T | null> {
-  let { data, error } = await attempt(row);
-  if (error && isMissingPerLocaleSlugError(error)) {
-    console.warn(`[${context}] slug_ua/slug_en columns missing — run migration 20260507000001_per_locale_slugs.sql. Falling back to legacy slug-only write.`);
-    ({ data, error } = await attempt(stripPerLocaleSlugs(row)));
+  const stripped = new Set<string>();
+  let current: Record<string, unknown> = row;
+  let { data, error } = await attempt(current);
+  while (error) {
+    const col = getMissingColumn(error);
+    if (!col || stripped.has(col) || !(col in current)) break;
+    console.warn(`[${context}] column "${col}" missing — stripping and retrying. Run any pending migrations.`);
+    stripped.add(col);
+    current = { ...current };
+    delete current[col];
+    ({ data, error } = await attempt(current));
   }
   if (error) console.error(`[${context}]`, error);
   return data;
