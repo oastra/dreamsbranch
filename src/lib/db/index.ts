@@ -98,6 +98,35 @@ function normTag(row: Record<string, unknown>) {
   return { ...row, tag: fromDb(row.tag as string) };
 }
 
+// Retry a Supabase write without the slug_ua/slug_en columns when those
+// columns don't exist in the target table. Lets the per-locale-slug code
+// run safely on a database where the migration hasn't been applied yet.
+function isMissingPerLocaleSlugError(err: { code?: string; message?: string } | null): boolean {
+  if (!err) return false;
+  if (err.code === '42703') return true;
+  return /column .*slug_(ua|en).* does not exist/i.test(err.message ?? '');
+}
+
+function stripPerLocaleSlugs(row: Record<string, unknown>): Record<string, unknown> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { slug_ua, slug_en, ...rest } = row;
+  return rest;
+}
+
+async function writeWithSlugFallback<T>(
+  attempt: (row: Record<string, unknown>) => PromiseLike<{ data: T | null; error: { code?: string; message?: string } | null }>,
+  row: Record<string, unknown>,
+  context: string,
+): Promise<T | null> {
+  let { data, error } = await attempt(row);
+  if (error && isMissingPerLocaleSlugError(error)) {
+    console.warn(`[${context}] slug_ua/slug_en columns missing — run migration 20260507000001_per_locale_slugs.sql. Falling back to legacy slug-only write.`);
+    ({ data, error } = await attempt(stripPerLocaleSlugs(row)));
+  }
+  if (error) console.error(`[${context}]`, error);
+  return data;
+}
+
 // ─── DB client ────────────────────────────────────────────────────────────────
 
 export const db = {
@@ -177,16 +206,24 @@ export const db = {
 
     async create({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as CampaignInsert;
-      const { data: created } = await sb.from('campaigns').insert(row).select().single();
-      return created ? normStatus(created as Record<string, unknown>) : null;
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') };
+      const created = await writeWithSlugFallback<Record<string, unknown>>(
+        (r) => sb.from('campaigns').insert(r as unknown as CampaignInsert).select().single(),
+        row,
+        'db.campaign.create',
+      );
+      return created ? normStatus(created) : null;
     },
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as CampaignUpdate;
-      const { data: updated } = await sb.from('campaigns').update(row).eq('id', where.id).select().single();
-      return updated ? normStatus(updated as Record<string, unknown>) : null;
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data);
+      const updated = await writeWithSlugFallback<Record<string, unknown>>(
+        (r) => sb.from('campaigns').update(r as unknown as CampaignUpdate).eq('id', where.id).select().single(),
+        row,
+        'db.campaign.update',
+      );
+      return updated ? normStatus(updated) : null;
     },
 
     async delete({ where }: { where: { id: string } }) {
@@ -269,16 +306,24 @@ export const db = {
 
     async create({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as EventInsert;
-      const { data: created } = await sb.from('events').insert(row).select().single();
-      return created ? normStatus(created as Record<string, unknown>) : null;
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') };
+      const created = await writeWithSlugFallback<Record<string, unknown>>(
+        (r) => sb.from('events').insert(r as unknown as EventInsert).select().single(),
+        row,
+        'db.event.create',
+      );
+      return created ? normStatus(created) : null;
     },
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as EventUpdate;
-      const { data: updated } = await sb.from('events').update(row).eq('id', where.id).select().single();
-      return updated ? normStatus(updated as Record<string, unknown>) : null;
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data);
+      const updated = await writeWithSlugFallback<Record<string, unknown>>(
+        (r) => sb.from('events').update(r as unknown as EventUpdate).eq('id', where.id).select().single(),
+        row,
+        'db.event.update',
+      );
+      return updated ? normStatus(updated) : null;
     },
 
     async delete({ where }: { where: { id: string } }) {
@@ -320,16 +365,24 @@ export const db = {
 
     async create({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as NewsArticleInsert;
-      const { data: created } = await sb.from('news_articles').insert(row).select().single();
-      return created ? normStatus(created as Record<string, unknown>) : null;
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') };
+      const created = await writeWithSlugFallback<Record<string, unknown>>(
+        (r) => sb.from('news_articles').insert(r as unknown as NewsArticleInsert).select().single(),
+        row,
+        'db.newsArticle.create',
+      );
+      return created ? normStatus(created) : null;
     },
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as NewsArticleUpdate;
-      const { data: updated } = await sb.from('news_articles').update(row).eq('id', where.id).select().single();
-      return updated ? normStatus(updated as Record<string, unknown>) : null;
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data);
+      const updated = await writeWithSlugFallback<Record<string, unknown>>(
+        (r) => sb.from('news_articles').update(r as unknown as NewsArticleUpdate).eq('id', where.id).select().single(),
+        row,
+        'db.newsArticle.update',
+      );
+      return updated ? normStatus(updated) : null;
     },
 
     async delete({ where }: { where: { id: string } }) {
@@ -546,16 +599,24 @@ export const db = {
 
     async create({ data }: { data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') } as unknown as ShopProductInsert;
-      const { data: created } = await sb.from('shop_products').insert(row).select().single();
-      return created ? normStatus(created as Record<string, unknown>) : null;
+      const row = { ...data, status: toDb((data.status as string) ?? 'DRAFT') };
+      const created = await writeWithSlugFallback<Record<string, unknown>>(
+        (r) => sb.from('shop_products').insert(r as unknown as ShopProductInsert).select().single(),
+        row,
+        'db.shopProduct.create',
+      );
+      return created ? normStatus(created) : null;
     },
 
     async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
       const sb = createAdminClient();
-      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data) as unknown as ShopProductUpdate;
-      const { data: updated } = await sb.from('shop_products').update(row).eq('id', where.id).select().single();
-      return updated ? normStatus(updated as Record<string, unknown>) : null;
+      const row = (data.status ? { ...data, status: toDb(data.status as string) } : data);
+      const updated = await writeWithSlugFallback<Record<string, unknown>>(
+        (r) => sb.from('shop_products').update(r as unknown as ShopProductUpdate).eq('id', where.id).select().single(),
+        row,
+        'db.shopProduct.update',
+      );
+      return updated ? normStatus(updated) : null;
     },
 
     async delete({ where }: { where: { id: string } }) {
