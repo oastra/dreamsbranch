@@ -30,8 +30,10 @@ const buttonVariants = cva(
         lg: "h-10 gap-2 px-[32px] py-[14px]",
         // Public-site marketing CTAs. Pair with shape="pill" for the
         // brand-blue rounded-full button used across events, campaigns,
-        // shop, etc.
-        xl: "h-12 gap-2 px-8 text-body",
+        // shop, etc. Don't repeat text-body here — the base already
+        // sets it, and tailwind-merge would treat it as a text-color
+        // group and silently drop the variant's text-white.
+        xl: "h-12 gap-2 px-8",
         icon: "size-8",
         "icon-xs":
           "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
