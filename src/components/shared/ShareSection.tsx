@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Check } from 'lucide-react';
 import FacebookColorIcon from '@/components/icons/FacebookIcon-color';
 import InstagramColorIcon from '@/components/icons/InstagramIcon-color';
@@ -15,25 +15,19 @@ interface ShareSectionProps {
 }
 
 const POPUP = 'noopener,noreferrer,width=600,height=520';
+const enc = encodeURIComponent;
 
 export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSectionProps) {
   const [copied, setCopied] = useState(false);
-  const [shareUrl, setShareUrl] = useState('');
-  const [shareTitle, setShareTitle] = useState('');
-
-  useEffect(() => {
-    setShareUrl(window.location.href);
-    setShareTitle(document.title);
-  }, []);
 
   async function copy() {
-    if (!shareUrl) return;
+    const url = window.location.href;
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(url);
     } catch {
       // Fallback for clipboard-blocked contexts: select-and-copy via a hidden textarea.
       const ta = document.createElement('textarea');
-      ta.value = shareUrl;
+      ta.value = url;
       ta.setAttribute('readonly', '');
       ta.style.position = 'absolute';
       ta.style.left = '-9999px';
@@ -46,15 +40,15 @@ export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSe
     setTimeout(() => setCopied(false), 2000);
   }
 
-  function openShare(url: string) {
-    if (!shareUrl) return;
-    window.open(url, '_blank', POPUP);
+  function shareTo(builder: (url: string, title: string) => string) {
+    const url = window.location.href;
+    const title = document.title;
+    window.open(builder(url, title), '_blank', POPUP);
   }
 
-  const enc = encodeURIComponent;
-  const fbHref = `https://www.facebook.com/sharer/sharer.php?u=${enc(shareUrl)}`;
-  const xHref = `https://twitter.com/intent/tweet?url=${enc(shareUrl)}&text=${enc(shareTitle)}`;
-  const waHref = `https://wa.me/?text=${enc(`${shareTitle} ${shareUrl}`)}`;
+  const fb = (url: string) => `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`;
+  const x = (url: string, title: string) => `https://twitter.com/intent/tweet?url=${enc(url)}&text=${enc(title)}`;
+  const wa = (url: string, title: string) => `https://wa.me/?text=${enc(`${title} ${url}`)}`;
 
   return (
     <div className="mt-12 flex flex-col items-stretch gap-4 rounded-2xl bg-secondary-10 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6 lg:px-8">
@@ -81,7 +75,7 @@ export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSe
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => openShare(fbHref)}
+            onClick={() => shareTo(fb)}
             className="transition-opacity hover:opacity-70"
             aria-label="Facebook"
           >
@@ -100,7 +94,7 @@ export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSe
           </button>
           <button
             type="button"
-            onClick={() => openShare(waHref)}
+            onClick={() => shareTo(wa)}
             className="transition-opacity hover:opacity-70"
             aria-label="WhatsApp"
           >
@@ -108,7 +102,7 @@ export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSe
           </button>
           <button
             type="button"
-            onClick={() => openShare(xHref)}
+            onClick={() => shareTo(x)}
             className="transition-opacity hover:opacity-70"
             aria-label="X"
           >
