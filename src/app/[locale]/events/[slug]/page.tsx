@@ -588,6 +588,7 @@ export default async function EventDetailPage({
           {/* Share */}
           <ShareSection
             copyLinkLabel={t("events.copy_link")}
+            copiedLabel={t("events.copy_link_copied")}
             shareLabel={t("events.share")}
           />
         </div>

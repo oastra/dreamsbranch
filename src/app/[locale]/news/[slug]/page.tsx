@@ -485,6 +485,7 @@ export default async function NewsArticlePage({
           {/* ── Share section ─────────────────────────────────── */}
           <ShareSection
             copyLinkLabel={t('news.copy_link')}
+            copiedLabel={t('news.copy_link_copied')}
             shareLabel={t('news.share')}
           />
         </div>
