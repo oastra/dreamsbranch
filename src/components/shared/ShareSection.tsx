@@ -1,23 +1,30 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Check } from 'lucide-react';
-import FacebookColorIcon from '@/components/icons/FacebookIcon-color';
-import InstagramColorIcon from '@/components/icons/InstagramIcon-color';
-import WhatsAppIcon from '@/components/icons/WhatsAppIcon';
-import XTwitterIcon from '@/components/icons/XTwitterIcon';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { Check } from "lucide-react";
+import FacebookColorIcon from "@/components/icons/FacebookIcon-color";
+import InstagramColorIcon from "@/components/icons/InstagramIcon-color";
+import WhatsAppIcon from "@/components/icons/WhatsAppIcon";
+import XTwitterIcon from "@/components/icons/XTwitterIcon";
+import { Button } from "@/components/ui/button";
 
 interface ShareSectionProps {
   copyLinkLabel: string;
   copiedLabel: string;
   shareLabel: string;
+  /** Accessible name for the section landmark, e.g. "Share this event". */
+  ariaLabel: string;
 }
 
-const POPUP = 'noopener,noreferrer,width=600,height=520';
+const POPUP = "noopener,noreferrer,width=600,height=520";
 const enc = encodeURIComponent;
 
-export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSectionProps) {
+export function ShareSection({
+  copyLinkLabel,
+  copiedLabel,
+  shareLabel,
+  ariaLabel,
+}: ShareSectionProps) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -26,14 +33,14 @@ export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSe
       await navigator.clipboard.writeText(url);
     } catch {
       // Fallback for clipboard-blocked contexts: select-and-copy via a hidden textarea.
-      const ta = document.createElement('textarea');
+      const ta = document.createElement("textarea");
       ta.value = url;
-      ta.setAttribute('readonly', '');
-      ta.style.position = 'absolute';
-      ta.style.left = '-9999px';
+      ta.setAttribute("readonly", "");
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
       document.body.appendChild(ta);
       ta.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(ta);
     }
     setCopied(true);
@@ -43,15 +50,21 @@ export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSe
   function shareTo(builder: (url: string, title: string) => string) {
     const url = window.location.href;
     const title = document.title;
-    window.open(builder(url, title), '_blank', POPUP);
+    window.open(builder(url, title), "_blank", POPUP);
   }
 
-  const fb = (url: string) => `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`;
-  const x = (url: string, title: string) => `https://twitter.com/intent/tweet?url=${enc(url)}&text=${enc(title)}`;
-  const wa = (url: string, title: string) => `https://wa.me/?text=${enc(`${title} ${url}`)}`;
+  const fb = (url: string) =>
+    `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`;
+  const x = (url: string, title: string) =>
+    `https://twitter.com/intent/tweet?url=${enc(url)}&text=${enc(title)}`;
+  const wa = (url: string, title: string) =>
+    `https://wa.me/?text=${enc(`${title} ${url}`)}`;
 
   return (
-    <div className="mt-12 flex flex-col items-stretch gap-4 rounded-2xl bg-secondary-10 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6 lg:px-8">
+    <section
+      aria-label={ariaLabel}
+      className="mt-12 flex flex-col items-stretch gap-4 rounded-2xl bg-secondary-10 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6 lg:px-8"
+    >
       <Button
         type="button"
         size="xl"
@@ -110,6 +123,6 @@ export function ShareSection({ copyLinkLabel, copiedLabel, shareLabel }: ShareSe
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

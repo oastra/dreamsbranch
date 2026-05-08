@@ -487,6 +487,7 @@ export default async function NewsArticlePage({
             copyLinkLabel={t('news.copy_link')}
             copiedLabel={t('news.copy_link_copied')}
             shareLabel={t('news.share')}
+            ariaLabel={t('news.share_aria')}
           />
         </div>
       </article>

@@ -221,22 +221,178 @@ const MOCK_LISTING_OVERRIDES: Array<{
   tags?: string[];
 }> = [
   // Active (April 2026)
-  { slug: "bunnings-kirrawee", title_ua: "Bunnings Kirrawee", title_en: "Bunnings Kirrawee", status: "active", event_date: "2026-04-10", start_time: "09:00", end_time: "14:00", location: "Bunnings Kirrawee", tags: ["looking_for_partners", "looking_for_volunteers"] },
-  { slug: "bunnings-padstow", title_ua: "Bunnings Padstow", title_en: "Bunnings Padstow", status: "active", event_date: "2026-04-12", start_time: "09:00", end_time: "14:00", location: "Bunnings Padstow", tags: ["looking_for_partners"] },
-  { slug: "4-years-of-war", title_ua: "4 роки війни", title_en: "4 Years of War", status: "active", event_date: "2026-04-15", start_time: "17:00", end_time: null, location: "Martin Place, Sydney", location_map_url: "https://maps.google.com", tags: ["looking_for_partners", "looking_for_volunteers"] },
-  { slug: "bunnings-castle-hill-apr", title_ua: "Bunnings Castle Hill", title_en: "Bunnings Castle Hill", status: "active", event_date: "2026-04-18", start_time: "09:00", end_time: "14:00", location: "Bunnings Castle Hill", tags: ["looking_for_volunteers"] },
-  { slug: "bunnings-ryde-apr", title_ua: "Bunnings Ryde", title_en: "Bunnings Ryde", status: "active", event_date: "2026-04-22", start_time: "09:00", end_time: "14:00", location: "Bunnings Ryde", tags: ["looking_for_partners"] },
-  { slug: "ukraine-vigil-apr", title_ua: "Вечірня вахта пам'яті", title_en: "Evening Vigil", status: "active", event_date: "2026-04-26", start_time: "18:30", end_time: "20:00", location: "Hyde Park, Sydney", location_map_url: "https://maps.google.com", tags: ["looking_for_volunteers"] },
-  { slug: "stand-with-ukraine-rally-apr", title_ua: "Stand with Ukraine — Rally", title_en: "Stand with Ukraine — Rally", status: "active", event_date: "2026-04-30", start_time: "11:00", end_time: "14:00", location: "Town Hall Square, Sydney", location_map_url: "https://maps.google.com", tags: ["looking_for_partners", "looking_for_volunteers"] },
+  {
+    slug: "bunnings-kirrawee",
+    title_ua: "Bunnings Kirrawee",
+    title_en: "Bunnings Kirrawee",
+    status: "active",
+    event_date: "2026-04-10",
+    start_time: "09:00",
+    end_time: "14:00",
+    location: "Bunnings Kirrawee",
+    tags: ["looking_for_partners", "looking_for_volunteers"],
+  },
+  {
+    slug: "bunnings-padstow",
+    title_ua: "Bunnings Padstow",
+    title_en: "Bunnings Padstow",
+    status: "active",
+    event_date: "2026-04-12",
+    start_time: "09:00",
+    end_time: "14:00",
+    location: "Bunnings Padstow",
+    tags: ["looking_for_partners"],
+  },
+  {
+    slug: "4-years-of-war",
+    title_ua: "4 роки війни",
+    title_en: "4 Years of War",
+    status: "active",
+    event_date: "2026-04-15",
+    start_time: "17:00",
+    end_time: null,
+    location: "Martin Place, Sydney",
+    location_map_url: "https://maps.google.com",
+    tags: ["looking_for_partners", "looking_for_volunteers"],
+  },
+  {
+    slug: "bunnings-castle-hill-apr",
+    title_ua: "Bunnings Castle Hill",
+    title_en: "Bunnings Castle Hill",
+    status: "active",
+    event_date: "2026-04-18",
+    start_time: "09:00",
+    end_time: "14:00",
+    location: "Bunnings Castle Hill",
+    tags: ["looking_for_volunteers"],
+  },
+  {
+    slug: "bunnings-ryde-apr",
+    title_ua: "Bunnings Ryde",
+    title_en: "Bunnings Ryde",
+    status: "active",
+    event_date: "2026-04-22",
+    start_time: "09:00",
+    end_time: "14:00",
+    location: "Bunnings Ryde",
+    tags: ["looking_for_partners"],
+  },
+  {
+    slug: "ukraine-vigil-apr",
+    title_ua: "Вечірня вахта пам'яті",
+    title_en: "Evening Vigil",
+    status: "active",
+    event_date: "2026-04-26",
+    start_time: "18:30",
+    end_time: "20:00",
+    location: "Hyde Park, Sydney",
+    location_map_url: "https://maps.google.com",
+    tags: ["looking_for_volunteers"],
+  },
+  {
+    slug: "stand-with-ukraine-rally-apr",
+    title_ua: "Stand with Ukraine — Rally",
+    title_en: "Stand with Ukraine — Rally",
+    status: "active",
+    event_date: "2026-04-30",
+    start_time: "11:00",
+    end_time: "14:00",
+    location: "Town Hall Square, Sydney",
+    location_map_url: "https://maps.google.com",
+    tags: ["looking_for_partners", "looking_for_volunteers"],
+  },
   // Archived
-  { slug: "bunnings-chatswood-apr", title_ua: "Bunnings Chatswood", title_en: "Bunnings Chatswood", status: "archived", event_date: "2026-04-02", start_time: "09:00", end_time: "14:00", location: "Bunnings Chatswood", tags: ["looking_for_partners", "looking_for_volunteers"] },
-  { slug: "bunnings-alexandria-apr", title_ua: "Bunnings Alexandria", title_en: "Bunnings Alexandria", status: "archived", event_date: "2026-04-08", start_time: "09:00", end_time: "13:00", location: "Bunnings Alexandria", tags: ["looking_for_volunteers"] },
-  { slug: "stand-with-ukraine-vigil-apr", title_ua: "Вечір пам'яті — Stand with Ukraine", title_en: "Stand with Ukraine — Memorial Evening", status: "archived", event_date: "2026-04-11", start_time: "18:30", end_time: "20:00", location: "Hyde Park, Sydney", location_map_url: "https://maps.google.com", tags: [] },
-  { slug: "ukrainian-easter-bake-sale-apr", title_ua: "Великодній благодійний ярмарок", title_en: "Ukrainian Easter Bake Sale", status: "archived", event_date: "2026-04-19", start_time: "10:00", end_time: "15:00", location: "Lidcombe Catholic Club", location_map_url: "https://maps.google.com", tags: ["looking_for_partners"] },
-  { slug: "bunnings-warriewood-apr", title_ua: "Bunnings Warriewood", title_en: "Bunnings Warriewood", status: "archived", event_date: "2026-04-25", start_time: "09:00", end_time: "14:00", location: "Bunnings Warriewood", tags: ["looking_for_partners", "looking_for_volunteers"] },
-  { slug: "bunnings-castle-hill-dec", title_ua: "Bunnings Castle Hill", title_en: "Bunnings Castle Hill", status: "archived", event_date: "2025-12-15", start_time: "09:00", end_time: "14:00", location: "Bunnings Castle Hill", tags: ["looking_for_partners", "looking_for_volunteers"] },
-  { slug: "bunnings-ryde-nov", title_ua: "Bunnings Ryde", title_en: "Bunnings Ryde", status: "archived", event_date: "2025-11-20", start_time: "09:00", end_time: "14:00", location: "Bunnings Ryde", tags: ["looking_for_volunteers"] },
-  { slug: "end-the-war-rally", title_ua: 'Мітинг "End the War on Ukraine\'s Terms"', title_en: "End the War on Ukraine's Terms Rally", status: "archived", event_date: "2025-10-24", start_time: "17:00", end_time: null, location: "Martin Place, Sydney", location_map_url: "https://maps.google.com", tags: [] },
+  {
+    slug: "bunnings-chatswood-apr",
+    title_ua: "Bunnings Chatswood",
+    title_en: "Bunnings Chatswood",
+    status: "archived",
+    event_date: "2026-04-02",
+    start_time: "09:00",
+    end_time: "14:00",
+    location: "Bunnings Chatswood",
+    tags: ["looking_for_partners", "looking_for_volunteers"],
+  },
+  {
+    slug: "bunnings-alexandria-apr",
+    title_ua: "Bunnings Alexandria",
+    title_en: "Bunnings Alexandria",
+    status: "archived",
+    event_date: "2026-04-08",
+    start_time: "09:00",
+    end_time: "13:00",
+    location: "Bunnings Alexandria",
+    tags: ["looking_for_volunteers"],
+  },
+  {
+    slug: "stand-with-ukraine-vigil-apr",
+    title_ua: "Вечір пам'яті — Stand with Ukraine",
+    title_en: "Stand with Ukraine — Memorial Evening",
+    status: "archived",
+    event_date: "2026-04-11",
+    start_time: "18:30",
+    end_time: "20:00",
+    location: "Hyde Park, Sydney",
+    location_map_url: "https://maps.google.com",
+    tags: [],
+  },
+  {
+    slug: "ukrainian-easter-bake-sale-apr",
+    title_ua: "Великодній благодійний ярмарок",
+    title_en: "Ukrainian Easter Bake Sale",
+    status: "archived",
+    event_date: "2026-04-19",
+    start_time: "10:00",
+    end_time: "15:00",
+    location: "Lidcombe Catholic Club",
+    location_map_url: "https://maps.google.com",
+    tags: ["looking_for_partners"],
+  },
+  {
+    slug: "bunnings-warriewood-apr",
+    title_ua: "Bunnings Warriewood",
+    title_en: "Bunnings Warriewood",
+    status: "archived",
+    event_date: "2026-04-25",
+    start_time: "09:00",
+    end_time: "14:00",
+    location: "Bunnings Warriewood",
+    tags: ["looking_for_partners", "looking_for_volunteers"],
+  },
+  {
+    slug: "bunnings-castle-hill-dec",
+    title_ua: "Bunnings Castle Hill",
+    title_en: "Bunnings Castle Hill",
+    status: "archived",
+    event_date: "2025-12-15",
+    start_time: "09:00",
+    end_time: "14:00",
+    location: "Bunnings Castle Hill",
+    tags: ["looking_for_partners", "looking_for_volunteers"],
+  },
+  {
+    slug: "bunnings-ryde-nov",
+    title_ua: "Bunnings Ryde",
+    title_en: "Bunnings Ryde",
+    status: "archived",
+    event_date: "2025-11-20",
+    start_time: "09:00",
+    end_time: "14:00",
+    location: "Bunnings Ryde",
+    tags: ["looking_for_volunteers"],
+  },
+  {
+    slug: "end-the-war-rally",
+    title_ua: 'Мітинг "End the War on Ukraine\'s Terms"',
+    title_en: "End the War on Ukraine's Terms Rally",
+    status: "archived",
+    event_date: "2025-10-24",
+    start_time: "17:00",
+    end_time: null,
+    location: "Martin Place, Sydney",
+    location_map_url: "https://maps.google.com",
+    tags: [],
+  },
 ];
 
 function buildMockFromListing(slug: string): Event | null {
@@ -560,8 +716,8 @@ export default async function EventDetailPage({
                 Wraps with description on tablet+, stacks on mobile. */}
             {(() => {
               const floatedImage =
-                (event as Event & { secondary_image?: string | null }).secondary_image ||
-                event.cover_image;
+                (event as Event & { secondary_image?: string | null })
+                  .secondary_image || event.cover_image;
               return floatedImage ? (
                 <div className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
                   <Image
@@ -590,6 +746,7 @@ export default async function EventDetailPage({
             copyLinkLabel={t("events.copy_link")}
             copiedLabel={t("events.copy_link_copied")}
             shareLabel={t("events.share")}
+            ariaLabel={t("events.share_aria")}
           />
         </div>
       </section>
@@ -610,11 +767,10 @@ export default async function EventDetailPage({
           Show whenever the event is archived AND has a financial
           report or gallery photos. Either piece is rendered on its
           own, so a gallery without a report still appears. */}
-      {isArchived &&
-        (financialReport || event.gallery_images.length > 0) && (
-        <section className="section">
+      {isArchived && (financialReport || event.gallery_images.length > 0) && (
+        <section className="">
           <div className="container-page">
-            <h2 className="mb-8 text-center text-h2 font-bold text-text-strong lg:mb-12 lg:text-[40px]">
+            <h2 className="mb-8 text-center text-h2 font-bold text-text-strong lg:text-[40px]">
               {t("events.reports")}
             </h2>
 
@@ -707,43 +863,43 @@ export default async function EventDetailPage({
                   ))}
                 </div>
 
-                {financialReport
-                  ? event.gallery_images.length > 2 && (
-                      <div className="mt-6 hidden grid-cols-4 gap-6 lg:grid">
-                        {event.gallery_images.slice(2, 6).map((img, i) => (
-                          <div
-                            key={`d-${i}`}
-                            className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10"
-                          >
-                            <Image
-                              src={img}
-                              alt={`${title} — ${i + 3}`}
-                              fill
-                              className="object-cover"
-                              sizes="25vw"
-                            />
-                          </div>
-                        ))}
+                {financialReport ? (
+                  event.gallery_images.length > 2 && (
+                    <div className="mt-6 hidden grid-cols-4 gap-6 lg:grid">
+                      {event.gallery_images.slice(2, 6).map((img, i) => (
+                        <div
+                          key={`d-${i}`}
+                          className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10"
+                        >
+                          <Image
+                            src={img}
+                            alt={`${title} — ${i + 3}`}
+                            fill
+                            className="object-cover"
+                            sizes="25vw"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )
+                ) : (
+                  <div className="mt-6 hidden grid-cols-4 gap-6 lg:grid">
+                    {event.gallery_images.slice(0, 8).map((img, i) => (
+                      <div
+                        key={`d-${i}`}
+                        className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10"
+                      >
+                        <Image
+                          src={img}
+                          alt={`${title} — ${i + 1}`}
+                          fill
+                          className="object-cover"
+                          sizes="25vw"
+                        />
                       </div>
-                    )
-                  : (
-                      <div className="mt-6 hidden grid-cols-4 gap-6 lg:grid">
-                        {event.gallery_images.slice(0, 8).map((img, i) => (
-                          <div
-                            key={`d-${i}`}
-                            className="relative aspect-square overflow-hidden rounded-2xl bg-secondary-10"
-                          >
-                            <Image
-                              src={img}
-                              alt={`${title} — ${i + 1}`}
-                              fill
-                              className="object-cover"
-                              sizes="25vw"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    ))}
+                  </div>
+                )}
               </>
             )}
 
