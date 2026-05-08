@@ -41,10 +41,10 @@ const buttonVariants = cva(
       },
       shape: {
         default: "",
-        // Marketing CTA shape — keep label white on hover and let the
-        // existing button fade lightly via opacity, matching the public
-        // site's pill-button convention.
-        pill: "rounded-full hover:text-white hover:opacity-90",
+        // Marketing CTA shape: rounded-full, no ripple wash on hover
+        // (the public site's convention is a subtle opacity fade with
+        // the label staying white).
+        pill: "rounded-full hover:text-white hover:opacity-90 [--ripple-color:transparent]",
       },
     },
     defaultVariants: {
