@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { EventCard } from '@/components/events/EventCard';
 import { FeaturedEventCard } from '@/components/events/FeaturedEventCard';
 
@@ -22,6 +23,7 @@ export type EventListItem = {
 type Filter = 'all' | 'active' | 'archive';
 
 const PAGE_SIZE = 6;
+const FILTERS: Filter[] = ['all', 'active', 'archive'];
 
 interface EventsListProps {
   locale: string;
@@ -49,14 +51,27 @@ export function EventsList({
   tagLabels,
   labels,
 }: EventsListProps) {
-  const [filter, setFilter] = useState<Filter>('active');
-  const [visible, setVisible] = useState(PAGE_SIZE);
-  const [monthOffset, setMonthOffset] = useState(0);
+  const router = useRouter();
+  const pathname = usePathname();
+  const sp = useSearchParams();
+
+  // ── State, persisted in the URL so back-navigation restores it ──────────
+  const filterParam = sp.get('filter') as Filter | null;
+  const filter: Filter = FILTERS.includes(filterParam as Filter) ? (filterParam as Filter) : 'active';
+
+  const monthParam = sp.get('month');
+  const visibleParam = Number(sp.get('visible'));
+  const visible = Number.isFinite(visibleParam) && visibleParam > 0 ? visibleParam : PAGE_SIZE;
 
   const selectedMonth = useMemo(() => {
+    if (monthParam) {
+      const [y, m] = monthParam.split('-').map(Number);
+      if (y && m && m >= 1 && m <= 12) return new Date(y, m - 1, 1);
+    }
     const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
-  }, [monthOffset]);
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  }, [monthParam]);
+
   const localeTag = locale === 'ua' ? 'uk-UA' : 'en-AU';
   const monthLabelFull = selectedMonth.toLocaleDateString(localeTag, {
     month: 'long',
@@ -83,14 +98,42 @@ export function EventsList({
   const shown = rest.slice(0, visible);
   const hasMore = rest.length > visible;
 
+  // Default values are stripped from the URL so it stays clean.
+  function pushUrl(updates: Record<string, string | null>) {
+    const next = new URLSearchParams(sp.toString());
+    for (const [k, v] of Object.entries(updates)) {
+      if (v === null || v === '') next.delete(k);
+      else next.set(k, v);
+    }
+    const qs = next.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }
+
   function changeFilter(next: Filter) {
-    setFilter(next);
-    setVisible(PAGE_SIZE);
+    pushUrl({
+      filter: next === 'active' ? null : next,
+      visible: null,
+    });
   }
 
   function changeMonth(delta: number) {
-    setMonthOffset((o) => o + delta);
-    setVisible(PAGE_SIZE);
+    const nextDate = new Date(
+      selectedMonth.getFullYear(),
+      selectedMonth.getMonth() + delta,
+      1,
+    );
+    const now = new Date();
+    const isCurrentMonth =
+      nextDate.getFullYear() === now.getFullYear() &&
+      nextDate.getMonth() === now.getMonth();
+    const monthStr = isCurrentMonth
+      ? null
+      : `${nextDate.getFullYear()}-${String(nextDate.getMonth() + 1).padStart(2, '0')}`;
+    pushUrl({ month: monthStr, visible: null });
+  }
+
+  function showMore() {
+    pushUrl({ visible: String(visible + PAGE_SIZE) });
   }
 
   const tabClass = (active: boolean) =>
@@ -225,7 +268,7 @@ export function EventsList({
             <div className="mt-8 flex justify-center">
               <button
                 type="button"
-                onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                onClick={showMore}
                 className="btn-primary"
               >
                 {labels.showMore}
