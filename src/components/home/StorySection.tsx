@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button-variants";
+import { ArrowRight } from "lucide-react";
 
 interface Props {
   title: string;
@@ -46,9 +46,13 @@ export function StorySection({
               </p>
               <Link
                 href={ctaHref}
-                className={buttonVariants({ size: "xl", shape: "pill" })}
+                className="group inline-flex items-center gap-2 text-body font-medium text-white underline-offset-4 transition-opacity hover:underline hover:opacity-90"
               >
                 {ctaLabel}
+                <ArrowRight
+                  className="size-4 transition-transform group-hover:translate-x-1"
+                  aria-hidden
+                />
               </Link>
             </div>
           </div>
