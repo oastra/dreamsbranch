@@ -29,12 +29,15 @@ export default async function HomePage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "home" });
   const tAbout = await getTranslations({ locale, namespace: "about" });
+  const tEvents = await getTranslations({ locale, namespace: "events" });
 
   // Reuse the about-page settings as the single source of truth for the
   // headline numbers — they're already editable via /admin/about-settings.
-  const settings = (await db.aboutSetting.findFirst()) as AboutPageSettings | null;
+  const settings =
+    (await db.aboutSetting.findFirst()) as AboutPageSettings | null;
   const yearsValue = settings?.years_value || tAbout("results.years_value");
-  const membersValue = settings?.members_value || tAbout("results.members_value");
+  const membersValue =
+    settings?.members_value || tAbout("results.members_value");
   const raisedValue = settings?.raised_value || tAbout("results.raised_value");
   const transparencyValue =
     settings?.transparency_value || tAbout("results.transparency_value");
@@ -139,8 +142,8 @@ export default async function HomePage({
       <SupportSection locale={locale} />
 
       <ContactSection
-        title={t("events.contact_title")}
-        description={t("events.contact_description")}
+        title={tEvents("contact_title")}
+        description={tEvents("contact_description")}
       />
     </>
   );
