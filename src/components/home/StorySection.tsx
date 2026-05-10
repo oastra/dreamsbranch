@@ -22,7 +22,7 @@ export function StorySection({
   return (
     <section className="section">
       <div className="container-page">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-secondary via-secondary-120 to-secondary-140 px-6 py-10 sm:px-10 sm:py-12 lg:px-16 lg:py-16">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2D9EE0] via-[#197FCE] to-[#0057B8] px-6 py-10 sm:px-10 sm:py-12 lg:px-16 lg:py-16">
           <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-12">
             {/* Mobile/tablet: emblem first, sits centered above the text. */}
             <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
@@ -41,7 +41,7 @@ export function StorySection({
               <h2 className="text-h2 font-semibold leading-tight lg:text-[40px]">
                 {title}
               </h2>
-              <p className="max-w-xl text-body text-white/80">
+              <p className="max-w-xl text-body text-white/85">
                 {description}
               </p>
               <Link
