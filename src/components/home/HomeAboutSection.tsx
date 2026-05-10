@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button-variants";
+import { MaskedImage } from "@/components/shared/MaskedImage";
 
 interface Props {
   title: string;
@@ -29,29 +29,15 @@ export function HomeAboutSection({
         {/* On mobile content stacks: title → lead → body p1 → image → body p2 → cta.
             On desktop the image takes the full left column and all text+cta sits on the right. */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[5fr_6fr] lg:gap-12">
-          {/* Image with brand corner accents */}
-          <div className="relative order-3 lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-5 lg:self-stretch">
-            {/* Yellow corner — top-left, in front of the image */}
-            <div
-              aria-hidden
-              className="absolute left-0 top-0 z-10 h-16 w-16 bg-primary sm:h-20 sm:w-20 lg:h-24 lg:w-24"
-              style={{ clipPath: "polygon(0 0, 100% 0, 0 100%)" }}
+          {/* Image — uses the shared MaskedImage so the yellow + light-blue
+              Figma corner triangles render automatically. */}
+          <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-5 lg:self-stretch">
+            <MaskedImage
+              src={imageSrc}
+              alt={imageAlt}
+              sizes="(max-width: 1024px) 100vw, 45vw"
+              className="aspect-[4/3] lg:h-full lg:aspect-auto lg:min-h-[480px]"
             />
-            {/* Blue corner — bottom-right, in front of the image */}
-            <div
-              aria-hidden
-              className="absolute bottom-0 right-0 z-10 h-16 w-16 bg-secondary sm:h-20 sm:w-20 lg:h-24 lg:w-24"
-              style={{ clipPath: "polygon(100% 0, 100% 100%, 0 100%)" }}
-            />
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-secondary-10 lg:h-full lg:aspect-auto lg:min-h-[480px]">
-              <Image
-                src={imageSrc}
-                alt={imageAlt}
-                fill
-                sizes="(max-width: 1024px) 100vw, 45vw"
-                className="object-cover"
-              />
-            </div>
           </div>
 
           <h2 className="order-1 text-h2 font-semibold leading-tight text-text-strong text-center lg:order-none lg:col-start-2 lg:row-start-1 lg:text-left lg:text-[40px]">
