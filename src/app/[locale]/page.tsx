@@ -6,8 +6,9 @@ import { SupportSection } from "@/components/shared/SupportSection";
 import { ResultsSection } from "@/components/shared/ResultsSection";
 import { StorySection } from "@/components/home/StorySection";
 import { HomeAboutSection } from "@/components/home/HomeAboutSection";
+import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { db } from "@/lib/db";
-import type { AboutPageSettings } from "@/types/database";
+import type { AboutPageSettings, Campaign } from "@/types/database";
 
 const HERO_SLIDES: HeroSlide[] = [
   {
@@ -31,6 +32,7 @@ export default async function HomePage({
   const t = await getTranslations({ locale, namespace: "home" });
   const tAbout = await getTranslations({ locale, namespace: "about" });
   const tEvents = await getTranslations({ locale, namespace: "events" });
+  const tCampaigns = await getTranslations({ locale, namespace: "campaigns" });
 
   // Reuse the about-page settings as the single source of truth for the
   // headline numbers — they're already editable via /admin/about-settings.
@@ -42,6 +44,14 @@ export default async function HomePage({
   const raisedValue = settings?.raised_value || tAbout("results.raised_value");
   const transparencyValue =
     settings?.transparency_value || tAbout("results.transparency_value");
+
+  // Newest 3 active campaigns for the home preview row.
+  const activeCampaigns = (await db.campaign.findMany({
+    where: { status: "ACTIVE" },
+    take: 3,
+  })) as unknown as Campaign[];
+  const titleKey: "title_ua" | "title_en" =
+    locale === "ua" ? "title_ua" : "title_en";
 
   return (
     <>
@@ -132,14 +142,56 @@ export default async function HomePage({
         imageAlt={t("about_preview.image_alt")}
       />
 
-      <section id="campaigns" className="section">
-        <div className="container-page">
-          <h2 className="text-h2 mb-8">{t("sections.active_campaigns")}</h2>
-          <p className="text-text-secondary">
-            Campaign cards — will load from database
-          </p>
-        </div>
-      </section>
+      {/* ── Active campaigns — 3 newest ─────────────────────────── */}
+      {activeCampaigns.length > 0 && (
+        <section id="campaigns" className="section">
+          <div className="container-page">
+            <h2 className="text-h2 mb-8 text-center font-semibold text-text-strong lg:text-left">
+              {t("sections.active_campaigns")}
+            </h2>
+
+            {/* Mobile: horizontal scroll-snap, peek of next card.
+                Desktop: 3-up grid. */}
+            <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {activeCampaigns.map((c) => (
+                <div
+                  key={c.id}
+                  className="w-[85%] shrink-0 snap-start"
+                >
+                  <CampaignCard
+                    slug={c.slug}
+                    locale={locale}
+                    title={c[titleKey] || ""}
+                    coverImage={c.cover_image}
+                    goalAmount={Number(c.goal_amount)}
+                    currentAmount={Number(c.current_amount)}
+                    raisedLabel={tCampaigns("raised")}
+                    goalLabel={tCampaigns("goal")}
+                    donateBtnLabel={tCampaigns("donate_btn")}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="hidden grid-cols-2 gap-6 sm:grid lg:grid-cols-3">
+              {activeCampaigns.map((c) => (
+                <CampaignCard
+                  key={c.id}
+                  slug={c.slug}
+                  locale={locale}
+                  title={c[titleKey] || ""}
+                  coverImage={c.cover_image}
+                  goalAmount={Number(c.goal_amount)}
+                  currentAmount={Number(c.current_amount)}
+                  raisedLabel={tCampaigns("raised")}
+                  goalLabel={tCampaigns("goal")}
+                  donateBtnLabel={tCampaigns("donate_btn")}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="section bg-surface-secondary">
         <div className="container-page">
