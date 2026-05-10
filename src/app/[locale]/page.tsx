@@ -1,15 +1,42 @@
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
+import { ContactSection } from "@/components/contact/ContactSection";
+import { SupportSection } from "@/components/shared/SupportSection";
+import { ResultsSection } from "@/components/shared/ResultsSection";
+import { db } from "@/lib/db";
+import type { AboutPageSettings } from "@/types/database";
 
 const HERO_SLIDES: HeroSlide[] = [
-  { src: "/images/fundaraising/backup-power-station-mobile-gadgets-charged-outdoor.webp", alt: "" },
-  { src: "/images/events/pray-peace-ukraine-hands-with-heart-no-war.webp", alt: "" },
+  {
+    src: "/images/fundaraising/backup-power-station-mobile-gadgets-charged-outdoor.webp",
+    alt: "",
+  },
+  {
+    src: "/images/events/pray-peace-ukraine-hands-with-heart-no-war.webp",
+    alt: "",
+  },
   { src: "/images/report/report.webp", alt: "" },
 ];
 
-export default function HomePage() {
-  const t = useTranslations("home");
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "home" });
+  const tAbout = await getTranslations({ locale, namespace: "about" });
+
+  // Reuse the about-page settings as the single source of truth for the
+  // headline numbers — they're already editable via /admin/about-settings.
+  const settings = (await db.aboutSetting.findFirst()) as AboutPageSettings | null;
+  const yearsValue = settings?.years_value || tAbout("results.years_value");
+  const membersValue = settings?.members_value || tAbout("results.members_value");
+  const raisedValue = settings?.raised_value || tAbout("results.raised_value");
+  const transparencyValue =
+    settings?.transparency_value || tAbout("results.transparency_value");
 
   return (
     <>
@@ -40,13 +67,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section bg-surface-secondary">
-        <div className="container-page text-center">
-          <p className="text-text-secondary">
-            Stats section — will load from HomePageSettings
-          </p>
-        </div>
-      </section>
+      {/* ── Results ──────────────────────────────────────────────── */}
+      <ResultsSection
+        title={t("results.title")}
+        description={t("results.description")}
+        stats={[
+          {
+            value: yearsValue,
+            unit: t("results.years_unit"),
+            label: t("results.years_label"),
+            heightClass: "lg:min-h-[200px]",
+          },
+          {
+            value: membersValue,
+            unit: t("results.members_unit"),
+            label: t("results.members_label"),
+            heightClass: "lg:min-h-[266px]",
+          },
+          {
+            value: raisedValue,
+            unit: t("results.raised_unit"),
+            label: t("results.raised_label"),
+            heightClass: "lg:min-h-[228px]",
+          },
+          {
+            value: transparencyValue,
+            unit: t("results.transparency_unit"),
+            label: t("results.transparency_label"),
+            heightClass: "lg:min-h-[342px]",
+          },
+        ]}
+      />
 
       <section id="campaigns" className="section">
         <div className="container-page">
@@ -66,23 +117,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section">
-        <div className="container-page">
-          <h2 className="text-h2 mb-4">{t("sections.support_title")}</h2>
-          <p className="text-text-secondary mb-8">
-            {t("sections.support_description")}
-          </p>
-        </div>
-      </section>
+      {/* ── Support section (reusable) ───────────────────────────── */}
+      <SupportSection locale={locale} />
 
-      <section className="section bg-surface-secondary">
-        <div className="container-page">
-          <h2 className="text-h2 mb-4">{t("sections.contact_title")}</h2>
-          <p className="text-text-secondary">
-            {t("sections.contact_description")}
-          </p>
-        </div>
-      </section>
+      <ContactSection
+        title={t("events.contact_title")}
+        description={t("events.contact_description")}
+      />
     </>
   );
 }

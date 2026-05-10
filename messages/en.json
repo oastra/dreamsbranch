@@ -30,6 +30,18 @@
       "campaigns": "years of work",
       "transparency": "Transparency"
     },
+    "results": {
+      "title": "Results",
+      "description": "Behind every figure is a story, a smile, and a life saved. We work every day to make giving a habit and kindness a daily choice.\nThank you to our donors and everyone who supports us in this great cause.",
+      "years_unit": "years",
+      "years_label": "Supporting Ukraine for",
+      "members_unit": "events",
+      "members_label": "Organised by the community",
+      "raised_unit": "",
+      "raised_label": "Aid provided",
+      "transparency_unit": "",
+      "transparency_label": "Of donations go to help"
+    },
     "sections": {
       "active_campaigns": "Active campaigns",
       "events": "Community events",

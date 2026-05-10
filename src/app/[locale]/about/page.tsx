@@ -10,6 +10,7 @@ import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { ReportsBanner } from "@/components/shared/ReportsBanner";
 import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
 import { SectionHeading } from "@/components/shared/SectionHeading";
+import { ResultsSection } from "@/components/shared/ResultsSection";
 import { db } from "@/lib/db";
 import type { AboutPageSettings, FaqItem } from "@/types/database";
 
@@ -357,61 +358,36 @@ export default async function Page({
       </section>
 
       {/* ── Results ───────────────────────────────────────────── */}
-      <section className="section">
-        <div className="container-page">
-          <SectionHeading
-            align="left"
-            className="mb-10"
-            description={t("results.description")}
-          >
-            {t("results.title")}
-          </SectionHeading>
-
-          <div className="grid grid-cols-1 items-end gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                value: yearsValue,
-                unit: t("results.years_unit"),
-                label: t("results.years_label"),
-                height: "lg:min-h-[200px]",
-              },
-              {
-                value: membersValue,
-                unit: t("results.members_unit"),
-                label: t("results.members_label"),
-                height: "lg:min-h-[266px]",
-              },
-              {
-                value: raisedValue,
-                unit: t("results.raised_unit"),
-                label: t("results.raised_label"),
-                height: "lg:min-h-[228px]",
-              },
-              {
-                value: transparencyValue,
-                unit: t("results.transparency_unit"),
-                label: t("results.transparency_label"),
-                height: "lg:min-h-[342px]",
-              },
-            ].map(({ value, unit, label, height }) => (
-              <div
-                key={label}
-                className={`flex flex-col justify-between rounded-2xl bg-secondary-10 p-6 text-text-strong ${height}`}
-              >
-                <p className="text-body text-text-secondary">{label}</p>
-                <p className="flex items-baseline justify-end gap-2 text-[2.5rem] font-medium leading-none sm:justify-start lg:text-[3rem]">
-                  {value}
-                  {unit && (
-                    <span className="text-body font-normal text-text-secondary">
-                      {unit}
-                    </span>
-                  )}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ResultsSection
+        title={t("results.title")}
+        description={t("results.description")}
+        stats={[
+          {
+            value: yearsValue,
+            unit: t("results.years_unit"),
+            label: t("results.years_label"),
+            heightClass: "lg:min-h-[200px]",
+          },
+          {
+            value: membersValue,
+            unit: t("results.members_unit"),
+            label: t("results.members_label"),
+            heightClass: "lg:min-h-[266px]",
+          },
+          {
+            value: raisedValue,
+            unit: t("results.raised_unit"),
+            label: t("results.raised_label"),
+            heightClass: "lg:min-h-[228px]",
+          },
+          {
+            value: transparencyValue,
+            unit: t("results.transparency_unit"),
+            label: t("results.transparency_label"),
+            heightClass: "lg:min-h-[342px]",
+          },
+        ]}
+      />
 
       {/* ── Transparency ──────────────────────────────────────── */}
       <section className="section">
