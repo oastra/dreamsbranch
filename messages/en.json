@@ -440,7 +440,8 @@
     },
     "results": {
       "title": "Results",
-      "description": "Over the years we have taken concrete steps to help Ukraine. Here are some numbers that represent real people and real help.",
+      "description_p1": "Behind every figure is a story, a smile, and a life saved.\nWe work every day to make giving a habit and kindness a daily choice.",
+      "description_p2": "Thank you to our donors and everyone who supports us in this great cause.",
       "years_value": "4",
       "years_unit": "years",
       "years_label": "Supporting the Armed Forces for",
