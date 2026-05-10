@@ -4,6 +4,7 @@ import { HeroCarousel, type HeroSlide } from "@/components/home/HeroCarousel";
 import { ContactSection } from "@/components/contact/ContactSection";
 import { SupportSection } from "@/components/shared/SupportSection";
 import { ResultsSection } from "@/components/shared/ResultsSection";
+import { StorySection } from "@/components/home/StorySection";
 import { db } from "@/lib/db";
 import type { AboutPageSettings } from "@/types/database";
 
@@ -106,6 +107,14 @@ export default async function HomePage({
             heightClass: "lg:min-h-[342px]",
           },
         ]}
+      />
+
+      {/* ── Story / mission card ────────────────────────────────── */}
+      <StorySection
+        title={t("story.title")}
+        description={t("story.description")}
+        ctaLabel={t("story.cta")}
+        ctaHref={`/${locale}/about`}
       />
 
       <section id="campaigns" className="section">
