@@ -5,6 +5,7 @@ import { ContactSection } from "@/components/contact/ContactSection";
 import { SupportSection } from "@/components/shared/SupportSection";
 import { ResultsSection } from "@/components/shared/ResultsSection";
 import { StorySection } from "@/components/home/StorySection";
+import { HomeAboutSection } from "@/components/home/HomeAboutSection";
 import { db } from "@/lib/db";
 import type { AboutPageSettings } from "@/types/database";
 
@@ -118,6 +119,17 @@ export default async function HomePage({
         description={t("story.description")}
         ctaLabel={t("story.cta")}
         ctaHref={`/${locale}/about`}
+      />
+
+      {/* ── About / founding-story preview ──────────────────────── */}
+      <HomeAboutSection
+        title={t("about_preview.title")}
+        lead={t("about_preview.lead")}
+        bodyP1={t("about_preview.body_p1")}
+        bodyP2={t("about_preview.body_p2")}
+        ctaLabel={t("about_preview.cta")}
+        ctaHref={`/${locale}/about`}
+        imageAlt={t("about_preview.image_alt")}
       />
 
       <section id="campaigns" className="section">

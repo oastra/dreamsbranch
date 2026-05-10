@@ -41,10 +41,10 @@ export function StorySection({
               <h2 className="text-h2 font-semibold leading-tight lg:text-[40px]">
                 {title}
               </h2>
-              <p className="max-w-xl text-body text-white/85">
+              <p className="max-w-xl whitespace-pre-line text-body text-white/85">
                 {description}
               </p>
-              <Link
+              {/* <Link
                 href={ctaHref}
                 className="group inline-flex items-center gap-2 text-body font-medium text-white underline-offset-4 transition-opacity hover:underline hover:opacity-90"
               >
@@ -53,7 +53,7 @@ export function StorySection({
                   className="size-4 transition-transform group-hover:translate-x-1"
                   aria-hidden
                 />
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>
