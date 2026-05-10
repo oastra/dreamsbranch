@@ -70,7 +70,16 @@ export default async function HomePage({
       {/* ── Results ──────────────────────────────────────────────── */}
       <ResultsSection
         title={t("results.title")}
-        description={t("results.description")}
+        description={
+          <>
+            <span className="block whitespace-pre-line">
+              {t("results.description_p1")}
+            </span>
+            <span className="mt-3 block whitespace-pre-line">
+              {t("results.description_p2")}
+            </span>
+          </>
+        }
         stats={[
           {
             value: yearsValue,

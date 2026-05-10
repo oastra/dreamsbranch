@@ -32,7 +32,8 @@
     },
     "results": {
       "title": "Results",
-      "description": "Behind every figure is a story, a smile, and a life saved. We work every day to make giving a habit and kindness a daily choice.\nThank you to our donors and everyone who supports us in this great cause.",
+      "description_p1": "Behind every figure is a story, a smile, and a life saved.\nWe work every day to make giving a habit and kindness a daily choice.",
+      "description_p2": "Thank you to our donors and everyone who supports us in this great cause.",
       "years_unit": "years",
       "years_label": "Supporting Ukraine for",
       "members_unit": "events",
