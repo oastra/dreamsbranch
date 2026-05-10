@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 
 export type ResultStat = {
@@ -13,7 +14,7 @@ export type ResultStat = {
 
 interface Props {
   title: string;
-  description: string;
+  description: ReactNode;
   stats: ResultStat[];
   /** Defaults match the about-page treatment. */
   className?: string;
