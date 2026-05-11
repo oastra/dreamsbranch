@@ -267,7 +267,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (UA) *</Label>
-                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!isEdit && !form.slugUa) set('slugUa', slugify(e.target.value)); }} required />
+                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!form.slugUa) set('slugUa', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (UA)</Label>
@@ -280,7 +280,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (EN) *</Label>
-                <Input value={form.titleEn} onChange={e => { set('titleEn', e.target.value); if (!isEdit && !form.slugEn) set('slugEn', slugify(e.target.value)); }} required />
+                <Input value={form.titleEn} onChange={e => { set('titleEn', e.target.value); if (!form.slugEn) set('slugEn', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (EN)</Label>

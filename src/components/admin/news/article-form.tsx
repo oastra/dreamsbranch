@@ -37,11 +37,11 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
 
   function handleTitleUaChange(value: string) {
     set('titleUa', value);
-    if (!isEdit && !form.slugUa) set('slugUa', slugify(value));
+    if (!form.slugUa) set('slugUa', slugify(value));
   }
   function handleTitleEnChange(value: string) {
     set('titleEn', value);
-    if (!isEdit && !form.slugEn) set('slugEn', slugify(value));
+    if (!form.slugEn) set('slugEn', slugify(value));
   }
 
   async function handleSubmit(e: React.FormEvent) {

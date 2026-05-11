@@ -23,8 +23,8 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
     titleEn: campaign?.title_en ?? '',
     slugUa: campaign?.slug_ua ?? campaign?.slug ?? '',
     slugEn: campaign?.slug_en ?? campaign?.slug ?? '',
-    descriptionUa: campaign?.description_ua ?? '',
-    descriptionEn: campaign?.description_en ?? '',
+    descriptionUa: typeof campaign?.description_ua === 'string' ? campaign.description_ua : '',
+    descriptionEn: typeof campaign?.description_en === 'string' ? campaign.description_en : '',
     coverImage: campaign?.cover_image ?? '',
     goalAmount: campaign?.goal_amount ?? 0,
     status: campaign?.status ?? 'DRAFT',
@@ -101,7 +101,7 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (UA) *</Label>
-                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!isEdit && !form.slugUa) set('slugUa', slugify(e.target.value)); }} required />
+                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!form.slugUa) set('slugUa', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (UA)</Label>
@@ -113,7 +113,7 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (EN) *</Label>
-                <Input value={form.titleEn} onChange={e => { set('titleEn', e.target.value); if (!isEdit && !form.slugEn) set('slugEn', slugify(e.target.value)); }} required />
+                <Input value={form.titleEn} onChange={e => { set('titleEn', e.target.value); if (!form.slugEn) set('slugEn', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (EN)</Label>

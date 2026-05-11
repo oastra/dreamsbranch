@@ -15,6 +15,7 @@ import {
   createShopPhotoReport,
   updateShopPhotoReport,
 } from '@/lib/actions/shop-photo-reports';
+import { slugify } from '@/lib/slug';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function PhotoReportForm({ report }: { report?: Record<string, any> }) {
@@ -111,7 +112,10 @@ export function PhotoReportForm({ report }: { report?: Record<string, any> }) {
               <Label>Title (UA) *</Label>
               <Input
                 value={form.titleUa}
-                onChange={(e) => set('titleUa', e.target.value)}
+                onChange={(e) => {
+                  set('titleUa', e.target.value);
+                  if (!form.slug) set('slug', slugify(e.target.value));
+                }}
                 required
               />
             </div>
@@ -121,7 +125,10 @@ export function PhotoReportForm({ report }: { report?: Record<string, any> }) {
               <Label>Title (EN) *</Label>
               <Input
                 value={form.titleEn}
-                onChange={(e) => set('titleEn', e.target.value)}
+                onChange={(e) => {
+                  set('titleEn', e.target.value);
+                  if (!form.slug) set('slug', slugify(e.target.value));
+                }}
                 required
               />
             </div>
