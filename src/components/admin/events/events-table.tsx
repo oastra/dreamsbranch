@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { StatusBadge } from '@/components/admin/shared/status-badge';
 import { DeleteConfirmDialog } from '@/components/admin/shared/delete-confirm-dialog';
+import { EditedByCell } from '@/components/admin/shared/edited-by-cell';
 import { deleteEvent, setEventStatus } from '@/lib/actions/events';
 
 interface Event {
@@ -19,11 +20,21 @@ interface Event {
   event_date: string | null;
   location: string | null;
   status: string;
+  updated_at?: string | null;
+  updated_by_admin_id?: string | null;
 }
 
 type StatusFilter = 'ALL' | 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
 
-export function EventsTable({ events, userRole }: { events: Event[]; userRole: string }) {
+export function EventsTable({
+  events,
+  userRole,
+  admins,
+}: {
+  events: Event[];
+  userRole: string;
+  admins: Record<string, string>;
+}) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [search, setSearch] = useState('');
@@ -97,13 +108,14 @@ export function EventsTable({ events, userRole }: { events: Event[]; userRole: s
               <TableHead>Date</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Edited</TableHead>
               <TableHead className="w-12" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-text-secondary py-8">
+                <TableCell colSpan={6} className="text-center text-text-secondary py-8">
                   {events.length === 0 ? 'No events yet' : 'No events match your filters'}
                 </TableCell>
               </TableRow>
@@ -125,6 +137,13 @@ export function EventsTable({ events, userRole }: { events: Event[]; userRole: s
                   </TableCell>
                   <TableCell className="text-text-secondary">{event.location || '—'}</TableCell>
                   <TableCell><StatusBadge status={event.status} /></TableCell>
+                  <TableCell>
+                    <EditedByCell
+                      adminId={event.updated_by_admin_id}
+                      updatedAt={event.updated_at}
+                      admins={admins}
+                    />
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

@@ -29,10 +29,14 @@ function toSnake(input: Record<string, unknown>) {
 }
 
 export async function createEvent(formData: unknown) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const parsed = eventSchema.safeParse(formData);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
-  const row = toSnake(parsed.data as Record<string, unknown>);
+  const row = {
+    ...toSnake(parsed.data as Record<string, unknown>),
+    created_by_admin_id: admin.id,
+    updated_by_admin_id: admin.id,
+  };
   const result = await db.event.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create event' };
   revalidatePath('/admin/events');
@@ -40,10 +44,13 @@ export async function createEvent(formData: unknown) {
 }
 
 export async function updateEvent(id: string, formData: unknown) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const parsed = eventSchema.safeParse(formData);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
-  const row = toSnake(parsed.data as Record<string, unknown>);
+  const row = {
+    ...toSnake(parsed.data as Record<string, unknown>),
+    updated_by_admin_id: admin.id,
+  };
   const result = await db.event.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update event' };
   revalidatePath('/admin/events');
@@ -58,8 +65,11 @@ export async function deleteEvent(id: string) {
 }
 
 export async function setEventStatus(id: string, status: 'DRAFT' | 'ACTIVE' | 'ARCHIVED') {
-  await requireAdmin();
-  const result = await db.event.update({ where: { id }, data: { status } });
+  const admin = await requireAdmin();
+  const result = await db.event.update({
+    where: { id },
+    data: { status, updated_by_admin_id: admin.id },
+  });
   if (!result) return { success: false, error: 'Failed to update status' };
   revalidatePath('/admin/events');
   return { success: true };

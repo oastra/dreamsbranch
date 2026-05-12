@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { StatusBadge } from '@/components/admin/shared/status-badge';
 import { DeleteConfirmDialog } from '@/components/admin/shared/delete-confirm-dialog';
+import { EditedByCell } from '@/components/admin/shared/edited-by-cell';
 import { deleteCampaign } from '@/lib/actions/campaigns';
 import { formatCurrency } from '@/lib/utils';
 
@@ -20,11 +21,21 @@ interface Campaign {
   goal_amount: number;
   current_amount?: number;
   status: string;
+  updated_at?: string | null;
+  updated_by_admin_id?: string | null;
 }
 
 type StatusFilter = 'ALL' | 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
 
-export function CampaignsTable({ campaigns, userRole }: { campaigns: Campaign[]; userRole: string }) {
+export function CampaignsTable({
+  campaigns,
+  userRole,
+  admins,
+}: {
+  campaigns: Campaign[];
+  userRole: string;
+  admins: Record<string, string>;
+}) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [search, setSearch] = useState('');
@@ -88,13 +99,14 @@ export function CampaignsTable({ campaigns, userRole }: { campaigns: Campaign[];
               <TableHead>Title</TableHead>
               <TableHead>Goal</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Edited</TableHead>
               <TableHead className="w-12" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-text-secondary py-8">
+                <TableCell colSpan={5} className="text-center text-text-secondary py-8">
                   {campaigns.length === 0 ? 'No campaigns yet' : 'No campaigns match your filters'}
                 </TableCell>
               </TableRow>
@@ -110,6 +122,13 @@ export function CampaignsTable({ campaigns, userRole }: { campaigns: Campaign[];
                   </TableCell>
                   <TableCell className="text-text-secondary">{formatCurrency(Number(campaign.goal_amount))}</TableCell>
                   <TableCell><StatusBadge status={campaign.status} /></TableCell>
+                  <TableCell>
+                    <EditedByCell
+                      adminId={campaign.updated_by_admin_id}
+                      updatedAt={campaign.updated_at}
+                      admins={admins}
+                    />
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

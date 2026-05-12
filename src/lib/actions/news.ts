@@ -22,10 +22,14 @@ function toSnake(input: Record<string, unknown>) {
 }
 
 export async function createArticle(formData: unknown) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const parsed = articleSchema.safeParse(formData);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
-  const row = toSnake(parsed.data as Record<string, unknown>);
+  const row = {
+    ...toSnake(parsed.data as Record<string, unknown>),
+    created_by_admin_id: admin.id,
+    updated_by_admin_id: admin.id,
+  };
   const result = await db.newsArticle.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create article' };
   revalidatePath('/admin/news');
@@ -33,10 +37,13 @@ export async function createArticle(formData: unknown) {
 }
 
 export async function updateArticle(id: string, formData: unknown) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const parsed = articleSchema.safeParse(formData);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
-  const row = toSnake(parsed.data as Record<string, unknown>);
+  const row = {
+    ...toSnake(parsed.data as Record<string, unknown>),
+    updated_by_admin_id: admin.id,
+  };
   const result = await db.newsArticle.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update article' };
   revalidatePath('/admin/news');

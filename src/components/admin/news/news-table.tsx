@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { StatusBadge } from '@/components/admin/shared/status-badge';
 import { DeleteConfirmDialog } from '@/components/admin/shared/delete-confirm-dialog';
+import { EditedByCell } from '@/components/admin/shared/edited-by-cell';
 import { deleteArticle } from '@/lib/actions/news';
 
 interface Article {
@@ -21,11 +22,21 @@ interface Article {
   is_featured: boolean;
   status: string;
   created_at: string;
+  updated_at?: string | null;
+  updated_by_admin_id?: string | null;
 }
 
 type StatusFilter = 'ALL' | 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 
-export function NewsTable({ articles, userRole }: { articles: Article[]; userRole: string }) {
+export function NewsTable({
+  articles,
+  userRole,
+  admins,
+}: {
+  articles: Article[];
+  userRole: string;
+  admins: Record<string, string>;
+}) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [search, setSearch] = useState('');
@@ -111,13 +122,14 @@ export function NewsTable({ articles, userRole }: { articles: Article[]; userRol
               <TableHead>Category</TableHead>
               <TableHead>Featured</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Edited</TableHead>
               <TableHead className="w-12" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-text-secondary py-8">
+                <TableCell colSpan={6} className="text-center text-text-secondary py-8">
                   {articles.length === 0 ? 'No articles yet' : 'No articles match your filters'}
                 </TableCell>
               </TableRow>
@@ -134,6 +146,13 @@ export function NewsTable({ articles, userRole }: { articles: Article[]; userRol
                   <TableCell className="text-text-secondary">{article.category || '—'}</TableCell>
                   <TableCell>{article.is_featured ? '⭐' : '—'}</TableCell>
                   <TableCell><StatusBadge status={article.status} /></TableCell>
+                  <TableCell>
+                    <EditedByCell
+                      adminId={article.updated_by_admin_id}
+                      updatedAt={article.updated_at}
+                      admins={admins}
+                    />
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
