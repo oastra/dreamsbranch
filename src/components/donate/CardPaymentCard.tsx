@@ -3,6 +3,7 @@
 import { useState } from "react";
 import MastercardMark from "@/components/icons/payments/MastercardMark";
 import VisaMark from "@/components/icons/payments/VisaMark";
+import { Button } from "@/components/ui/button";
 
 export type CardPaymentLabels = {
   sectionTitle: string;
@@ -171,12 +172,14 @@ export function CardPaymentCard({ labels }: Props) {
 
         {/* ── Actions ─────────────────────────────────────── */}
         <div className="mt-6 flex flex-col items-center gap-4 sm:mt-8 sm:flex-row sm:justify-between sm:gap-6">
-          <button
+          <Button
             type="submit"
-            className="inline-flex h-[54px] w-full items-center justify-center rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90 sm:w-auto sm:flex-1 lg:max-w-[280px]"
+            size="xl"
+            shape="pill"
+            className="w-full sm:w-auto sm:flex-1 lg:max-w-[280px]"
           >
             {labels.submit}
-          </button>
+          </Button>
           <button
             type="button"
             onClick={handleCancel}

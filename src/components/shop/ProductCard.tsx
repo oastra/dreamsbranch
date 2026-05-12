@@ -18,7 +18,7 @@ type Props = {
 
 export function ProductCard({ locale, product, addLabel }: Props) {
   return (
-    <article className="group/product flex h-[300px] w-[280px] shrink-0 flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow hover:shadow-md sm:h-[320px] lg:h-[360px] lg:w-[302px]">
+    <article className="group/product flex h-[300px] w-[280px] shrink-0 flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow hover:shadow-card-hover sm:h-[320px] lg:h-[360px] lg:w-[302px]">
       <Link
         href={`/${locale}/shop/product/${product.slug}`}
         className="relative block flex-1 bg-grey-40"

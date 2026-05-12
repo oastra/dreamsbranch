@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import type { Report } from "@/types/database";
 import { SupportSection } from "@/components/shared/SupportSection";
 import { ContactSection } from "@/components/contact/ContactSection";
+import { Button } from "@/components/ui/button";
 
 type ReportItem = {
   key: string;
@@ -19,10 +20,6 @@ type ReportItem = {
 
 const FALLBACK_IMAGE = "/images/report/report.webp";
 
-const detailsBtnBase =
-  "inline-flex items-center justify-center rounded-full px-10 py-[14px] text-body font-medium transition-colors duration-300";
-const detailsBtnEnabled = `${detailsBtnBase} bg-secondary text-white hover:bg-secondary/90`;
-const detailsBtnDisabled = `${detailsBtnBase} bg-grey-40 text-text-tertiary cursor-not-allowed`;
 
 export const revalidate = 60;
 
@@ -177,21 +174,28 @@ export default async function Page({
 
                     <div className="pt-2 lg:self-start">
                       {item.pdfUrl ? (
-                        <a
-                          href={item.pdfUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={detailsBtnEnabled}
+                        <Button
+                          render={
+                            <a
+                              href={item.pdfUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            />
+                          }
+                          size="xl"
+                          shape="pill"
                         >
                           {t("details")}
-                        </a>
+                        </Button>
                       ) : (
-                        <span
+                        <Button
+                          disabled
                           aria-disabled="true"
-                          className={detailsBtnDisabled}
+                          size="xl"
+                          shape="pill"
                         >
                           {t("details")}
-                        </span>
+                        </Button>
                       )}
                     </div>
                   </div>

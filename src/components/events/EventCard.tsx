@@ -28,7 +28,7 @@ export function EventCard({
   return (
     <Link
       href={`/${locale}/events/${slug}`}
-      className="group flex h-full flex-col rounded-2xl bg-white p-4 transition-shadow hover:shadow-md"
+      className="group flex h-full flex-col rounded-2xl bg-white p-4 transition-shadow hover:shadow-card-hover"
     >
       <h3 className="text-h3 font-semibold text-text-strong">{title}</h3>
       {subtitle && (

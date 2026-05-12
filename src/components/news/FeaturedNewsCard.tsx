@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
 
 export interface FeaturedNewsCardProps {
@@ -106,12 +107,14 @@ export function FeaturedNewsCard({
 
         {/* CTA — always last */}
         <div className="order-5 mt-2 lg:mt-4">
-          <Link
-            href={`/${locale}/news/${slug}`}
-            className="inline-flex h-[52px] w-full items-center justify-center rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90 md:w-auto md:min-w-[220px] lg:h-[54px]"
+          <Button
+            render={<Link href={`/${locale}/news/${slug}`} />}
+            size="xl"
+            shape="pill"
+            className="w-full md:w-auto md:min-w-[220px]"
           >
             {learnMoreLabel}
-          </Link>
+          </Button>
         </div>
       </div>
     </article>

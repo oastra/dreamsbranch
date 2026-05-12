@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
+import { Button } from '@/components/ui/button';
 
 export interface FeaturedEventCardProps {
   slug: string;
@@ -111,18 +112,21 @@ export function FeaturedEventCard({
 
   const buttons = (
     <div className="flex flex-wrap gap-3">
-      <Link
-        href={`/${locale}/events/${slug}`}
-        className="inline-flex items-center justify-center rounded-full bg-secondary px-8 py-3 text-body font-medium text-white transition-opacity hover:opacity-90"
+      <Button
+        render={<Link href={`/${locale}/events/${slug}`} />}
+        size="xl"
+        shape="pill"
       >
         {learnMoreLabel}
-      </Link>
-      <Link
-        href={`/${locale}/events/${slug}`}
-        className="inline-flex items-center justify-center rounded-full border-2 border-secondary bg-white px-8 py-3 text-body font-medium text-secondary transition-colors hover:bg-secondary-10"
+      </Button>
+      <Button
+        render={<Link href={`/${locale}/events/${slug}`} />}
+        variant="outline"
+        size="xl"
+        shape="pill"
       >
         {joinLabel}
-      </Link>
+      </Button>
     </div>
   );
 

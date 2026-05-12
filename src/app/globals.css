@@ -78,19 +78,16 @@ body {
   @apply text-[12px] leading-[120%] tracking-[0] font-medium;
 }
 
-/* ---------- Button utilities (Figma spec: 280×54 on tablet/desktop) ---------- */
-
-@utility btn-primary {
-  @apply inline-flex h-13.5 w-70 max-w-full items-center justify-center rounded-full bg-secondary px-10 text-body font-medium text-white transition-colors duration-300 hover:opacity-90;
-}
-
-@utility btn-outline {
-  @apply inline-flex h-13.5 w-70 max-w-full items-center justify-center rounded-full border border-border bg-white px-10 text-body font-medium text-text-strong transition-colors duration-300 hover:bg-grey-40;
-}
-
 /* Title → subtitle / description gap. Figma: 24 / 32 / 40 (M / T / D). */
 @utility mb-title-gap {
   @apply mb-6 md:mb-8 lg:mb-10;
+}
+
+/* Shared card-hover elevation (Figma "Shadows and blurs / Drop"):
+   x=0, y=8, blur=24, spread=0, color #0057B8 at 32%. Applied to every
+   clickable content card (campaigns, events, news, products) on hover. */
+@utility shadow-card-hover {
+  box-shadow: 0 8px 24px 0 rgba(0, 87, 184, 0.32);
 }
 
 /* ---------- Components ---------- */

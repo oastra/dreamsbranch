@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   id?: string;
@@ -67,12 +68,14 @@ export function CateringSection({
               </div>
 
               <div className="mt-2 flex justify-center lg:justify-start">
-                <Link
-                  href={ctaHref}
-                  className="inline-flex h-12 min-w-[240px] items-center justify-center rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90"
+                <Button
+                  render={<Link href={ctaHref} />}
+                  size="xl"
+                  shape="pill"
+                  className="min-w-[240px]"
                 >
                   {ctaLabel}
-                </Link>
+                </Button>
               </div>
             </div>
           </div>

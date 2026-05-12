@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ReportIcon from "@/components/icons/ReportIcon";
+import { Button } from "@/components/ui/button";
 
 type ReportsBannerProps = {
   title: string;
@@ -32,12 +33,15 @@ export function ReportsBanner({
       <p className="text-body text-white/80 lg:order-2 lg:max-w-[32ch] lg:flex-1">
         {description}
       </p>
-      <Link
-        href={ctaHref}
-        className="inline-flex h-[54px] w-[280px] max-w-full shrink-0 items-center justify-center rounded-full bg-primary px-10 text-body font-medium text-text-strong transition-opacity hover:opacity-90 lg:order-4"
+      <Button
+        render={<Link href={ctaHref} />}
+        variant="secondary"
+        size="xl"
+        shape="pill"
+        className="w-70 max-w-full shrink-0 lg:order-4"
       >
         {ctaLabel}
-      </Link>
+      </Button>
     </div>
   );
 }

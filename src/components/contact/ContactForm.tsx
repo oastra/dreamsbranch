@@ -121,11 +121,12 @@ export function ContactForm() {
           )}
         />
 
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-stretch gap-3 sm:items-start">
           <Button
             type="submit"
-            size="lg"
-            className="w-full rounded-full px-10 sm:w-auto sm:px-16"
+            size="xl"
+            shape="pill"
+            className="w-full sm:w-auto sm:min-w-[200px]"
             disabled={form.formState.isSubmitting}
           >
             {t('send')}

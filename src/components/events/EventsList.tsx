@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { EventCard } from '@/components/events/EventCard';
 import { FeaturedEventCard } from '@/components/events/FeaturedEventCard';
+import { Button } from '@/components/ui/button';
 
 export type EventListItem = {
   id: string;
@@ -266,13 +267,15 @@ export function EventsList({
 
           {hasMore && (
             <div className="mt-8 flex justify-center">
-              <button
+              <Button
                 type="button"
                 onClick={showMore}
-                className="btn-primary"
+                size="xl"
+                shape="pill"
+                className="w-70 max-w-full"
               >
                 {labels.showMore}
-              </button>
+              </Button>
             </div>
           )}
         </div>

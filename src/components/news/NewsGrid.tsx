@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { NewsCard, type NewsCardProps } from '@/components/news/NewsCard';
+import { Button } from '@/components/ui/button';
 
 const PAGE_SIZE = 4;
 
@@ -53,13 +54,14 @@ export function NewsGrid({ locale, items, brandLabel, showMoreLabel }: Props) {
 
       {hasMore && (
         <div className="mt-6 flex justify-center lg:mt-10">
-          <button
+          <Button
             type="button"
             onClick={showMore}
-            className="inline-flex h-[52px] items-center justify-center rounded-full bg-secondary px-10 text-body font-medium text-white transition-opacity hover:opacity-90 lg:h-[54px]"
+            size="xl"
+            shape="pill"
           >
             {showMoreLabel}
-          </button>
+          </Button>
         </div>
       )}
     </div>

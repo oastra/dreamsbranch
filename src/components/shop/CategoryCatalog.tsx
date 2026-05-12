@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ArrowDownNarrowWide, ArrowDownWideNarrow } from "lucide-react";
 import { ProductCard, type ProductCardProduct } from "./ProductCard";
 import { FilterPills, type FilterOption } from "./FilterPills";
+import { Button } from "@/components/ui/button";
 
 const ALL_VALUE = "__all__";
 const PAGE_SIZE = 4;
@@ -157,13 +158,15 @@ export function CategoryCatalog({
 
             {hasMore && (
               <div className="mt-8 flex justify-center sm:mt-10">
-                <button
+                <Button
                   type="button"
                   onClick={showMore}
-                  className="inline-flex h-12 min-w-[200px] items-center justify-center rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90"
+                  size="xl"
+                  shape="pill"
+                  className="min-w-[200px]"
                 >
                   {showMoreLabel}
-                </button>
+                </Button>
               </div>
             )}
           </>
@@ -188,12 +191,14 @@ function EmptyState({
     <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-10 text-center">
       <h3 className="text-h3 font-semibold text-text-strong">{title}</h3>
       <p className="text-body text-text-secondary">{description}</p>
-      <Link
-        href={ctaHref}
-        className="mt-2 inline-flex h-12 min-w-[200px] items-center justify-center rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90"
+      <Button
+        render={<Link href={ctaHref} />}
+        size="xl"
+        shape="pill"
+        className="mt-2 min-w-[200px]"
       >
         {ctaLabel}
-      </Link>
+      </Button>
     </div>
   );
 }

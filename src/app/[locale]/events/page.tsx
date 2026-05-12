@@ -163,7 +163,8 @@ const MOCK_ACTIVE: EventPreview[] = [
     slug: "stand-with-ukraine-rally-apr",
     title_ua: "Stand with Ukraine — Rally",
     title_en: "Stand with Ukraine — Rally",
-    description_ua: "Велика хода солідарності. Підтримайте Україну разом з нами.",
+    description_ua:
+      "Велика хода солідарності. Підтримайте Україну разом з нами.",
     description_en: "Solidarity march. Stand with Ukraine alongside us.",
     cover_image: null,
     gallery_images: [],
@@ -390,7 +391,10 @@ export default async function EventsPage({
   // Flat list passed to the client component: all active + all archived.
   // The first matching item (per filter/month) becomes the featured card; the
   // rest fill the grid below.
-  const toListItem = (ev: EventPreview, isArchived: boolean): EventListItem => ({
+  const toListItem = (
+    ev: EventPreview,
+    isArchived: boolean,
+  ): EventListItem => ({
     id: ev.id,
     slug: ev.slug,
     title: ev[titleKey],
@@ -413,7 +417,7 @@ export default async function EventsPage({
   return (
     <>
       {/* ── Page hero ────────────────────────────────────────────── */}
-      <section className=" py-8 lg:py-16">
+      <section className=" py-8 md:py-16 lg:py-20">
         <div className="container-page">
           <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2 lg:items-center lg:gap-10">
             {/* Title — centered on mobile/tablet, left in left column on desktop */}

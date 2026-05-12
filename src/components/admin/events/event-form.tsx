@@ -46,7 +46,9 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
     location: event?.location ?? '',
     locationMapUrl: event?.location_map_url ?? '',
     status: event?.status ?? 'DRAFT',
-    volunteerCta: event?.show_volunteer_cta ?? event?.volunteer_cta ?? false,
+    // Default ON for new events so active events automatically show the
+    // "Стань волонтером" block. Editing keeps whatever was previously saved.
+    volunteerCta: event?.show_volunteer_cta ?? event?.volunteer_cta ?? !isEdit,
     tags: (event?.tags ?? []) as string[],
     financialReport: initialReport,
   });

@@ -8,6 +8,7 @@ import { StorySection } from "@/components/home/StorySection";
 import { HomeAboutSection } from "@/components/home/HomeAboutSection";
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { NewsCard } from "@/components/news/NewsCard";
+import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import type {
   AboutPageSettings,
@@ -173,12 +174,23 @@ export default async function HomePage({
               {t("hero.description")}
             </p>
             <div className="flex flex-wrap justify-center gap-4 lg:justify-start">
-              <Link href={`/${locale}/about`} className="btn-primary">
+              <Button
+                render={<Link href={`/${locale}/about`} />}
+                size="xl"
+                shape="pill"
+                className="w-70 max-w-full"
+              >
                 {t("hero.cta_about")}
-              </Link>
-              <Link href={`/${locale}/shop`} className="btn-outline">
+              </Button>
+              <Button
+                render={<Link href={`/${locale}/shop`} />}
+                variant="outline"
+                size="xl"
+                shape="pill"
+                className="w-70 max-w-full"
+              >
                 {t("hero.cta_shop")}
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

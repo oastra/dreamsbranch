@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CampaignCard, type CampaignCardProps } from "./CampaignCard";
+import { Button } from "@/components/ui/button";
 
 const INITIAL_COUNT = 3;
 const PAGE_SIZE = 3;
@@ -59,13 +60,15 @@ export function ArchivedCampaignsList({ campaigns, cardProps, moreLabel }: Props
 
       {hasMore && (
         <div className="mt-10 flex justify-center">
-          <button
+          <Button
             type="button"
             onClick={showMore}
-            className="btn-primary"
+            size="xl"
+            shape="pill"
+            className="w-70 max-w-full"
           >
             {moreLabel}
-          </button>
+          </Button>
         </div>
       )}
     </>

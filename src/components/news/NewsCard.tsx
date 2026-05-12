@@ -58,7 +58,7 @@ export function NewsCard({
   return (
     <Link
       href={`/${locale}/news/${slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl bg-white transition-shadow hover:shadow-md"
+      className="group flex flex-col overflow-hidden rounded-2xl bg-white transition-shadow hover:shadow-card-hover"
     >
       {/* ── Image with yellow category pill ─────────────────────── */}
       <div className="relative aspect-[16/11] bg-grey-40">

@@ -705,9 +705,9 @@ export default async function EventDetailPage({
       </section>
 
       {/* ── Description section ──────────────────────────────────── */}
-      <section className="">
+      <section className="section">
         <div className="container-page">
-          <h2 className="mb-8 text-center text-h2 font-bold text-text-strong lg:mb-12 lg:text-[40px]">
+          <h2 className=" mb-8 text-center text-h2 font-bold text-text-strong lg:mb-12 lg:text-[40px]">
             {t("events.charity_event")} &laquo;{title}&raquo;
           </h2>
 
@@ -740,16 +740,17 @@ export default async function EventDetailPage({
 
           {/* Static info blocks — same content on every event (active + archived) */}
           <EventInfoBlocks />
-
-          {/* Share */}
-          <ShareSection
-            copyLinkLabel={t("events.copy_link")}
-            copiedLabel={t("events.copy_link_copied")}
-            shareLabel={t("events.share")}
-            ariaLabel={t("events.share_aria")}
-          />
         </div>
       </section>
+
+      {/* Share */}
+
+      <ShareSection
+        copyLinkLabel={t("events.copy_link")}
+        copiedLabel={t("events.copy_link_copied")}
+        shareLabel={t("events.share")}
+        ariaLabel={t("events.share_aria")}
+      />
 
       {/* ── Volunteer CTA (active only) ──────────────────────────── */}
       {!isArchived && event.show_volunteer_cta && (
@@ -759,7 +760,7 @@ export default async function EventDetailPage({
           ctaLabel={t("shared.volunteer_cta.cta")}
           ctaHref={`/${locale}/contact`}
           imageAlt={t("shared.volunteer_cta.image_alt")}
-          className="lg:!pb-0 lg:!h-auto"
+          className=" lg:!h-auto"
         />
       )}
 

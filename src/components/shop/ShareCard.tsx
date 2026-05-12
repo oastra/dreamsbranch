@@ -6,6 +6,7 @@ import FacebookColorIcon from "@/components/icons/FacebookIcon-color";
 import InstagramColorIcon from "@/components/icons/InstagramIcon-color";
 import WhatsAppFillIcon from "@/components/icons/WhatsAppFillIcon";
 import XTwitterIcon from "@/components/icons/XTwitterIcon";
+import { Button } from "@/components/ui/button";
 
 type Labels = {
   copyLink: string;
@@ -57,11 +58,13 @@ export function ShareCard({ shareTitle, labels }: Props) {
     <section className="pb-12 sm:pb-16 lg:pb-20">
       <div className="container-page">
         <div className="flex flex-col items-stretch gap-4 rounded-3xl bg-secondary-10 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:p-8">
-          <button
+          <Button
             type="button"
             onClick={handleCopy}
             aria-live="polite"
-            className="inline-flex h-12 w-full items-center justify-center gap-2 self-center rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90 sm:w-[280px] lg:h-[54px]"
+            size="xl"
+            shape="pill"
+            className="w-full self-center sm:w-[280px]"
           >
             {copied ? (
               <>
@@ -71,7 +74,7 @@ export function ShareCard({ shareTitle, labels }: Props) {
             ) : (
               <span>{labels.copyLink}</span>
             )}
-          </button>
+          </Button>
 
           <div className="flex flex-col items-center gap-3 rounded-3xl bg-white p-4 sm:flex-row sm:justify-center sm:gap-6 sm:px-6 sm:py-3 lg:rounded-full">
             <span className="text-body font-semibold text-text-strong">

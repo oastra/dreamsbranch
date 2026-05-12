@@ -61,66 +61,72 @@ export function ShareSection({
     `https://wa.me/?text=${enc(`${title} ${url}`)}`;
 
   return (
-    <section
-      aria-label={ariaLabel}
-      className="mt-10 flex flex-col items-stretch gap-4 rounded-2xl bg-secondary-10 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6 md:mt-14 lg:mt-25 lg:px-8"
-    >
-      <Button
-        type="button"
-        size="xl"
-        shape="pill"
-        onClick={copy}
-        aria-live="polite"
-        className="w-full sm:w-[280px]"
-      >
-        {copied ? (
-          <>
-            <Check className="size-4" aria-hidden />
-            {copiedLabel}
-          </>
-        ) : (
-          copyLinkLabel
-        )}
-      </Button>
-
-      <div className="flex items-center justify-between gap-4 rounded-full bg-white px-5 py-2.5 sm:justify-end sm:gap-5">
-        <span className="text-body text-text-strong">{shareLabel}</span>
-        <div className="flex items-center gap-3">
-          <button
+    // `<section>` is the page landmark and only carries spacing — keep its
+    // styling minimal so the card visuals don't bleed past `container-page`'s
+    // horizontal padding.
+    <section aria-label={ariaLabel} className="">
+      <div className="container-page">
+        {/* The visible "share" card. Plain <div> on purpose — it's a UI
+            element inside the section landmark, not its own landmark. */}
+        <div className="flex flex-col items-stretch gap-4 rounded-2xl bg-secondary-10 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6 lg:px-8">
+          <Button
             type="button"
-            onClick={() => shareTo(fb)}
-            className="transition-opacity hover:opacity-70"
-            aria-label="Facebook"
-          >
-            <FacebookColorIcon size={32} />
-          </button>
-          {/* Instagram has no web share intent. Treat the icon as a
-              "copy link" shortcut so the user can paste it into a story
-              or DM, which is how IG shares typically happen. */}
-          <button
-            type="button"
+            size="xl"
+            shape="pill"
             onClick={copy}
-            className="transition-opacity hover:opacity-70"
-            aria-label="Instagram"
+            aria-live="polite"
+            className="w-full sm:w-[280px]"
           >
-            <InstagramColorIcon size={32} />
-          </button>
-          <button
-            type="button"
-            onClick={() => shareTo(wa)}
-            className="transition-opacity hover:opacity-70"
-            aria-label="WhatsApp"
-          >
-            <WhatsAppIcon size={32} />
-          </button>
-          <button
-            type="button"
-            onClick={() => shareTo(x)}
-            className="transition-opacity hover:opacity-70"
-            aria-label="X"
-          >
-            <XTwitterIcon size={32} />
-          </button>
+            {copied ? (
+              <>
+                <Check className="size-4" aria-hidden />
+                {copiedLabel}
+              </>
+            ) : (
+              copyLinkLabel
+            )}
+          </Button>
+
+          <div className="flex items-center justify-between gap-4 rounded-full bg-white px-5 py-2.5 sm:justify-end sm:gap-5">
+            <span className="text-body text-text-strong">{shareLabel}</span>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => shareTo(fb)}
+                className="transition-opacity hover:opacity-70"
+                aria-label="Facebook"
+              >
+                <FacebookColorIcon size={32} />
+              </button>
+              {/* Instagram has no web share intent. Treat the icon as a
+                  "copy link" shortcut so the user can paste it into a story
+                  or DM, which is how IG shares typically happen. */}
+              <button
+                type="button"
+                onClick={copy}
+                className="transition-opacity hover:opacity-70"
+                aria-label="Instagram"
+              >
+                <InstagramColorIcon size={32} />
+              </button>
+              <button
+                type="button"
+                onClick={() => shareTo(wa)}
+                className="transition-opacity hover:opacity-70"
+                aria-label="WhatsApp"
+              >
+                <WhatsAppIcon size={32} />
+              </button>
+              <button
+                type="button"
+                onClick={() => shareTo(x)}
+                className="transition-opacity hover:opacity-70"
+                aria-label="X"
+              >
+                <XTwitterIcon size={32} />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>

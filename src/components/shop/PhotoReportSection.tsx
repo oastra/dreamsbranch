@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PhotoReportCarousel } from "./PhotoReportCarousel";
 import type { PhotoReportCardData } from "./PhotoReportCard";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   id?: string;
@@ -26,12 +27,14 @@ export function PhotoReportSection({
   if (reports.length === 0) return null;
 
   const allReportsLink = (
-    <Link
-      href={allReportsHref}
-      className="inline-flex h-12 items-center justify-center rounded-full border-2 border-secondary px-8 text-body font-medium text-secondary transition-colors hover:bg-secondary hover:text-white"
+    <Button
+      render={<Link href={allReportsHref} />}
+      variant="outline"
+      size="xl"
+      shape="pill"
     >
       {allReportsLabel}
-    </Link>
+    </Button>
   );
 
   return (
@@ -68,12 +71,15 @@ export function PhotoReportSection({
 
         {/* Mobile/tablet: "All reports" button below the carousel */}
         <div className="mt-6 flex justify-center lg:hidden">
-          <Link
-            href={allReportsHref}
-            className="inline-flex h-12 w-full max-w-sm items-center justify-center rounded-full border-2 border-secondary px-8 text-body font-medium text-secondary transition-colors hover:bg-secondary hover:text-white"
+          <Button
+            render={<Link href={allReportsHref} />}
+            variant="outline"
+            size="xl"
+            shape="pill"
+            className="w-full max-w-sm"
           >
             {allReportsLabel}
-          </Link>
+          </Button>
         </div>
       </div>
     </section>

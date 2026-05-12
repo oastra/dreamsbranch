@@ -129,15 +129,15 @@ export function Footer() {
 
           {/* Support button */}
           <div className="shrink-0">
-            <Link href="/donate">
-              <Button
-                variant="secondary"
-                size="lg"
-                className="rounded-full w-50 h-12"
-              >
-                {t("nav.support")}
-              </Button>
-            </Link>
+            <Button
+              render={<Link href="/donate" />}
+              variant="secondary"
+              size="xl"
+              shape="pill"
+              className="w-50"
+            >
+              {t("nav.support")}
+            </Button>
           </div>
         </div>
 

@@ -11,10 +11,9 @@ import { ReportsBanner } from "@/components/shared/ReportsBanner";
 import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { ResultsSection } from "@/components/shared/ResultsSection";
+import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import type { AboutPageSettings, FaqItem } from "@/types/database";
-
-const btnPrimary = "btn-primary hover:text-primary";
 
 export default async function Page({
   params,
@@ -89,9 +88,14 @@ export default async function Page({
                 {t("hero.description_2")}
               </p>
               <div className="mt-auto pt-2">
-                <Link href={`/${locale}/contact`} className={btnPrimary}>
+                <Button
+                  render={<Link href={`/${locale}/contact`} />}
+                  size="xl"
+                  shape="pill"
+                  className="w-70 max-w-full"
+                >
                   {t("hero.cta")}
-                </Link>
+                </Button>
               </div>
             </div>
 

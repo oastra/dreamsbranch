@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   title: string;
@@ -23,9 +24,10 @@ export function VolunteerCTA({
   className = "",
 }: Props) {
   return (
-    <section
-      className={`py-10 px-4 sm:py-10 sm:px-6 lg:py-15 lg:px-15 lg:h-[302px] ${className}`}
-    >
+    // `<section>` is the landmark with only vertical spacing — horizontal
+    // padding comes from `container-page`, same as ShareSection and the
+    // rest of the page, so both cards line up to the same column width.
+    <section className={`py-10 sm:py-10 lg:py-15 lg:h-[302px] ${className}`}>
       <div className="container-page">
         <article className="rounded-3xl bg-[#FFEF99] p-5 sm:p-8  lg:p-10">
           {/*
@@ -56,12 +58,15 @@ export function VolunteerCTA({
                 <p className="text-center text-body text-text-primary lg:text-left">
                   {description}
                 </p>
-                <Link
-                  href={ctaHref}
-                  className="inline-flex h-12 w-full items-center justify-center rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90 sm:w-auto sm:min-w-[280px] lg:min-w-[220px]"
+                <Button
+                  render={<Link href={ctaHref} />}
+                  variant="default-on-yellow"
+                  size="xl"
+                  shape="pill"
+                  className="w-full sm:w-auto sm:min-w-[280px] lg:min-w-[220px]"
                 >
                   {ctaLabel}
-                </Link>
+                </Button>
               </div>
             </div>
           </div>

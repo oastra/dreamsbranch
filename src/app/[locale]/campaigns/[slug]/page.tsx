@@ -14,6 +14,7 @@ import {
 } from "@/components/campaigns/CampaignShareCard";
 import { CampaignDonorsList } from "@/components/campaigns/CampaignDonorsList";
 import { CopyLinkButton } from "@/components/campaigns/CopyLinkButton";
+import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import type { Campaign, Donation } from "@/types/database";
@@ -841,12 +842,13 @@ function DonationAmountCard({
   return (
     <div className="flex flex-col items-center gap-5 rounded-[20px] border border-[#A8B6CC]/40 bg-white px-6 py-6 sm:py-8">
       <span className="text-h2 font-medium text-text-strong">{label}</span>
-      <button
+      <Button
         type="button"
-        className="inline-flex h-11 w-full items-center justify-center rounded-full bg-secondary px-6 text-body-sm font-semibold text-white transition-opacity hover:opacity-90"
+        shape="pill"
+        className="h-11 w-full px-6"
       >
         {ctaLabel}
-      </button>
+      </Button>
     </div>
   );
 }

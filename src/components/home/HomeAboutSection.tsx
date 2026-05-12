@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button-variants";
+import { Button } from "@/components/ui/button";
 import { MaskedImage } from "@/components/shared/MaskedImage";
 
 interface Props {
@@ -59,12 +59,14 @@ export function HomeAboutSection({
           </p>
 
           <div className="order-5 flex justify-center lg:order-none lg:col-start-2 lg:row-start-5 lg:justify-start">
-            <Link
-              href={ctaHref}
-              className={buttonVariants({ size: "xl", shape: "pill" })}
+            <Button
+              render={<Link href={ctaHref} />}
+              size="xl"
+              shape="pill"
+              className="w-70 max-w-full"
             >
               {ctaLabel}
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Truck } from "lucide-react";
 import { QuantityStepper } from "./QuantityStepper";
+import { Button } from "@/components/ui/button";
 import ApplePayMark from "@/components/icons/payments/ApplePayMark";
 import GooglePayMark from "@/components/icons/payments/GooglePayMark";
 import MastercardMark from "@/components/icons/payments/MastercardMark";
@@ -71,13 +72,16 @@ export function ProductBuyPanel({ title, price, description, labels }: Props) {
             inputAriaLabel={labels.quantityLabel}
           />
 
-          <button
+          <Button
             type="button"
             onClick={handleAddToCart}
-            className="inline-flex h-[54px] flex-1 items-center justify-center rounded-full border border-secondary bg-white px-8 text-body font-medium text-secondary transition-colors hover:bg-secondary hover:text-white"
+            variant="outline"
+            size="xl"
+            shape="pill"
+            className="flex-1"
           >
             {labels.addToCart}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -124,7 +128,7 @@ export function ProductBuyPanel({ title, price, description, labels }: Props) {
 
       <div>
         <h2 className="flex items-center gap-2 text-h3 font-semibold text-text-strong">
-          <Truck size={22} strokeWidth={1.75} className="text-[#2D3748]" aria-hidden />
+          <Truck size={22} strokeWidth={1.75} className="text-text-strong" aria-hidden />
           <span>{labels.deliveryTitle}</span>
         </h2>
         <p className="mt-3 whitespace-pre-line text-body text-text-primary">

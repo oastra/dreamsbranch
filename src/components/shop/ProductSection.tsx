@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ProductCard, type ProductCardProduct } from "./ProductCard";
 import { FilterPills, type FilterOption } from "./FilterPills";
+import { Button } from "@/components/ui/button";
 
 const ALL_VALUE = "__all__";
 const PAGE_SIZE = 4;
@@ -99,13 +100,15 @@ export function ProductSection({
 
             {hasMore && (
               <div className="mt-8 flex justify-center sm:mt-10">
-                <button
+                <Button
                   type="button"
                   onClick={() => setVisible((v) => v + PAGE_SIZE)}
-                  className="inline-flex h-12 min-w-[200px] items-center justify-center rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90"
+                  size="xl"
+                  shape="pill"
+                  className="min-w-[200px]"
                 >
                   {showMoreLabel}
-                </button>
+                </Button>
               </div>
             )}
           </>

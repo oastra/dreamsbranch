@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
+import { Button } from "@/components/ui/button";
 
 export interface CampaignCardProps {
   slug: string;
@@ -32,7 +33,7 @@ export function CampaignCard({
   const progressWidth = Math.min(percentage, 100);
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl bg-white">
+    <div className="flex flex-col overflow-hidden rounded-2xl bg-white transition-shadow hover:shadow-card-hover">
       {/* Cover image */}
       <div className="relative aspect-[16/10] bg-secondary-10">
         {coverImage ? (
@@ -78,12 +79,14 @@ export function CampaignCard({
 
         {/* Outlined blue donate button — only for active campaigns */}
         {!isArchived && (
-          <Link
-            href={`/${locale}/campaigns/${slug}`}
-            className="mt-auto inline-flex h-11 w-full items-center justify-center rounded-full border border-secondary text-body font-medium text-secondary transition-colors hover:bg-secondary hover:text-white"
+          <Button
+            render={<Link href={`/${locale}/campaigns/${slug}`} />}
+            variant="outline"
+            shape="pill"
+            className="mt-auto h-11 w-full px-6"
           >
             {donateBtnLabel}
-          </Link>
+          </Button>
         )}
       </div>
     </div>
