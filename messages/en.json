@@ -18,9 +18,13 @@
   },
   "home": {
     "hero": {
+      "eyebrow": "Dreams branch of UWAA",
       "title": "«Dreams»",
       "subtitle": "Union of Ukrainian Women of Australia",
-      "description": "We dream of peace, act for the sake of life. Support the Armed Forces of Ukraine through donations and fundraising.",
+      "lead": "We dream of peace, we act for life",
+      "description": "Supporting the Armed Forces of Ukraine through charity events and fundraisers",
+      "cta_about": "Learn more",
+      "cta_shop": "Shop",
       "cta_campaigns": "See campaigns",
       "cta_donate": "Donate"
     },
@@ -72,6 +76,7 @@
       "subscription": "Subscription",
       "subscription_desc": "Monthly donation",
       "news": "News",
+      "news_cta": "All news",
       "reports": "Photo reports",
       "contact_title": "Contact us",
       "contact_description": "If you have questions, want to become a partner, or volunteer — fill out the form and we will contact you.",
