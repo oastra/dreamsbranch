@@ -4,7 +4,10 @@ import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { campaignSchema } from '@/lib/validations';
 
+type BilingualFaq = { q_ua: string; a_ua: string; q_en: string; a_en: string };
+
 function toSnake(input: Record<string, unknown>) {
+  const faqItems = (input.faqItems as BilingualFaq[] | undefined) ?? [];
   return {
     title_ua: input.titleUa,
     title_en: input.titleEn,
@@ -18,6 +21,8 @@ function toSnake(input: Record<string, unknown>) {
     goal_amount: input.goalAmount,
     status: (input.status as string).toLowerCase(),
     sort_order: input.order ?? 0,
+    faq_ua: faqItems.map((it) => ({ question: it.q_ua, answer: it.a_ua })),
+    faq_en: faqItems.map((it) => ({ question: it.q_en, answer: it.a_en })),
   };
 }
 

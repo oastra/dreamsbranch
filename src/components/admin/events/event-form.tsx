@@ -141,14 +141,22 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <Label>Slug (UA) *</Label>
-            <Input value={form.slugUa} onChange={e => set('slugUa', e.target.value)} placeholder="podiia" required />
-            <p className="text-xs text-text-secondary mt-1">URL: /ua/events/{form.slugUa || '...'}</p>
+            <Label>URL (UA)</Label>
+            <p className="mt-1 text-sm text-text-primary break-all">
+              /ua/events/<span className="font-medium">{form.slugUa || <span className="text-text-tertiary italic">generated from the UA title on save</span>}</span>
+            </p>
+            <p className="mt-1 text-xs text-text-tertiary">
+              Generated automatically from the title. Contact the developer to change it.
+            </p>
           </div>
           <div>
-            <Label>Slug (EN) *</Label>
-            <Input value={form.slugEn} onChange={e => set('slugEn', e.target.value)} placeholder="event-name" required />
-            <p className="text-xs text-text-secondary mt-1">URL: /en/events/{form.slugEn || '...'}</p>
+            <Label>URL (EN)</Label>
+            <p className="mt-1 text-sm text-text-primary break-all">
+              /en/events/<span className="font-medium">{form.slugEn || <span className="text-text-tertiary italic">generated from the EN title on save</span>}</span>
+            </p>
+            <p className="mt-1 text-xs text-text-tertiary">
+              Generated automatically from the title. Contact the developer to change it.
+            </p>
           </div>
         </div>
         <ImageUpload
@@ -267,7 +275,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (UA) *</Label>
-                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!form.slugUa) set('slugUa', slugify(e.target.value)); }} required />
+                <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!isEdit) set('slugUa', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (UA)</Label>
@@ -280,7 +288,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
             <>
               <div>
                 <Label>Title (EN) *</Label>
-                <Input value={form.titleEn} onChange={e => { set('titleEn', e.target.value); if (!form.slugEn) set('slugEn', slugify(e.target.value)); }} required />
+                <Input value={form.titleEn} onChange={e => { set('titleEn', e.target.value); if (!isEdit) set('slugEn', slugify(e.target.value)); }} required />
               </div>
               <div>
                 <Label>Description (EN)</Label>

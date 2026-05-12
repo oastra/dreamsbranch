@@ -41,7 +41,7 @@ Tips:
 | **End time** | e.g. `14:00` | Optional. Shows as `09:00 – 14:00` on the page. |
 | **Location** | e.g. `Bunnings Ashfield` or `Harbourside Shopping Centre` | What appears in the "Місце проведення / Location" card. |
 | **Map URL** | Paste a Google Maps link to the venue | Optional. Becomes the "відкрити на мапі" link. |
-| **Slug** | Auto-fills from the UA title for **Latin** titles (e.g. `Bunnings Ashfield` → `bunnings-ashfield`). For Cyrillic-only titles you must type the slug manually in Latin (e.g. `kyiv-concert`). Lowercase letters, numbers, hyphens only | This becomes the URL: `/events/<slug>`. Don't change after publishing — that breaks links. |
+| **URL (UA) / URL (EN)** | **Generated automatically from the title — there's nothing to type here.** Ukrainian letters are transliterated to Latin (`Подія в Києві` → `podiia-v-kyievi`). The URL preview below the label shows what the public URL will be after you save. | The URL is **locked once the event is saved** so existing share links keep working. If you ever need to change it later, message the developer. |
 | **Cover image** | Upload one `.webp` photo of the event | Required for the page to look complete. |
 | **Gallery images** | Upload up to 6 `.webp` square photos | **Only used when status = Archived.** First two appear next to the financial card; the other four fill the row below. Upload exactly 6 for the cleanest layout. |
 | **Tags** | Click `Looking for partners` and/or `Looking for volunteers` if relevant | Become the blue/yellow pills under the title. Skip both for archived events. |
@@ -100,7 +100,7 @@ For each past event:
 4. Upload **6 gallery images** (.webp, square)
 5. Fill **Financial report** with the income/expense lines and profit
 6. Fill **Title** + **Description** in UA and EN
-7. **Slug** auto-fills — adjust if a duplicate exists (add the year, e.g. `bunnings-ashfield-2024-12`)
+7. **URLs (UA + EN)** are generated automatically from the title at save time — nothing to do here. They're locked after the first save; if a duplicate or rename is needed, ask the developer.
 8. Tags: usually leave both off for archived events
 9. **Show volunteer CTA**: leave OFF
 10. Save
@@ -133,7 +133,7 @@ A: The event saves but doesn't appear on the public site. Use Draft while still 
 
 ## 7. If something is broken
 
-- Form won't save → check Date and Slug are filled (both are required).
+- Form won't save → check Date and both Title fields (UA + EN) are filled. The URL is filled in automatically from the title.
 - Public page shows "404" → check Status is not Draft, and that the slug in the URL matches the slug in the admin.
 - Photos don't show → re-upload as .webp.
 - Description is blank on the public page → make sure both UA and EN textareas have text. Plain text only, paragraphs separated by a blank line.

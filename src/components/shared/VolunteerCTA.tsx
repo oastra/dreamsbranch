@@ -23,7 +23,9 @@ export function VolunteerCTA({
   className = "",
 }: Props) {
   return (
-    <section className={`py-10 px-4 sm:py-10 sm:px-6 lg:py-15 lg:px-15 lg:h-[302px] ${className}`}>
+    <section
+      className={`py-10 px-4 sm:py-10 sm:px-6 lg:py-15 lg:px-15 lg:h-[302px] ${className}`}
+    >
       <div className="container-page">
         <article className="rounded-3xl bg-[#FFEF99] p-5 sm:p-8  lg:p-10">
           {/*

@@ -705,7 +705,7 @@ export default async function EventDetailPage({
       </section>
 
       {/* ── Description section ──────────────────────────────────── */}
-      <section className="section">
+      <section className="">
         <div className="container-page">
           <h2 className="mb-8 text-center text-h2 font-bold text-text-strong lg:mb-12 lg:text-[40px]">
             {t("events.charity_event")} &laquo;{title}&raquo;
@@ -768,7 +768,7 @@ export default async function EventDetailPage({
           report or gallery photos. Either piece is rendered on its
           own, so a gallery without a report still appears. */}
       {isArchived && (financialReport || event.gallery_images.length > 0) && (
-        <section className="">
+        <section className="section">
           <div className="container-page">
             <h2 className="mb-8 text-center text-h2 font-bold text-text-strong lg:text-[40px]">
               {t("events.reports")}

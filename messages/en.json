@@ -103,6 +103,20 @@
     "faq_title": "Common Questions",
     "tab_description": "Description",
     "tab_faq": "Common Questions",
+    "default_faq": [
+      {
+        "question": "Where will the funds go?",
+        "answer": "All collected funds will go towards equipment and the needs of this campaign."
+      },
+      {
+        "question": "How can I help?",
+        "answer": "You can make a donation of any amount on this page or share the campaign with friends."
+      },
+      {
+        "question": "When will the purchase be made?",
+        "answer": "The purchase will be made immediately after reaching the campaign goal. A report will be published on the website."
+      }
+    ],
     "share_title": "Share this campaign",
     "copy_link": "Copy link",
     "copy_link_short": "copy link",

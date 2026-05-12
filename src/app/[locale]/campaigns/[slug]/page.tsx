@@ -413,7 +413,19 @@ export default async function CampaignDetailPage({
         )
       : 0;
   const progressWidth = Math.min(percentage, 100);
-  const faqItems = (campaign[faqKey] as unknown as FaqItem[]) ?? [];
+  // FAQ = hardcoded defaults (from translations) + any campaign-specific
+  // questions saved in the DB. Drop dupes by question text so admins can
+  // override a default by re-using its wording.
+  const defaultFaq = (t.raw("campaigns.default_faq") as FaqItem[]) ?? [];
+  const dbFaq = (campaign[faqKey] as unknown as FaqItem[]) ?? [];
+  const seenQuestions = new Set(defaultFaq.map((f) => f.question.trim()));
+  const extraFaq = dbFaq.filter((f) => {
+    const q = (f?.question ?? "").trim();
+    if (!q || seenQuestions.has(q)) return false;
+    seenQuestions.add(q);
+    return true;
+  });
+  const faqItems: FaqItem[] = [...defaultFaq, ...extraFaq];
   const presets = campaign.preset_amounts?.length
     ? campaign.preset_amounts
     : [10, 30, 50];
@@ -734,8 +746,20 @@ function DescriptionPanel({
   // Parse the TipTap doc directly so we can interleave the cover image with
   // the first paragraphs (per Figma desktop layout) and style the trailing
   // "Дякуємо…" line as a bold, centered closer.
-  const root = (doc as { content?: TiptapNode[] }) ?? {};
-  const nodes = root.content ?? [];
+  // The admin form saves descriptions as plain strings (textarea, blank-line
+  // separated paragraphs). Normalise that into the same Tiptap-shaped nodes
+  // so the rest of this component doesn't care about the source format.
+  const nodes: TiptapNode[] =
+    typeof doc === "string"
+      ? doc
+          .split(/\n\s*\n/)
+          .map((p) => p.trim())
+          .filter((p) => p.length > 0)
+          .map((p) => ({
+            type: "paragraph",
+            content: [{ type: "text", text: p }],
+          }))
+      : (((doc as { content?: TiptapNode[] }) ?? {}).content ?? []);
   const heading = nodes.find((n) => n.type === "heading");
   const paragraphs = nodes.filter((n) => n.type === "paragraph");
   const last = paragraphs[paragraphs.length - 1];
@@ -800,7 +824,11 @@ function DescriptionPanel({
 
 function FaqPanel({ items }: { items: FaqItem[] }) {
   if (items.length === 0) return null;
-  return <FaqAccordion items={items} />;
+  return (
+    <div className="max-w-2xl">
+      <FaqAccordion items={items} layout="single" />
+    </div>
+  );
 }
 
 function DonationAmountCard({

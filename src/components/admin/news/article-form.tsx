@@ -37,11 +37,11 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
 
   function handleTitleUaChange(value: string) {
     set('titleUa', value);
-    if (!form.slugUa) set('slugUa', slugify(value));
+    if (!isEdit) set('slugUa', slugify(value));
   }
   function handleTitleEnChange(value: string) {
     set('titleEn', value);
-    if (!form.slugEn) set('slugEn', slugify(value));
+    if (!isEdit) set('slugEn', slugify(value));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -65,14 +65,22 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <Label>Slug (UA) *</Label>
-            <Input value={form.slugUa} onChange={e => set('slugUa', e.target.value)} placeholder="stattia" required />
-            <p className="text-xs text-text-secondary mt-1">URL: /ua/news/{form.slugUa || '...'}</p>
+            <Label>URL (UA)</Label>
+            <p className="mt-1 text-sm text-text-primary break-all">
+              /ua/news/<span className="font-medium">{form.slugUa || <span className="text-text-tertiary italic">generated from the UA title on save</span>}</span>
+            </p>
+            <p className="mt-1 text-xs text-text-tertiary">
+              Generated automatically from the title. Contact the developer to change it.
+            </p>
           </div>
           <div>
-            <Label>Slug (EN) *</Label>
-            <Input value={form.slugEn} onChange={e => set('slugEn', e.target.value)} placeholder="article-name" required />
-            <p className="text-xs text-text-secondary mt-1">URL: /en/news/{form.slugEn || '...'}</p>
+            <Label>URL (EN)</Label>
+            <p className="mt-1 text-sm text-text-primary break-all">
+              /en/news/<span className="font-medium">{form.slugEn || <span className="text-text-tertiary italic">generated from the EN title on save</span>}</span>
+            </p>
+            <p className="mt-1 text-xs text-text-tertiary">
+              Generated automatically from the title. Contact the developer to change it.
+            </p>
           </div>
         </div>
 

@@ -1,17 +1,25 @@
 import { z } from 'zod';
 
+export const faqItemSchema = z.object({
+  q_ua: z.string().min(1, 'Question (UA) is required'),
+  a_ua: z.string().min(1, 'Answer (UA) is required'),
+  q_en: z.string().min(1, 'Question (EN) is required'),
+  a_en: z.string().min(1, 'Answer (EN) is required'),
+});
+
 export const campaignSchema = z.object({
   titleUa: z.string().min(1, 'Title (UA) is required'),
   titleEn: z.string().min(1, 'Title (EN) is required'),
   slugUa: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
   slugEn: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
-  descriptionUa: z.any().optional(),
-  descriptionEn: z.any().optional(),
+  descriptionUa: z.string().min(1, 'Description (UA) is required'),
+  descriptionEn: z.string().min(1, 'Description (EN) is required'),
   coverImage: z.string().optional(),
   galleryImages: z.array(z.string()).optional(),
   goalAmount: z.coerce.number().positive('Goal must be positive'),
   status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
   order: z.coerce.number().int().default(0),
+  faqItems: z.array(faqItemSchema).default([]),
 });
 export type CampaignInput = z.infer<typeof campaignSchema>;
 
@@ -131,13 +139,6 @@ export const homeSettingsSchema = z.object({
   ctaTextEn: z.string(),
 });
 export type HomeSettingsInput = z.infer<typeof homeSettingsSchema>;
-
-export const faqItemSchema = z.object({
-  q_ua: z.string().min(1, 'Question (UA) is required'),
-  a_ua: z.string().min(1, 'Answer (UA) is required'),
-  q_en: z.string().min(1, 'Question (EN) is required'),
-  a_en: z.string().min(1, 'Answer (EN) is required'),
-});
 
 export const deliveredItemSchema = z.object({
   count: z.coerce.number().int().min(0),
