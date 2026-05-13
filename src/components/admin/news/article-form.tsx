@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
+import { RichTextEditor } from '@/components/admin/shared/rich-text-editor';
 import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 import { createArticle, updateArticle } from '@/lib/actions/news';
 import { slugify } from '@/lib/slug';
@@ -128,7 +128,11 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
             <>
               <div>
                 <Label>Body (UA)</Label>
-                <Textarea rows={14} value={form.bodyUa} onChange={e => set('bodyUa', e.target.value)} />
+                <RichTextEditor
+                  value={form.bodyUa}
+                  onChange={(val) => set('bodyUa', val)}
+                  uploadFolder="news"
+                />
               </div>
             </>
           }
@@ -140,7 +144,11 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
               </div>
               <div>
                 <Label>Body (EN)</Label>
-                <Textarea rows={14} value={form.bodyEn} onChange={e => set('bodyEn', e.target.value)} />
+                <RichTextEditor
+                  value={form.bodyEn}
+                  onChange={(val) => set('bodyEn', val)}
+                  uploadFolder="news"
+                />
               </div>
             </>
           }

@@ -26,10 +26,12 @@ export async function createArticle(formData: unknown) {
   const admin = await requireAdmin();
   const parsed = articleSchema.safeParse(formData);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
+  const snake = toSnake(parsed.data as Record<string, unknown>);
   const row = {
-    ...toSnake(parsed.data as Record<string, unknown>),
+    ...snake,
     created_by_admin_id: admin.id,
     updated_by_admin_id: admin.id,
+    ...(snake.status === 'published' ? { published_at: new Date().toISOString() } : {}),
   };
   const result = await db.newsArticle.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create article' };
@@ -41,9 +43,22 @@ export async function updateArticle(id: string, formData: unknown) {
   const admin = await requireAdmin();
   const parsed = articleSchema.safeParse(formData);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
+  const snake = toSnake(parsed.data as Record<string, unknown>);
+  // First-time publish stamps published_at; re-saving an already-published
+  // article keeps the original date.
+  let publishedAtPatch: { published_at?: string } = {};
+  if (snake.status === 'published') {
+    const existing = (await db.newsArticle.findUnique({ where: { id } })) as
+      | (Record<string, unknown> & { published_at?: string | null })
+      | null;
+    if (!existing?.published_at) {
+      publishedAtPatch = { published_at: new Date().toISOString() };
+    }
+  }
   const row = {
-    ...toSnake(parsed.data as Record<string, unknown>),
+    ...snake,
     updated_by_admin_id: admin.id,
+    ...publishedAtPatch,
   };
   const result = await db.newsArticle.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update article' };

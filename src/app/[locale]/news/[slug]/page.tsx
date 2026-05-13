@@ -302,7 +302,25 @@ type TiptapNode = {
 };
 
 function renderRichText(doc: unknown): React.ReactNode[] {
-  if (!doc || typeof doc !== 'object') return [];
+  if (!doc) return [];
+
+  // Plain string from the admin textarea — split on blank lines into paragraphs.
+  // Single newlines within a paragraph are preserved as line breaks via
+  // `whitespace-pre-line`. Tiptap JSON path below still works for rich content.
+  if (typeof doc === 'string') {
+    const trimmed = doc.trim();
+    if (!trimmed) return [];
+    return trimmed.split(/\n{2,}/).map((para, i) => (
+      <p
+        key={i}
+        className="mb-5 whitespace-pre-line text-body leading-relaxed text-text-primary"
+      >
+        {para.trim()}
+      </p>
+    ));
+  }
+
+  if (typeof doc !== 'object') return [];
 
   const root = doc as { content?: TiptapNode[] };
   if (!root.content) return [];
