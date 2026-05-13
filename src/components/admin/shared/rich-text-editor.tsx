@@ -20,6 +20,10 @@ type Props = {
   onChange: (value: JSONContent) => void;
   placeholder?: string;
   uploadFolder?: string;
+  // Off by default — best-practice CMS pattern is a separate gallery upload
+  // alongside the editor. Pass `withImages` only when inline images make sense
+  // (e.g. a docs-style rich page with embedded screenshots).
+  withImages?: boolean;
 };
 
 // Tiptap expects a JSON doc. The form may pass us:
@@ -46,7 +50,13 @@ function normaliseInitialContent(value: unknown): JSONContent {
   return { type: 'doc', content: [{ type: 'paragraph' }] };
 }
 
-export function RichTextEditor({ value, onChange, placeholder, uploadFolder = 'news' }: Props) {
+export function RichTextEditor({
+  value,
+  onChange,
+  placeholder,
+  uploadFolder = 'news',
+  withImages = false,
+}: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadingRef = useRef(false);
 
@@ -55,7 +65,7 @@ export function RichTextEditor({ value, onChange, placeholder, uploadFolder = 'n
       StarterKit.configure({
         heading: { levels: [2, 3] },
       }),
-      Image.configure({ inline: false, allowBase64: false }),
+      ...(withImages ? [Image.configure({ inline: false, allowBase64: false })] : []),
     ],
     content: normaliseInitialContent(value),
     immediatelyRender: false,
@@ -140,28 +150,32 @@ export function RichTextEditor({ value, onChange, placeholder, uploadFolder = 'n
         >
           <Italic className="h-4 w-4" />
         </ToolbarButton>
-        <Divider />
-        <ToolbarButton
-          onClick={() => fileInputRef.current?.click()}
-          label="Insert image"
-        >
-          {uploadingRef.current ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <ImageIcon className="h-4 w-4" />
-          )}
-        </ToolbarButton>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) void handleImageUpload(file);
-            e.target.value = '';
-          }}
-        />
+        {withImages && (
+          <>
+            <Divider />
+            <ToolbarButton
+              onClick={() => fileInputRef.current?.click()}
+              label="Insert image"
+            >
+              {uploadingRef.current ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ImageIcon className="h-4 w-4" />
+              )}
+            </ToolbarButton>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handleImageUpload(file);
+                e.target.value = '';
+              }}
+            />
+          </>
+        )}
       </div>
 
       {/* Editor */}

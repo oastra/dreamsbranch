@@ -470,6 +470,9 @@ export default async function NewsArticlePage({
   const title = article[titleKey];
   const body = article[bodyKey];
   const publishDate = formatDate(article.published_at, locale);
+  const coverImage = article.cover_image;
+  const galleryImages = ((article as unknown as { gallery_images?: string[] })
+    .gallery_images ?? []).filter(Boolean);
 
   return (
     <>
@@ -493,12 +496,46 @@ export default async function NewsArticlePage({
             {title}
           </h1>
 
+          {/* Cover image (article hero) */}
+          {coverImage && (
+            <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-secondary-10 lg:mb-10">
+              <Image
+                src={coverImage}
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 1200px"
+                priority
+              />
+            </div>
+          )}
+
           {/* Body (rich text — first image renders as full-width hero,
               subsequent images float left so paragraphs wrap around them) */}
           <div className="text-body text-text-primary">
             {renderRichText(body)}
             <div className="clear-both" />
           </div>
+
+          {/* Gallery (below body, separate from rich text) */}
+          {galleryImages.length > 0 && (
+            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {galleryImages.map((src, i) => (
+                <div
+                  key={`${src}-${i}`}
+                  className="relative aspect-[4/3] overflow-hidden rounded-xl bg-secondary-10"
+                >
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* ── Share section ─────────────────────────────────── */}
           <ShareSection

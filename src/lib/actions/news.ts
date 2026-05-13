@@ -15,6 +15,7 @@ function toSnake(input: Record<string, unknown>) {
     body_ua: input.bodyUa ?? null,
     body_en: input.bodyEn ?? null,
     cover_image: input.coverImage ?? null,
+    gallery_images: (input.galleryImages as string[] | undefined) ?? [],
     category: input.category ?? null,
     tags: input.tags ?? [],
     is_featured: input.isFeatured ?? false,
@@ -69,10 +70,15 @@ export async function updateArticle(id: string, formData: unknown) {
 export async function deleteArticle(id: string) {
   await requireSuperAdmin();
   const row = (await db.newsArticle.findUnique({ where: { id } })) as
-    | (Record<string, unknown> & { cover_image?: string | null })
+    | (Record<string, unknown> & {
+        cover_image?: string | null;
+        gallery_images?: string[] | null;
+      })
     | null;
   await db.newsArticle.delete({ where: { id } });
-  if (row) void deleteFilesAction([row.cover_image]);
+  if (row) {
+    void deleteFilesAction([row.cover_image, ...(row.gallery_images ?? [])]);
+  }
   revalidatePath('/admin/news');
   return { success: true };
 }

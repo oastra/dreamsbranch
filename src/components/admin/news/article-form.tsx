@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
+import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
 import { RichTextEditor } from '@/components/admin/shared/rich-text-editor';
 import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 import { createArticle, updateArticle } from '@/lib/actions/news';
@@ -29,6 +30,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
     bodyUa: article?.body_ua ?? '',
     bodyEn: article?.body_en ?? '',
     coverImage: article?.cover_image ?? '',
+    galleryImages: (article?.gallery_images ?? []) as string[],
     category: article?.category ?? '',
     isFeatured: article?.is_featured ?? false,
     status: article?.status ?? 'DRAFT',
@@ -64,11 +66,6 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
     <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
       <div className="bg-white rounded-xl border border-border p-6 space-y-4">
         <h2 className="text-body font-semibold">General</h2>
-
-        <div>
-          <Label>Title (UA) *</Label>
-          <Input value={form.titleUa} onChange={e => handleTitleUaChange(e.target.value)} required />
-        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -118,7 +115,19 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           <Label htmlFor="featured">Featured article</Label>
         </div>
 
-        <ImageUpload value={form.coverImage} onChange={url => set('coverImage', url ?? '')} folder="news" label="Cover image" />
+        <ImageUpload
+          value={form.coverImage}
+          onChange={url => set('coverImage', url ?? '')}
+          folder="news"
+          label="Cover image (~16:11 landscape) — shown in news listings + at the top of the article"
+        />
+
+        <MultiImageUpload
+          value={form.galleryImages}
+          onChange={urls => set('galleryImages', urls)}
+          folder="news"
+          label="Gallery images (~4:3) — shown in a grid below the article body"
+        />
       </div>
 
       <div className="bg-white rounded-xl border border-border p-6">
@@ -126,6 +135,10 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
         <BilingualTabs
           ua={
             <>
+              <div>
+                <Label>Title (UA) *</Label>
+                <Input value={form.titleUa} onChange={e => handleTitleUaChange(e.target.value)} required />
+              </div>
               <div>
                 <Label>Body (UA)</Label>
                 <RichTextEditor
