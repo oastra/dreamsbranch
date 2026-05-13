@@ -48,102 +48,101 @@ export function Header() {
   return (
     <header className="z-50 mb-5">
       <div className="bg-white border border-border">
-      <div className="container-page">
-        <div className="flex items-center justify-between h-16 lg:h-22">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink min-w-0">
-            <Image
-              src="/logo-blue.svg"
-              alt="Dreams Branch"
-              width={280}
-              height={40}
-              priority
-              className="h-8 w-auto max-w-[180px] sm:max-w-[220px] lg:h-10 lg:max-w-none lg:w-70"
-            />
-          </Link>
-
-          {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center text-secondary gap-1">
-            {navItems.map((item) => (
-              <NavItem
-                key={item.key}
-                href={item.href}
-                label={item.label}
-                isActive={isActive(item.href)}
+        <div className="container-page">
+          <div className="flex items-center justify-between h-16 lg:h-22">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 shrink min-w-0">
+              <Image
+                src="/logo-blue.svg"
+                alt="Dreams Branch"
+                width={280}
+                height={40}
+                priority
+                className="h-8 w-auto max-w-[180px] sm:max-w-[220px] lg:h-10 lg:max-w-none lg:w-70"
               />
-            ))}
-          </nav>
-
-          {/* Desktop actions */}
-          <div className="hidden lg:flex items-center gap-3">
-            <LanguageSwitcher
-              currentLocale={currentLocale}
-              onSwitch={switchLocale}
-            />
-
-            <Link
-              href="https://www.facebook.com/profile.php?id=100092434277929"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="w-12 h-12 rounded-full bg-secondary-10 flex items-center justify-center hover:bg-brand-blue-dark transition-colors"
-            >
-              <FacebookIcon className="w-6 h-6 text-grey-100" />
             </Link>
 
-            <Link href="/donate">
-              <Button
-                variant="default"
-                size="lg"
-                className="rounded-full w-38 h-11.75"
+            {/* Desktop nav */}
+            <nav className="hidden lg:flex items-center text-secondary gap-1">
+              {navItems.map((item) => (
+                <NavItem
+                  key={item.key}
+                  href={item.href}
+                  label={item.label}
+                  isActive={isActive(item.href)}
+                />
+              ))}
+            </nav>
+
+            {/* Desktop actions */}
+            <div className="hidden lg:flex items-center gap-3">
+              <LanguageSwitcher
+                currentLocale={currentLocale}
+                onSwitch={switchLocale}
+              />
+
+              <Link
+                href="https://www.facebook.com/profile.php?id=100092434277929"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="w-12 h-12 rounded-full bg-secondary-10 flex items-center justify-center hover:bg-brand-blue-dark transition-colors"
               >
-                {t("support")}
-              </Button>
-            </Link>
+                <FacebookIcon className="w-6 h-6 text-grey-100  hover:text-secondary-120" />
+              </Link>
 
-            <button
-              aria-label="Cart"
-              className="w-12 h-12 bg-secondary-10 rounded-full  flex items-center justify-center hover:border-brand-blue transition-colors"
-            >
-              <ShoppingBag className="w-6 h-6 text-grey-100" />
-            </button>
-          </div>
+              <Link href="/donate">
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="rounded-full w-38 h-11.75"
+                >
+                  {t("support")}
+                </Button>
+              </Link>
 
-          {/* Mobile actions */}
-          <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden shrink-0">
-            {/* Language chip — only when menu closed (drawer has its own) */}
-            {!mobileOpen && (
               <button
-                type="button"
-                onClick={() => switchLocale()}
-                aria-label={`Switch language to ${currentLocale === "ua" ? "English" : "Ukrainian"}`}
-                className="h-9 w-9 sm:h-10 sm:min-w-10 sm:w-auto sm:px-3 rounded-full bg-secondary-10 text-text-strong text-body-sm font-bold uppercase transition-colors hover:bg-secondary hover:text-white"
+                aria-label="Cart"
+                className="w-12 h-12 bg-secondary-10 rounded-full  flex items-center justify-center hover:border-brand-blue transition-colors"
               >
-                {currentLocale}
+                <ShoppingBag className="w-6 h-6 text-grey-100  hover:text-secondary-120" />
               </button>
-            )}
-            {/* Cart — always visible (open or closed) */}
-            <button
-              aria-label="Cart"
-              className="w-9 h-9 sm:w-10 sm:h-10 bg-primary rounded-full flex items-center justify-center"
-            >
-              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
-            </button>
-            <button
-              onClick={() => setMobileOpen((v) => !v)}
-              className="w-9 h-9 sm:w-10 sm:h-10 bg-secondary-10 rounded-full flex items-center justify-center"
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? (
-                <X className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
-              ) : (
-                <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
+            </div>
+
+            {/* Mobile actions */}
+            <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden shrink-0">
+              {/* Language chip — only when menu closed (drawer has its own) */}
+              {!mobileOpen && (
+                <button
+                  type="button"
+                  onClick={() => switchLocale()}
+                  aria-label={`Switch language to ${currentLocale === "ua" ? "English" : "Ukrainian"}`}
+                  className="h-9 w-9 sm:h-10 sm:min-w-10 sm:w-auto sm:px-3 rounded-full bg-secondary-10 text-text-strong text-body-sm font-bold uppercase transition-colors hover:bg-secondary hover:text-white"
+                >
+                  {currentLocale}
+                </button>
               )}
-            </button>
+              {/* Cart — always visible (open or closed) */}
+              <button
+                aria-label="Cart"
+                className="w-9 h-9 sm:w-10 sm:h-10 bg-primary rounded-full flex items-center justify-center"
+              >
+                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
+              </button>
+              <button
+                onClick={() => setMobileOpen((v) => !v)}
+                className="w-9 h-9 sm:w-10 sm:h-10 bg-secondary-10 rounded-full flex items-center justify-center"
+                aria-label="Toggle menu"
+              >
+                {mobileOpen ? (
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
+                ) : (
+                  <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
-
-      </div>
       </div>
 
       {/* Mobile support CTA — fixed-width blue banner centered under the header */}

@@ -20,7 +20,12 @@ interface Props {
   className?: string;
 }
 
-export function ResultsSection({ title, description, stats, className = "" }: Props) {
+export function ResultsSection({
+  title,
+  description,
+  stats,
+  className = "",
+}: Props) {
   return (
     <section className={`section ${className}`.trim()}>
       <div className="container-page">
@@ -38,11 +43,11 @@ export function ResultsSection({ title, description, stats, className = "" }: Pr
               key={label}
               className={`flex flex-col justify-between rounded-2xl bg-secondary-10 p-6 text-text-strong ${heightClass ?? ""}`.trim()}
             >
-              <p className="text-body text-text-secondary">{label}</p>
+              <p className="text-body text-text-strong">{label}</p>
               <p className="flex items-baseline justify-end gap-2 text-[2.5rem] font-medium leading-none sm:justify-start lg:text-[3rem]">
                 {value}
                 {unit && (
-                  <span className="text-body font-normal text-text-secondary">
+                  <span className="text-body font-normal text-text-primary">
                     {unit}
                   </span>
                 )}

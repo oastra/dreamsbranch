@@ -81,15 +81,15 @@ export default async function Page({
                 title={t("hero.title")}
                 titleClassName="mb-title-gap"
               />
-              <p className="text-secondary text-text-secondary">
+              <p className="text-secondary text-text-primary">
                 {t("hero.description_1")}
               </p>
-              <p className="text-secondary text-text-secondary">
+              <p className="text-secondary text-text-primary">
                 {t("hero.description_2")}
               </p>
               <div className="mt-auto pt-2">
                 <Button
-                  render={<Link href={`/${locale}/contact`} />}
+                  render={<Link href={`/${locale}/donate`} />}
                   size="xl"
                   shape="pill"
                   className="w-70 max-w-full"
@@ -120,13 +120,13 @@ export default async function Page({
             {/* Left: 2x2 grid of stat cards */}
             <div className="grid auto-rows-fr grid-cols-2 gap-4">
               <div className="flex flex-col items-center justify-center rounded-2xl bg-accent-1 px-6 py-8 text-center text-text-strong">
-                <p className="text-body-sm mb-2 text-text-secondary">
+                <p className="text-body-sm mb-2 text-text-primary">
                   {t("team.founded_label")}
                 </p>
                 <p className="text-h2 font-medium">{t("team.founded_value")}</p>
               </div>
               <div className="flex flex-col items-center justify-center rounded-2xl bg-accent-3 px-6 py-8 text-center text-text-strong">
-                <p className="text-body-sm mb-2 text-text-secondary">
+                <p className="text-body-sm mb-2 text-text-primary">
                   {t("team.location_label")}
                 </p>
                 <p className="text-h2 font-medium">
@@ -134,7 +134,7 @@ export default async function Page({
                 </p>
               </div>
               <div className="flex flex-col items-center justify-center rounded-2xl bg-accent-4 px-6 py-8 text-center text-text-strong">
-                <p className="text-body-sm mb-2 text-text-secondary">
+                <p className="text-body-sm mb-2 text-text-primary">
                   {t("team.volunteers_label")}
                 </p>
                 <p className="text-h2 font-medium">
@@ -150,15 +150,11 @@ export default async function Page({
 
             {/* Right: description paragraphs */}
             <div className="flex flex-col gap-6">
-              <p className="text-body text-text-strong">{t("team.desc_1")}</p>
-              <p className="text-body text-text-strong">{t("team.desc_1b")}</p>
+              <p className="text-h3 text-text-strong">{t("team.desc_1")}</p>
+              <p className="text-h3 text-text-strong">{t("team.desc_1b")}</p>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <p className="text-body-sm text-text-secondary">
-                  {t("team.desc_3")}
-                </p>
-                <p className="text-body-sm text-text-secondary">
-                  {t("team.desc_4")}
-                </p>
+                <p className="text-body text-grey-80">{t("team.desc_3")}</p>
+                <p className="text-body text-grey-80">{t("team.desc_4")}</p>
               </div>
               <div className="mt-auto rounded-2xl bg-[#CCDDF1] px-6 py-5 text-center">
                 <p className="text-body font-medium text-text-strong">
@@ -245,14 +241,14 @@ export default async function Page({
                 <h3 className="order-1 text-h2 text-text-strong">
                   {t("story.ch2_title")}
                 </h3>
-                <p className="order-2 text-body text-text-secondary">
+                <p className="order-2 text-body text-text-primary">
                   {t("story.ch2_text_a")}
                 </p>
-                <p className="order-4 text-body text-text-secondary">
+                <p className="order-4 text-body text-text-primary">
                   {t("story.ch2_text_b")}
                 </p>
                 <div className="order-5 rounded-2xl bg-primary px-6 py-5">
-                  <p className="text-h3 text-center text-text-strong">
+                  <p className="text-h2 text-center text-text-strong">
                     {t("story.ch2_highlight")}
                   </p>
                 </div>
@@ -266,17 +262,17 @@ export default async function Page({
                   <span>{t("story.ch3_title_a")}</span>
                   <span className="self-end">{t("story.ch3_title_b")}</span>
                 </h3>
-                <p className="order-3 text-body text-text-secondary">
+                <p className="order-3 text-body text-text-primary">
                   {t("story.ch3_text_a")}
                 </p>
-                <p className="order-4 text-body text-text-secondary">
+                <p className="order-4 text-body text-text-primary">
                   <strong className="font-medium text-text-strong">
                     {t("story.ch3_date")}
                   </strong>{" "}
                   {t("story.ch3_text_b")}
                 </p>
                 <div className="order-5 rounded-2xl bg-secondary px-6 py-5">
-                  <p className="text-h3 font-medium text-white">
+                  <p className="text-[16px] md:text-[20px] font-medium text-white">
                     {t("story.ch3_highlight")}
                   </p>
                 </div>
@@ -307,13 +303,13 @@ export default async function Page({
                 <h3 className="order-1 text-h2 text-text-strong">
                   {t("story.ch4_title")}
                 </h3>
-                <p className="order-3 text-body text-text-secondary">
+                <p className="order-3 text-body text-text-primary">
                   {t("story.ch4_text_a")}
                 </p>
-                <p className="order-4 text-body text-text-secondary">
+                <p className="order-4 text-body md:text-[18px] lg:text-[20px] text-text-primary">
                   {t("story.ch4_text_b")}
                 </p>
-                <p className="order-5 text-body text-text-secondary">
+                <p className="order-5 text-body text-text-primary">
                   {t("story.ch4_text_c")}
                 </p>
               </div>
@@ -325,13 +321,13 @@ export default async function Page({
                 <h3 className="order-1 text-h2 text-text-strong">
                   {t("story.ch5_title")}
                 </h3>
-                <p className="order-3 text-body text-text-secondary">
+                <p className="order-3 text-body text-text-primary">
                   {t("story.ch5_text_a")}
                 </p>
-                <p className="order-4 text-body text-text-secondary">
+                <p className="order-4 text-body text-text-primary">
                   {t("story.ch5_text_b")}
                 </p>
-                <p className="order-5 text-body-sm text-text-secondary">
+                <p className="order-5 text-body-sm text-text-primary">
                   {t("story.ch5_text_c")}
                 </p>
                 <div className="order-6 rounded-2xl bg-primary px-6 py-5">

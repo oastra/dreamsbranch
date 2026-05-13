@@ -7,12 +7,15 @@ import { ResultsSection } from "@/components/shared/ResultsSection";
 import { StorySection } from "@/components/home/StorySection";
 import { HomeAboutSection } from "@/components/home/HomeAboutSection";
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
+import { EventCard } from "@/components/events/EventCard";
 import { NewsCard } from "@/components/news/NewsCard";
+import { HomePhotoReports } from "@/components/home/HomePhotoReports";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import type {
   AboutPageSettings,
   Campaign,
+  Event,
   NewsArticle,
 } from "@/types/database";
 
@@ -22,7 +25,7 @@ const HERO_SLIDES: HeroSlide[] = [
     alt: "",
   },
   {
-    src: "/images/events/pray-peace-ukraine-hands-with-heart-no-war.webp",
+    src: "/images/events/hands-with-heart.webp",
     alt: "",
   },
   { src: "/images/report/report.webp", alt: "" },
@@ -118,6 +121,28 @@ export default async function HomePage({
   })) as unknown as Campaign[];
   const titleKey: "title_ua" | "title_en" =
     locale === "ua" ? "title_ua" : "title_en";
+
+  // Newest 3 active events for the home preview row.
+  const activeEvents = (await db.event.findMany({
+    where: { status: "ACTIVE" },
+    take: 3,
+  })) as unknown as Event[];
+  const eventTagLabels: Record<string, string> = {
+    active: tEvents("tag_active"),
+    archived: tEvents("tag_archived"),
+    looking_for_partners: tEvents("tag_looking_for_partners"),
+    looking_for_volunteers: tEvents("tag_looking_for_volunteers"),
+  };
+
+  // Photo-reports grid: pull the newest events that actually have
+  // gallery photos and flatten their `gallery_images` into a single
+  // de-duped list. Section hides when there's nothing to show.
+  const eventsWithPhotos = (await db.event.findMany({
+    take: 12,
+  })) as unknown as Event[];
+  const photoReportImages = Array.from(
+    new Set(eventsWithPhotos.flatMap((e) => e.gallery_images ?? [])),
+  ).slice(0, 7);
 
   // Newest 2 published articles for the home news preview. Falls back to
   // mock data so the section still renders before any article is published.
@@ -304,15 +329,74 @@ export default async function HomePage({
         </section>
       )}
 
-      <section className="section bg-surface-secondary">
-        <div className="container-page">
-          <h2 className="text-h2 mb-8">{t("sections.events")}</h2>
-          <p className="text-text-secondary">
-            Event cards — will load from database
-          </p>
-        </div>
-      </section>
+      {/* ── Community events — 3 newest active events ─────────────── */}
+      {activeEvents.length > 0 && (
+        <section className="section">
+          <div className="container-page">
+            <div className="rounded-3xl bg-secondary-10 p-5 sm:p-8 lg:p-12">
+              <div className="mb-6 flex items-center justify-between gap-4 lg:mb-10">
+                <h2 className="text-h2 font-semibold text-text-strong">
+                  {t("sections.events")}
+                </h2>
+                <Button
+                  render={<Link href={`/${locale}/events`} />}
+                  size="xl"
+                  shape="pill"
+                  className="hidden sm:inline-flex"
+                >
+                  {t("sections.events_cta")}
+                </Button>
+              </div>
 
+              {/* Mobile: horizontal scroll-snap. Tablet+: 3-up grid. */}
+              <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {activeEvents.map((event, i) => (
+                  <div key={event.id} className="w-[85%] shrink-0 snap-start">
+                    <EventCard
+                      slug={event.slug}
+                      locale={locale}
+                      title={event[titleKey] || ""}
+                      coverImage={event.cover_image}
+                      tags={event.tags}
+                      tagLabels={eventTagLabels}
+                      priority={i === 0}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="hidden grid-cols-2 gap-6 sm:grid lg:grid-cols-3">
+                {activeEvents.map((event, i) => (
+                  <EventCard
+                    key={event.id}
+                    slug={event.slug}
+                    locale={locale}
+                    title={event[titleKey] || ""}
+                    coverImage={event.cover_image}
+                    tags={event.tags}
+                    tagLabels={eventTagLabels}
+                    priority={i === 0}
+                  />
+                ))}
+              </div>
+
+              {/* Mobile: "All events" pill below the carousel */}
+              <div className="mt-6 flex justify-center sm:hidden">
+                <Button
+                  render={<Link href={`/${locale}/events`} />}
+                  size="xl"
+                  shape="pill"
+                >
+                  {t("sections.events_cta")}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Support section (reusable) ───────────────────────────── */}
+      <SupportSection locale={locale} />
       {/* ── Latest news — 2 newest published articles ────────────── */}
       {newsArticles.length > 0 && (
         <section className="section">
@@ -371,8 +455,32 @@ export default async function HomePage({
         </section>
       )}
 
-      {/* ── Support section (reusable) ───────────────────────────── */}
-      <SupportSection locale={locale} />
+      {/* ── Photo reports — gallery aggregated from latest events ─── */}
+      {photoReportImages.length > 0 && (
+        <section className="section">
+          <div className="container-page">
+            <div className="p-5 sm:p-8 lg:p-12">
+              <div className="mb-6 flex items-center justify-between gap-4 lg:mb-10">
+                <h2 className="text-h2 font-semibold text-text-strong">
+                  {t("sections.reports")}
+                </h2>
+                <Button
+                  render={<Link href={`/${locale}/reports`} />}
+                  size="xl"
+                  shape="pill"
+                >
+                  {t("sections.photo_reports_cta")}
+                </Button>
+              </div>
+              <HomePhotoReports
+                images={photoReportImages}
+                prevAriaLabel={t("sections.photo_reports_prev")}
+                nextAriaLabel={t("sections.photo_reports_next")}
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       <ContactSection
         title={tEvents("contact_title")}

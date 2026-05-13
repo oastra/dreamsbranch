@@ -75,9 +75,13 @@
       "volunteer_desc": "Volunteer programs",
       "subscription": "Subscription",
       "subscription_desc": "Monthly donation",
+      "events_cta": "All events",
       "news": "News",
       "news_cta": "All news",
       "reports": "Photo reports",
+      "photo_reports_cta": "Reports",
+      "photo_reports_prev": "Previous photo",
+      "photo_reports_next": "Next photo",
       "contact_title": "Contact us",
       "contact_description": "If you have questions, want to become a partner, or volunteer — fill out the form and we will contact you.",
       "more": "View more"
@@ -420,7 +424,7 @@
       "title": "About the Community",
       "description_1": "Our community in Australia is a reliable support base for Ukraine's defenders. The foundation's projects focus on rapidly meeting frontline needs — from tactical gear to critical medicine. We do everything to ensure every soldier feels supported, even from across the ocean.",
       "description_2": "Here you can join fundraising campaigns, become a volunteer, and find like-minded people among thousands of Ukrainians in Australia. Together we turn every contribution into real help, build a strong community, and bring victory closer by acting according to our values.",
-      "cta": "Learn more"
+      "cta": "Donate now"
     },
     "team": {
       "title": "About the Team",

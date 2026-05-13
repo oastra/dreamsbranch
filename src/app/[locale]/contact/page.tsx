@@ -17,10 +17,10 @@ export default async function Page({
   return (
     <>
       {/* Page header */}
-      <section className="py-12 lg:py-16">
+      <section className="py-6 lg:py-8">
         <div className="container-page text-center">
           <PageHeroHeading title={t("title")} titleClassName="mb-title-gap" />
-          <p className="text-secondary text-text-secondary mx-auto max-w-2xl">
+          <p className="text-h3 text-text-primary mx-auto max-w-2xl">
             {t("description")}
           </p>
         </div>
@@ -31,21 +31,21 @@ export default async function Page({
         <div className="container-page">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
             {/* Left: contact info + photo */}
-            <div className="flex flex-col gap-6">
-              <div>
-                <p className="text-body-sm mb-1 font-medium text-text-secondary">
+            <div className="flex flex-col">
+              <div className="mb-4">
+                <p className="text-subheading mb-1.5 font-medium text-text-strong">
                   {t("our_email")}
                 </p>
                 <a
                   href="mailto:dreamsbranch@gmail.com"
-                  className="text-secondary font-medium text-secondary-120 hover:underline"
+                  className="text-h2 font-medium text-grey-80 hover:underline"
                 >
                   dreamsbranch@gmail.com
                 </a>
               </div>
 
-              <div>
-                <p className="text-body-sm mb-2 font-medium text-text-secondary">
+              <div className="mb-6">
+                <p className="text-subheading mb-1.5 font-medium text-text-strong">
                   {t("our_socials")}
                 </p>
                 <Link
@@ -53,17 +53,18 @@ export default async function Page({
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary-10 transition-colors hover:bg-brand-blue-dark"
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-grey-10 transition-colors "
                 >
-                  <FacebookIcon className="h-6 w-6 text-grey-100" />
+                  <FacebookIcon className="h-6 w-6 text-grey-100  hover:text-secondary-120" />
                 </Link>
               </div>
 
-              <div className="relative mt-2 aspect-4/3 overflow-hidden rounded-2xl">
+              <div className="relative mt-2 aspect-4/3 h-72.75 overflow-hidden rounded-2xl">
                 <Image
                   src="/images/contact/contact-photo.webp"
                   alt="Dreams Branch of UWAA team"
                   fill
+                  priority
                   sizes="(max-width: 1024px) 100vw, 45vw"
                   className="object-cover"
                 />

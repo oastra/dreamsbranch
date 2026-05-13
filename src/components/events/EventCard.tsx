@@ -13,6 +13,8 @@ export interface EventCardProps {
   tags: string[];
   isArchived?: boolean;
   tagLabels: Record<string, string>;
+  /** Set on the first card in a row when it can be the LCP. */
+  priority?: boolean;
 }
 
 export function EventCard({
@@ -24,6 +26,7 @@ export function EventCard({
   tags,
   isArchived = false,
   tagLabels,
+  priority = false,
 }: EventCardProps) {
   return (
     <Link
@@ -57,6 +60,7 @@ export function EventCard({
               src={coverImage}
               alt={title}
               fill
+              priority={priority}
               className="object-cover"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />

@@ -25,12 +25,10 @@ export function SectionHeading({
 
   return (
     <div className={`flex flex-col gap-3 ${alignClass} ${className}`}>
-      {eyebrow && (
-        <p className="text-subheading text-text-secondary">{eyebrow}</p>
-      )}
+      {eyebrow && <p className="text-subheading text-text-strong">{eyebrow}</p>}
       <Tag className={headingClass}>{children}</Tag>
       {description && (
-        <p className="text-body text-text-secondary">{description}</p>
+        <p className="text-body text-text-primary">{description}</p>
       )}
     </div>
   );

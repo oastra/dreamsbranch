@@ -18,17 +18,14 @@
   /* ---------- Neutral / Greys ---------- */
   --color-grey-100: #2d3748;
   --color-grey-main-text: #4a5568;
-  --color-grey-80: #6d6c6c;
+  --color-grey-80: #718096;
   --color-grey-40: #e9e9ea;
   --color-grey-20: #a6a8a9;
   --color-grey-10: #d3d3d4;
 
-  /* ---------- Semantic text ----------
-     text-strong   → headings + emphasis (#2D3748, same as grey-100)
-     text-primary  → body copy        (#4A5568, "grey main text")
-     text-secondary → muted captions  (#6D6C6C, same as grey-80) */
+  /* ---------- Semantic text ---------- */
   --color-text-strong: #2d3748;
-  --color-text-primary: #4a5568;
+  --color-text-primary: ##4d5154;
   --color-text-secondary: #6d6c6c;
 
   /* ---------- Surfaces ---------- */

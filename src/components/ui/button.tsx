@@ -12,9 +12,17 @@ function Button({
   size = "default",
   shape = "default",
   children,
+  render,
+  nativeButton,
   ...props
 }: ButtonPrimitive.Props & ButtonVariantProps) {
   const ref = useRef<HTMLButtonElement>(null);
+  // When the caller renders Button as a non-<button> element (e.g.
+  // `render={<Link />}` for a marketing CTA), base-ui emits a warning
+  // unless `nativeButton` is explicitly opted out of. Default it off
+  // whenever a `render` element is supplied so each callsite doesn't
+  // have to pass it.
+  const resolvedNativeButton = nativeButton ?? render === undefined;
 
   useEffect(() => {
     const btn = ref.current;
@@ -46,6 +54,8 @@ function Button({
       ref={ref}
       data-slot="button"
       className={cn(buttonVariants({ variant, size, shape, className }))}
+      render={render}
+      nativeButton={resolvedNativeButton}
       {...props}
     >
       <span className="relative z-10 pointer-events-none inline-flex items-center gap-2 whitespace-nowrap">

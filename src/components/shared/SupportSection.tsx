@@ -17,8 +17,8 @@ export async function SupportSection({ locale }: SupportSectionProps) {
   // Shared classes for the small tiles. Span behaviour is appended per-tile.
   const tileBase =
     "group relative flex flex-col items-center justify-start overflow-hidden rounded-2xl p-6 text-center transition-colors duration-300 lg:justify-center lg:p-8";
-  const titleCls = "text-h3 font-semibold text-text-strong";
-  const descCls = "mt-2 text-body-sm text-text-secondary";
+  const titleCls = "text-title-mobile font-medium text-text-strong";
+  const descCls = "mt-2 text-body text-text-primary";
   const iconCls =
     "pointer-events-none absolute bottom-4 right-4 text-text-strong opacity-0 transition-opacity duration-300 group-hover:opacity-100 lg:bottom-6 lg:right-6";
 
@@ -27,10 +27,10 @@ export async function SupportSection({ locale }: SupportSectionProps) {
       <div className="container-page">
         {/* Mobile + tablet: title above the grid (no grey card). */}
         <div className="mb-6 text-center lg:hidden lg:text-left">
-          <h2 className="text-h2 font-semibold text-text-strong">
+          <h2 className="text-h2 whitespace-pre-line font-semibold text-text-strong">
             {t("support_title")}
           </h2>
-          <p className="mt-4 whitespace-pre-line text-body text-text-secondary">
+          <p className="mt-4 whitespace-pre-line text-body text-text-primary">
             {t("support_description")}
           </p>
         </div>
@@ -48,10 +48,10 @@ export async function SupportSection({ locale }: SupportSectionProps) {
 
           {/* Title tile — desktop only (mobile/tablet show the title above the grid). */}
           <div className="hidden rounded-2xl bg-grey-40 p-8 lg:col-span-3 lg:flex lg:flex-col lg:justify-center">
-            <h2 className="text-h2 font-semibold text-text-strong">
+            <h2 className="text-title-tablet whitespace-pre-line font-medium text-text-strong">
               {t("support_title")}
             </h2>
-            <p className="mt-4 max-w-2xl whitespace-pre-line text-body text-text-secondary">
+            <p className="mt-4 max-w-2xl whitespace-pre-line text-body text-text-primary">
               {t("support_description")}
             </p>
           </div>

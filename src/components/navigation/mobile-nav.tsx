@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { Mail } from 'lucide-react';
-import FacebookIcon from '@/components/icons/FacebookIcon';
-import { NavItem } from './nav-item';
-import type { Locale } from 'next-intl';
+import { Mail } from "lucide-react";
+import FacebookIcon from "@/components/icons/FacebookIcon";
+import { NavItem } from "./nav-item";
+import type { Locale } from "next-intl";
 
 interface MobileNavItem {
   key: string;
@@ -26,7 +26,7 @@ export function MobileNav({
   onClose,
   isActive,
 }: MobileNavProps) {
-  const targetLocale = currentLocale === 'ua' ? 'EN' : 'UA';
+  const targetLocale = currentLocale === "ua" ? "EN" : "UA";
 
   return (
     <div className="lg:hidden border-t border-border bg-surface-primary">
@@ -45,7 +45,10 @@ export function MobileNav({
         <div className="pt-5 pb-4 flex items-center gap-3">
           <button
             type="button"
-            onClick={() => { onLocaleSwitch(); onClose(); }}
+            onClick={() => {
+              onLocaleSwitch();
+              onClose();
+            }}
             aria-label={`Switch language to ${targetLocale}`}
             className="h-10 min-w-10 px-3 rounded-full bg-secondary-10 text-text-strong text-body-sm font-bold uppercase transition-colors hover:bg-secondary hover:text-white"
           >
@@ -65,7 +68,7 @@ export function MobileNav({
             aria-label="Facebook"
             className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 hover:bg-secondary-140 transition-colors"
           >
-            <FacebookIcon className="w-5 h-5 text-white" />
+            <FacebookIcon className="w-5 h-5 text-white " />
           </a>
         </div>
       </nav>
