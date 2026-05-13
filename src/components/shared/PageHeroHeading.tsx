@@ -27,14 +27,13 @@ export function PageHeroHeading({
   titleClassName = "",
   eyebrowClassName = "",
 }: Props) {
-  const eyebrowColor =
-    tone === "dark" ? "text-white/70" : "text-text-strong";
+  const eyebrowColor = tone === "dark" ? "text-white/70" : "text-text-strong";
   const titleColor = tone === "dark" ? "text-white" : "text-secondary";
 
   return (
     <div className={className}>
       <p
-        className={`text-body-sm mb-2 font-semibold ${eyebrowColor} ${eyebrowClassName}`}
+        className={`text-subheading mb-2 font-semibold ${eyebrowColor} ${eyebrowClassName}`}
       >
         {eyebrow}
       </p>

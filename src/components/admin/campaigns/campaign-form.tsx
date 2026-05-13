@@ -12,6 +12,7 @@ import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
 import { createCampaign, updateCampaign } from '@/lib/actions/campaigns';
 import { slugify } from '@/lib/slug';
+import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 import uaMessages from '../../../../messages/ua.json';
 import enMessages from '../../../../messages/en.json';
 
@@ -80,16 +81,25 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
     return campaign?.id ? [] : getDefaultFaqItems();
   });
 
-  function set(key: string, value: unknown) { setForm(f => ({ ...f, [key]: value })); }
+  const [dirty, setDirty] = useState(false);
+  const handleCancel = useCancelWithConfirm('/admin/campaigns', dirty);
+
+  function set(key: string, value: unknown) {
+    setForm(f => ({ ...f, [key]: value }));
+    setDirty(true);
+  }
 
   function addFaq() {
     setFaqItems([...faqItems, { q_ua: '', a_ua: '', q_en: '', a_en: '' }]);
+    setDirty(true);
   }
   function removeFaq(i: number) {
     setFaqItems(faqItems.filter((_, idx) => idx !== i));
+    setDirty(true);
   }
   function updateFaq(i: number, key: keyof FaqItem, val: string) {
     setFaqItems(faqItems.map((it, idx) => (idx === i ? { ...it, [key]: val } : it)));
+    setDirty(true);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -294,7 +304,7 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
 
       <div className="flex gap-3">
         <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create campaign'}</Button>
-        <Button type="button" size="lg" variant="outline" className="rounded-full" onClick={() => router.push('/admin/campaigns')}>Cancel</Button>
+        <Button type="button" size="lg" variant="destructive" className="rounded-full" onClick={handleCancel}>Cancel</Button>
       </div>
     </form>
   );

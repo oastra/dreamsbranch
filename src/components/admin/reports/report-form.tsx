@@ -11,6 +11,7 @@ import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
 import { FileUpload } from '@/components/admin/shared/file-upload';
 import { createReport, updateReport } from '@/lib/actions/reports';
+import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ReportForm({ report }: { report?: Record<string, any> }) {
@@ -30,7 +31,13 @@ export function ReportForm({ report }: { report?: Record<string, any> }) {
     status: report?.status ?? 'DRAFT',
   });
 
-  function set(key: string, value: unknown) { setForm(f => ({ ...f, [key]: value })); }
+  const [dirty, setDirty] = useState(false);
+  const handleCancel = useCancelWithConfirm('/admin/reports', dirty);
+
+  function set(key: string, value: unknown) {
+    setForm(f => ({ ...f, [key]: value }));
+    setDirty(true);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -102,7 +109,7 @@ export function ReportForm({ report }: { report?: Record<string, any> }) {
 
       <div className="flex gap-3">
         <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create report'}</Button>
-        <Button type="button" size="lg" variant="outline" className="rounded-full" onClick={() => router.push('/admin/reports')}>Cancel</Button>
+        <Button type="button" size="lg" variant="destructive" className="rounded-full" onClick={handleCancel}>Cancel</Button>
       </div>
     </form>
   );

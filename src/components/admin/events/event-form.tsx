@@ -12,6 +12,7 @@ import { ImageUpload } from '@/components/admin/shared/image-upload';
 import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
 import { createEvent, updateEvent } from '@/lib/actions/events';
 import { slugify } from '@/lib/slug';
+import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 
 type LineItem = { label: string; amount: number };
 type FinancialReport = { income: LineItem[]; expenses: LineItem[]; profit: number };
@@ -53,25 +54,33 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
     financialReport: initialReport,
   });
 
+  const [dirty, setDirty] = useState(false);
+  const handleCancel = useCancelWithConfirm('/admin/events', dirty);
+
   function setLine(kind: 'income' | 'expenses', index: number, key: 'label' | 'amount', value: string) {
     setForm(f => {
       const list = [...f.financialReport[kind]];
       list[index] = { ...list[index], [key]: key === 'amount' ? Number(value) : value };
       return { ...f, financialReport: { ...f.financialReport, [kind]: list } };
     });
+    setDirty(true);
   }
   function addLine(kind: 'income' | 'expenses') {
     setForm(f => ({ ...f, financialReport: { ...f.financialReport, [kind]: [...f.financialReport[kind], { ...EMPTY_LINE }] } }));
+    setDirty(true);
   }
   function removeLine(kind: 'income' | 'expenses', index: number) {
     setForm(f => ({ ...f, financialReport: { ...f.financialReport, [kind]: f.financialReport[kind].filter((_, i) => i !== index) } }));
+    setDirty(true);
   }
   function setProfit(value: string) {
     setForm(f => ({ ...f, financialReport: { ...f.financialReport, profit: Number(value) } }));
+    setDirty(true);
   }
 
   function set(key: string, value: unknown) {
     setForm(f => ({ ...f, [key]: value }));
+    setDirty(true);
   }
 
   function toggleTag(tag: string) {
@@ -79,6 +88,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
       ...f,
       tags: f.tags.includes(tag) ? f.tags.filter(t => t !== tag) : [...f.tags, tag],
     }));
+    setDirty(true);
   }
 
 
@@ -306,7 +316,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
         <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>
           {saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create event'}
         </Button>
-        <Button type="button" size="lg" variant="outline" className="rounded-full" onClick={() => router.push('/admin/events')}>
+        <Button type="button" size="lg" variant="destructive" className="rounded-full" onClick={handleCancel}>
           Cancel
         </Button>
       </div>

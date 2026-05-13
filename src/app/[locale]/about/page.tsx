@@ -81,12 +81,16 @@ export default async function Page({
                 title={t("hero.title")}
                 titleClassName="mb-title-gap"
               />
-              <p className="text-secondary text-text-primary">
-                {t("hero.description_1")}
-              </p>
-              <p className="text-secondary text-text-primary">
-                {t("hero.description_2")}
-              </p>
+              {/* Two paragraphs with 16px between them (regardless of the
+                  parent's larger title→buttons rhythm). */}
+              <div className="flex flex-col gap-4">
+                <p className="text-secondary text-text-primary">
+                  {t("hero.description_1")}
+                </p>
+                <p className="text-secondary text-text-primary">
+                  {t("hero.description_2")}
+                </p>
+              </div>
               <div className="mt-auto pt-2">
                 <Button
                   render={<Link href={`/${locale}/donate`} />}

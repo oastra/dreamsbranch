@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Plus, Trash2 } from 'lucide-react';
@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
+import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 import { updateAboutSettings } from '@/lib/actions/about';
 import type { AboutPageSettings, FaqItem } from '@/types/database';
 
@@ -31,6 +32,28 @@ export function AboutForm({ settings }: Props) {
   const [faqItems, setFaqItems] = useState<FaqItem[]>(
     (settings?.faq_items ?? []) as unknown as FaqItem[],
   );
+
+  // Any change to a tracked field flips `dirty`. The ref skips the
+  // initial-mount effect run so an untouched form doesn't claim it's
+  // dirty. The Save handler resets it once the row is persisted.
+  const [dirty, setDirty] = useState(false);
+  const skipFirstRun = useRef(true);
+  useEffect(() => {
+    if (skipFirstRun.current) {
+      skipFirstRun.current = false;
+      return;
+    }
+    setDirty(true);
+  }, [
+    heroImages,
+    teamImages,
+    yearsValue,
+    membersValue,
+    raisedValue,
+    transparencyValue,
+    faqItems,
+  ]);
+  const handleCancel = useCancelWithConfirm('/admin', dirty);
 
   function addFaq() {
     setFaqItems([...faqItems, { q_ua: '', a_ua: '', q_en: '', a_en: '' }]);
@@ -57,6 +80,7 @@ export function AboutForm({ settings }: Props) {
     setSaving(false);
     if (result.success) {
       toast.success('About page updated');
+      setDirty(false);
       router.refresh();
     } else {
       toast.error(result.error ?? 'Something went wrong');
@@ -233,10 +257,10 @@ export function AboutForm({ settings }: Props) {
         <Button
           type="button"
           size="lg"
-          variant="outline"
+          variant="destructive"
           className="rounded-full"
           disabled={saving}
-          onClick={() => router.refresh()}
+          onClick={handleCancel}
         >
           Cancel
         </Button>

@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
+import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 import { createArticle, updateArticle } from '@/lib/actions/news';
 import { slugify } from '@/lib/slug';
 
@@ -33,7 +34,13 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
     status: article?.status ?? 'DRAFT',
   });
 
-  function set(key: string, value: unknown) { setForm(f => ({ ...f, [key]: value })); }
+  const [dirty, setDirty] = useState(false);
+  const handleCancel = useCancelWithConfirm('/admin/news', dirty);
+
+  function set(key: string, value: unknown) {
+    setForm(f => ({ ...f, [key]: value }));
+    setDirty(true);
+  }
 
   function handleTitleUaChange(value: string) {
     set('titleUa', value);
@@ -142,7 +149,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
 
       <div className="flex gap-3">
         <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create article'}</Button>
-        <Button type="button" size="lg" variant="outline" className="rounded-full" onClick={() => router.push('/admin/news')}>Cancel</Button>
+        <Button type="button" size="lg" variant="destructive" className="rounded-full" onClick={handleCancel}>Cancel</Button>
       </div>
     </form>
   );

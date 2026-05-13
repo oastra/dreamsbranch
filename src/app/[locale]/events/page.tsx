@@ -383,7 +383,7 @@ export default async function EventsPage({
   const heroSlides: CarouselSlide[] = [
     { src: "/images/events/events.webp", alt: t("events.title") },
     {
-      src: "/images/events/pray-peace-ukraine-hands-with-heart-no-war.webp",
+      src: "/images/events/hands-with-heart.webp",
       alt: t("events.title"),
     },
   ];
@@ -426,24 +426,25 @@ export default async function EventsPage({
               className="text-center lg:col-start-1 lg:row-start-1 lg:text-left"
             />
 
-            {/* First paragraph — appears below title; col 1 row 2 on desktop */}
-            <p className="text-body text-text-secondary lg:col-start-1 lg:row-start-2 lg:max-w-xl">
-              {t("events.description")}
-            </p>
+            {/* Two paragraphs share one grid cell so the gap between
+                them stays 16px regardless of the outer grid's rhythm. */}
+            <div className="flex flex-col gap-4 lg:col-start-1 lg:row-start-2 lg:max-w-xl">
+              <p className="text-h3 text-text-primary">
+                {t("events.description")}
+              </p>
+              <p className="text-h3 text-text-primary">
+                {t("events.description_2")}
+              </p>
+            </div>
 
-            {/* Hero carousel — col 2 spans rows 1–3 on desktop */}
-            <div className="relative w-full lg:col-start-2 lg:row-start-1 lg:row-end-4 lg:h-full">
+            {/* Hero carousel — col 2 spans rows 1–2 on desktop */}
+            <div className="relative w-full lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:h-full">
               <MaskedImageCarousel
                 slides={heroSlides}
                 aspectRatio="716/500"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
-
-            {/* Second paragraph — below image on mobile; col 1 row 3 on desktop */}
-            <p className="text-body text-text-secondary lg:col-start-1 lg:row-start-3 lg:max-w-xl">
-              {t("events.description_2")}
-            </p>
           </div>
         </div>
       </section>

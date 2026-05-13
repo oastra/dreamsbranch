@@ -16,6 +16,7 @@ import {
   updateShopPhotoReport,
 } from '@/lib/actions/shop-photo-reports';
 import { slugify } from '@/lib/slug';
+import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function PhotoReportForm({ report }: { report?: Record<string, any> }) {
@@ -39,8 +40,12 @@ export function PhotoReportForm({ report }: { report?: Record<string, any> }) {
     })) as EditorImage[],
   });
 
+  const [dirty, setDirty] = useState(false);
+  const handleCancel = useCancelWithConfirm('/admin/shop-photo-reports', dirty);
+
   function set<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+    setDirty(true);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -151,9 +156,9 @@ export function PhotoReportForm({ report }: { report?: Record<string, any> }) {
         <Button
           type="button"
           size="lg"
-          variant="outline"
+          variant="destructive"
           className="rounded-full"
-          onClick={() => router.push('/admin/shop-photo-reports')}
+          onClick={handleCancel}
         >
           Cancel
         </Button>

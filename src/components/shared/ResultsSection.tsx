@@ -43,7 +43,7 @@ export function ResultsSection({
               key={label}
               className={`flex flex-col justify-between rounded-2xl bg-secondary-10 p-6 text-text-strong ${heightClass ?? ""}`.trim()}
             >
-              <p className="text-body text-text-strong">{label}</p>
+              <p className="whitespace-pre-line text-body text-text-strong">{label}</p>
               <p className="flex items-baseline justify-end gap-2 text-[2.5rem] font-medium leading-none sm:justify-start lg:text-[3rem]">
                 {value}
                 {unit && (

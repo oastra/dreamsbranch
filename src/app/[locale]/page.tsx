@@ -166,36 +166,46 @@ export default async function HomePage({
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────────
-          Desktop: two columns — title + lead/CTAs stacked in the left
-          column, the masked carousel spans both rows on the right.
+          Desktop: two columns — title sits at the top of the left
+          column, lead/CTAs at the bottom; the masked carousel spans
+          both rows on the right. Row 1 is auto-sized to the title;
+          row 2 is `1fr` so the lead/CTA cell stretches to the image's
+          full remaining height, and `self-end` pins its content to
+          the bottom edge — that's how the CTAs end up flush with the
+          image's bottom.
           Mobile/tablet: single column — title → image → lead/CTAs. */}
       <section className="py-8 lg:py-20">
-        <div className="container-page grid gap-8 lg:grid-cols-2 lg:gap-10">
+        <div className="container-page grid gap-8 lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-10">
           {/* Title block */}
           <div className="text-center lg:text-left">
-            <p className="text-body-sm mb-3 font-semibold text-text-strong lg:mb-4">
+            <p className="text-subheading mb-3 font-semibold text-text-strong lg:mb-4">
               {t("hero.eyebrow")}
             </p>
             <h1 className="text-display mb-2 text-secondary lg:mb-3">
               {t("hero.title")}
             </h1>
-            <p className="text-h3 font-medium text-text-strong">
+            <p className="text-h3 md:text-[42px] font-medium text-text-strong">
               {t("hero.subtitle")}
             </p>
           </div>
 
           {/* Masked carousel — between text blocks on mobile, right
-              column spanning both text rows on desktop. */}
+              column spanning both rows on desktop. The image keeps its
+              natural 716/500 aspect ratio (so it has predictable
+              dimensions on every viewport); the left text column
+              stretches via `lg:row-span-2 lg:justify-between` so the
+              CTAs sit at the bottom edge of the column, lining up with
+              the image's bottom edge. */}
           <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2">
             <HeroCarousel slides={HERO_SLIDES} />
           </div>
 
           {/* Lead + description + CTAs */}
-          <div className="text-center lg:text-left lg:col-start-1 lg:row-start-2">
-            <p className="text-h3 mb-2 font-medium text-text-strong lg:mb-3">
+          <div className="text-center lg:self-end lg:text-left lg:col-start-1 lg:row-start-2">
+            <p className="text-h2 mb-4 font-medium text-text-primary">
               {t("hero.lead")}
             </p>
-            <p className="text-body mb-6 text-text-primary lg:mb-8">
+            <p className="text-h3 mb-6 text-text-primary lg:mb-8">
               {t("hero.description")}
             </p>
             <div className="flex flex-wrap justify-center gap-4 lg:justify-start">

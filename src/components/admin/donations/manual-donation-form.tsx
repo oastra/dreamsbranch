@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { createManualDonation } from '@/lib/actions/donations';
+import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 
 export type CampaignOption = { id: string; title: string };
 
@@ -34,8 +35,12 @@ export function ManualDonationForm({ campaigns }: Props) {
     note: '',
   });
 
+  const [dirty, setDirty] = useState(false);
+  const handleCancel = useCancelWithConfirm('/admin/donations', dirty);
+
   function set<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+    setDirty(true);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -152,9 +157,9 @@ export function ManualDonationForm({ campaigns }: Props) {
         <Button
           type="button"
           size="lg"
-          variant="outline"
+          variant="destructive"
           className="rounded-full"
-          onClick={() => router.push('/admin/donations')}
+          onClick={handleCancel}
         >
           Cancel
         </Button>

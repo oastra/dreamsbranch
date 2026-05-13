@@ -13,6 +13,7 @@ import {
   createShopReview,
   updateShopReview,
 } from '@/lib/actions/shop-reviews';
+import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ShopReviewForm({ review }: { review?: Record<string, any> }) {
@@ -33,8 +34,12 @@ export function ShopReviewForm({ review }: { review?: Record<string, any> }) {
     status: review?.status ?? 'DRAFT',
   });
 
+  const [dirty, setDirty] = useState(false);
+  const handleCancel = useCancelWithConfirm('/admin/shop-reviews', dirty);
+
   function set<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+    setDirty(true);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -185,9 +190,9 @@ export function ShopReviewForm({ review }: { review?: Record<string, any> }) {
         <Button
           type="button"
           size="lg"
-          variant="outline"
+          variant="destructive"
           className="rounded-full"
-          onClick={() => router.push('/admin/shop-reviews')}
+          onClick={handleCancel}
         >
           Cancel
         </Button>
