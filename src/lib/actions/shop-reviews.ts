@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { shopReviewSchema } from '@/lib/validations';
+import { deleteFilesAction } from '@/lib/actions/upload';
 
 function toSnake(input: Record<string, unknown>) {
   return {
@@ -45,7 +46,11 @@ export async function updateShopReview(id: string, formData: unknown) {
 
 export async function deleteShopReview(id: string) {
   await requireSuperAdmin();
+  const row = (await db.shopReview.findUnique({ where: { id } })) as
+    | (Record<string, unknown> & { avatar?: string | null })
+    | null;
   await db.shopReview.delete({ where: { id } });
+  if (row) void deleteFilesAction([row.avatar]);
   revalidatePath('/admin/shop-reviews');
   revalidatePath('/[locale]/shop/[category]', 'page');
   return { success: true };

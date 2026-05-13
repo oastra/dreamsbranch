@@ -80,6 +80,7 @@ export function AdminSidebar({ user }: { user: AdminUser }) {
               width={36}
               height={36}
               priority
+              style={{ width: "36px", height: "36px" }}
             />
             <div className="text-secondary">
               {" "}

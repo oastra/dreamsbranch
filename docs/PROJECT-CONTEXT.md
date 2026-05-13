@@ -53,8 +53,9 @@ ripple via `[data-slot="button"]::before` (definition in `globals.css`).
 Figma "Button" component). Pair with `shape="pill"` for rounded.
 
 **Rendering as a link:** use `<Button render={<Link href="..." />}>`. Button
-auto-sets `nativeButton={false}` so base-ui doesn't warn. 3px outlines use `ring-3`
-not `border` so hover doesn't shift layout. Every variant has a `hover:bg-*` fallback
+auto-defaults `nativeButton={false}` when a `render` prop is supplied so base-ui
+doesn't warn about anchors-rendered-as-buttons. 3px outlines use `ring-3` not
+`border` so hover doesn't shift layout. Every variant has a `hover:bg-*` fallback
 so even Link-style usages (no ripple JS) get the right color transition.
 
 ⚠ Do **not** reintroduce `.btn-primary` / `.btn-outline` CSS utilities — they were
@@ -90,10 +91,39 @@ removed in favor of `buttonVariants`.
 - **Audit columns** on `campaigns` / `events` / `news_articles`:
   `created_by_admin_id` and `updated_by_admin_id` (FK `admin_users(id)` on delete
   set null). Server actions stamp the admin from `requireAdmin()`. Admin list tables
-  show "Edited by X · 3d ago" via `components/admin/shared/edited-by-cell.tsx`.
+  show **two separate columns — `Created` and `Edited`** — rendered by
+  `components/admin/shared/edited-by-cell.tsx` (it accepts a `kind: 'both' |
+  'created' | 'edited'` prop; single-column callers can still use `kind="both"`
+  for the stacked layout). The Edited column auto-suppresses to `—` when the
+  row hasn't been touched since creation (same admin + timestamps within 5 s).
+- **Events image columns**: `cover_image` is the small floated image shown next to
+  the description (~4:3), `hero_image` is the big banner at the top of the event
+  page (~16:9). Both are required at save time. Legacy column `secondary_image`
+  was renamed to `hero_image` in `20260513000001_rename_event_secondary_to_hero.sql`;
+  the public page still reads the legacy column as a fallback for any row not yet
+  re-saved.
 - All migrations live in `supabase/migrations/` — apply with `supabase db push` (or
   via the Supabase dashboard SQL editor). Most recent is
-  `20260512000001_admin_audit_columns.sql`.
+  `20260513000001_rename_event_secondary_to_hero.sql`.
+
+## Storage + uploads
+- Single bucket: `media` (public).
+- **Server-side image processing** (`src/lib/supabase/storage.ts`): every upload is
+  pushed through `sharp` — EXIF orientation honoured, resized to fit within
+  2000×2000 (preserving aspect ratio, no upscaling), re-encoded to WebP at quality
+  85, stored with a `.webp` extension and `image/webp` content-type. SVG and GIF
+  bypass the pipeline. Tuning knobs (`MAX_DIMENSION`, `QUALITY`, `SKIP_TYPES`) live
+  at the top of the file.
+- **Storage cleanup** (`src/lib/actions/upload.ts` exports `deleteFileAction` /
+  `deleteFilesAction`):
+  - `ImageUpload` and `MultiImageUpload` fire `deleteFileAction(oldUrl)` on remove
+    and on replace, so the bucket doesn't accumulate orphans.
+  - `delete*` server actions for **campaigns / events / news / reports /
+    shop-photo-reports / shop-reviews** load the row first, run
+    `db.*.delete`, then `deleteFilesAction([...all urls on the row])`. All are
+    fire-and-forget (`void`) so a storage hiccup never blocks the DB delete.
+  - **When the shop-products and shop-categories admin gets built**, add the same
+    pattern to those `delete*` actions (cover image + gallery images, etc.).
 
 ## Admin panel
 - Routes under `src/app/admin/(protected)/`. Auth via Supabase Auth + `admin_users` table.
@@ -118,12 +148,15 @@ removed in favor of `buttonVariants`.
   `PAYPAL_WEBHOOK_ID`. Donation flow on `/campaigns/[slug]` is not wired yet.
 
 ## Pages built so far
-- `/` home (hero with masked carousel + 2 CTAs, Results, Story, About preview,
-  Active campaigns row, Events placeholder, **News preview**, Support, Contact)
+- `/` home: hero with masked carousel + 2 CTAs, Results, Story, About preview,
+  Active campaigns row (3 newest active), **Events row** (3 newest active),
+  News preview (2 newest published), **Photo reports** (7 images aggregated from
+  the newest events' `gallery_images`), Support, Contact.
 - `/about` (full About page)
 - `/campaigns` + `/campaigns/[slug]` (with FAQ tab + DonationAmountCard buttons)
 - `/events` + `/events/[slug]` (active + archived variants, ShareSection,
-  VolunteerCTA, financial report)
+  VolunteerCTA, financial report). Hero slot uses `hero_image`, floated card slot
+  uses `cover_image`.
 - `/news` + `/news/[slug]` (with FeaturedNewsCard hero)
 - `/shop`, `/shop/[category]`, `/shop/product/[slug]`
 - `/donate`
@@ -132,16 +165,32 @@ removed in favor of `buttonVariants`.
 - `/contact`
 
 ## Reusable components worth knowing
-- `<ContactSection title description />` — bottom-of-page form panel (image + form)
+- `<ContactSection title description />` — bottom-of-page form panel (image + form).
+  This is the reusable component used at the bottom of events / news / donate / etc.
+  The standalone `/contact` page has its own layout (centered title + email/socials
+  + 291px photo) and does **not** use this component.
 - `<SupportSection locale />` — multi-channel donate row
 - `<ResultsSection title description stats />` — 4-stat headline numbers
 - `<StorySection />`, `<HomeAboutSection />` — home-only narrative blocks
+- `<HomePhotoReports images prevAriaLabel nextAriaLabel />` — home-page Фото-звіти
+  grid (3+4 on desktop, single image with prev/next on mobile)
 - `<VolunteerCTA />` — yellow card with image + CTA (`lg:h-[302px]`, opt out via
   `lg:!h-auto`)
 - `<ReportsBanner />` — blue full-width banner with yellow CTA
 - `<ShareSection />` — copy-link + social share row
 - `<FaqAccordion items />` — used on /about, /donate, /campaigns/[slug]
 - `<EditedByCell />` — admin "who/when" cell
+- `<ImageUpload />`, `<MultiImageUpload />` — admin uploaders. Both:
+  - Accept any image format (JPG, PNG, HEIC, WebP) — server-side sharp pipeline
+    converts everything to WebP on upload.
+  - Render a single shared subtitle under the label
+    (`Any format … auto-converted to WebP. Max 4 MB.`) so per-callsite labels
+    only need to carry the field name + aspect ratio.
+  - Clean the Storage file on remove and on replace.
+  - Show the same `DeleteConfirmDialog` modal as the row-delete actions when
+    the X button is clicked, so admins always confirm a destructive image
+    removal. Replace (uploading a new file when one exists) stays silent —
+    the user clearly intends the swap.
 
 ## Conventions
 - Don't add comments unless they explain a non-obvious *why*.
@@ -159,8 +208,25 @@ removed in favor of `buttonVariants`.
   `PhotoReportCarousel`, `ReviewsCarousel`) aren't migrated to `<Button>` — they need
   an `iconCircle` size variant first.
 - Header/mobile-nav locale switcher is its own component, not part of `buttonVariants`.
-- `/events` placeholder on the home page is still a stub, not wired to the DB.
 - Donation flow (Stripe/PayPal) is awaiting keys from the client.
+- **Shop-products / shop-categories admin** doesn't exist yet. When built, mirror
+  the storage-cleanup pattern: load the row → `db.*.delete` → `deleteFilesAction(
+  [...all URLs on the row])`. `ImageUpload` / `MultiImageUpload` already self-clean.
+- Standalone `/contact` page doesn't yet match the Figma "Contact us" card layout
+  (centered title, email/socials, 291px photo). The user reverted my last attempt;
+  the Figma rebuild needs to happen on `src/app/[locale]/contact/page.tsx` directly,
+  NOT on the reusable `<ContactSection>`.
+- Next.js 16.2.0 dev mode emits a harmless console error
+  `'GlobalNotFound' cannot have a negative time stamp` — known Next bug, not from
+  project code, doesn't affect production builds.
+
+## Image / Next/Image gotchas
+- Whenever you set `width` and `height` props on `next/image` for an SVG, Next
+  emits a noisy "either width or height modified" warning if the parent layout
+  could reshape it. The fix is NOT `style={{ width: "auto", height: "auto" }}` —
+  that makes SVGs use their (often huge) intrinsic viewBox. Use explicit pixel
+  values: `style={{ width: "36px", height: "36px" }}` or pin the height only via
+  `style={{ height: "40px" }}` and leave width to scale via Tailwind `w-auto`.
 
 ## How to work
 - Run `npm run dev` (Turbopack). If anything looks weird in CSS, the fix is usually

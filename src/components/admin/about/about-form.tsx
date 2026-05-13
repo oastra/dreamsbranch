@@ -75,8 +75,7 @@ export function AboutForm({ settings }: Props) {
           value={heroImages}
           onChange={setHeroImages}
           folder="about-hero"
-          label="Hero images"
-          requirements="Recommended: min 1200 × 900 px, landscape, JPG / WebP / PNG, under 4 MB each."
+          label="Hero images (landscape, ~4:3, min 1200 × 900)"
           minImages={4}
         />
       </div>
@@ -91,8 +90,7 @@ export function AboutForm({ settings }: Props) {
           value={teamImages}
           onChange={setTeamImages}
           folder="about-team"
-          label="Team images"
-          requirements="Recommended: min 1920 × 810 px (≈2.37 : 1), landscape, JPG / WebP / PNG, under 4 MB each."
+          label="Team images (landscape, ≈2.37:1, min 1920 × 810)"
           minImages={4}
         />
       </div>
@@ -231,6 +229,16 @@ export function AboutForm({ settings }: Props) {
           disabled={saving}
         >
           {saving ? 'Saving...' : 'Save changes'}
+        </Button>
+        <Button
+          type="button"
+          size="lg"
+          variant="outline"
+          className="rounded-full"
+          disabled={saving}
+          onClick={() => router.refresh()}
+        >
+          Cancel
         </Button>
       </div>
     </form>

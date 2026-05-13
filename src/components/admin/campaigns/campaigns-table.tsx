@@ -21,6 +21,8 @@ interface Campaign {
   goal_amount: number;
   current_amount?: number;
   status: string;
+  created_at?: string | null;
+  created_by_admin_id?: string | null;
   updated_at?: string | null;
   updated_by_admin_id?: string | null;
 }
@@ -99,6 +101,7 @@ export function CampaignsTable({
               <TableHead>Title</TableHead>
               <TableHead>Goal</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Created</TableHead>
               <TableHead>Edited</TableHead>
               <TableHead className="w-12" />
             </TableRow>
@@ -106,7 +109,7 @@ export function CampaignsTable({
           <TableBody>
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-text-secondary py-8">
+                <TableCell colSpan={6} className="text-center text-text-secondary py-8">
                   {campaigns.length === 0 ? 'No campaigns yet' : 'No campaigns match your filters'}
                 </TableCell>
               </TableRow>
@@ -124,7 +127,18 @@ export function CampaignsTable({
                   <TableCell><StatusBadge status={campaign.status} /></TableCell>
                   <TableCell>
                     <EditedByCell
-                      adminId={campaign.updated_by_admin_id}
+                      kind="created"
+                      createdBy={campaign.created_by_admin_id}
+                      createdAt={campaign.created_at}
+                      admins={admins}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <EditedByCell
+                      kind="edited"
+                      createdBy={campaign.created_by_admin_id}
+                      createdAt={campaign.created_at}
+                      updatedBy={campaign.updated_by_admin_id}
                       updatedAt={campaign.updated_at}
                       admins={admins}
                     />

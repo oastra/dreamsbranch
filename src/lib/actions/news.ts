@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { articleSchema } from '@/lib/validations';
+import { deleteFilesAction } from '@/lib/actions/upload';
 
 function toSnake(input: Record<string, unknown>) {
   return {
@@ -52,7 +53,11 @@ export async function updateArticle(id: string, formData: unknown) {
 
 export async function deleteArticle(id: string) {
   await requireSuperAdmin();
+  const row = (await db.newsArticle.findUnique({ where: { id } })) as
+    | (Record<string, unknown> & { cover_image?: string | null })
+    | null;
   await db.newsArticle.delete({ where: { id } });
+  if (row) void deleteFilesAction([row.cover_image]);
   revalidatePath('/admin/news');
   return { success: true };
 }

@@ -22,6 +22,7 @@ interface Article {
   is_featured: boolean;
   status: string;
   created_at: string;
+  created_by_admin_id?: string | null;
   updated_at?: string | null;
   updated_by_admin_id?: string | null;
 }
@@ -122,6 +123,7 @@ export function NewsTable({
               <TableHead>Category</TableHead>
               <TableHead>Featured</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Created</TableHead>
               <TableHead>Edited</TableHead>
               <TableHead className="w-12" />
             </TableRow>
@@ -129,7 +131,7 @@ export function NewsTable({
           <TableBody>
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-text-secondary py-8">
+                <TableCell colSpan={7} className="text-center text-text-secondary py-8">
                   {articles.length === 0 ? 'No articles yet' : 'No articles match your filters'}
                 </TableCell>
               </TableRow>
@@ -148,7 +150,18 @@ export function NewsTable({
                   <TableCell><StatusBadge status={article.status} /></TableCell>
                   <TableCell>
                     <EditedByCell
-                      adminId={article.updated_by_admin_id}
+                      kind="created"
+                      createdBy={article.created_by_admin_id}
+                      createdAt={article.created_at}
+                      admins={admins}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <EditedByCell
+                      kind="edited"
+                      createdBy={article.created_by_admin_id}
+                      createdAt={article.created_at}
+                      updatedBy={article.updated_by_admin_id}
                       updatedAt={article.updated_at}
                       admins={admins}
                     />

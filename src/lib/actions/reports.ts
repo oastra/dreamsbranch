@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { reportSchema } from '@/lib/validations';
+import { deleteFilesAction } from '@/lib/actions/upload';
 
 function toSnake(input: Record<string, unknown>) {
   return {
@@ -45,7 +46,23 @@ export async function updateReport(id: string, formData: unknown) {
 
 export async function deleteReport(id: string) {
   await requireSuperAdmin();
+  const row = (await db.report.findUnique({ where: { id } })) as
+    | (Record<string, unknown> & {
+        cover_image?: string | null;
+        gallery_images?: string[] | null;
+        pdf_url_ua?: string | null;
+        pdf_url_en?: string | null;
+      })
+    | null;
   await db.report.delete({ where: { id } });
+  if (row) {
+    void deleteFilesAction([
+      row.cover_image,
+      row.pdf_url_ua,
+      row.pdf_url_en,
+      ...(row.gallery_images ?? []),
+    ]);
+  }
   revalidatePath('/admin/reports');
   revalidatePath('/[locale]/reports', 'page');
   return { success: true };

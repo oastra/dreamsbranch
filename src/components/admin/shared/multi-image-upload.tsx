@@ -1,8 +1,9 @@
 'use client';
 import { useRef, useState } from 'react';
-import { uploadFileAction } from '@/lib/actions/upload';
+import { uploadFileAction, deleteFileAction } from '@/lib/actions/upload';
 import { Loader2, Upload, X, ArrowLeft, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
+import { DeleteConfirmDialog } from './delete-confirm-dialog';
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB
 
@@ -25,6 +26,7 @@ export function MultiImageUpload({
 }: MultiImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [confirmingIndex, setConfirmingIndex] = useState<number | null>(null);
 
   async function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
@@ -54,8 +56,13 @@ export function MultiImageUpload({
     if (uploaded.length) onChange([...value, ...uploaded]);
   }
 
-  function remove(i: number) {
+  function confirmRemove() {
+    if (confirmingIndex === null) return;
+    const i = confirmingIndex;
+    const url = value[i];
+    if (url) void deleteFileAction(url);
     onChange(value.filter((_, idx) => idx !== i));
+    setConfirmingIndex(null);
   }
 
   function move(i: number, dir: -1 | 1) {
@@ -78,6 +85,9 @@ export function MultiImageUpload({
           {value.length} / min {minImages}
         </p>
       </div>
+      <p className="text-caption text-text-tertiary">
+        Any format (JPG, PNG, HEIC, WebP) — auto-converted to WebP. Max 4 MB each.
+      </p>
       {requirements && (
         <p className="text-caption text-text-tertiary">{requirements}</p>
       )}
@@ -92,7 +102,7 @@ export function MultiImageUpload({
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
             <button
               type="button"
-              onClick={() => remove(i)}
+              onClick={() => setConfirmingIndex(i)}
               className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
               aria-label="Remove"
             >
@@ -146,6 +156,12 @@ export function MultiImageUpload({
         multiple
         className="hidden"
         onChange={handleFiles}
+      />
+      <DeleteConfirmDialog
+        open={confirmingIndex !== null}
+        onOpenChange={(o) => !o && setConfirmingIndex(null)}
+        onConfirm={confirmRemove}
+        itemName="image"
       />
     </div>
   );

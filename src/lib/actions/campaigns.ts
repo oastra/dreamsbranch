@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { campaignSchema } from '@/lib/validations';
+import { deleteFilesAction } from '@/lib/actions/upload';
 
 type BilingualFaq = { q_ua: string; a_ua: string; q_en: string; a_en: string };
 
@@ -57,7 +58,23 @@ export async function updateCampaign(id: string, formData: unknown) {
 
 export async function deleteCampaign(id: string) {
   await requireSuperAdmin();
+  // Pick up the row first so we can clean its uploaded files from
+  // Storage after the row itself is removed. We always remove the row
+  // (even if the storage cleanup partially fails) so the admin UI
+  // never gets stuck with a half-deleted campaign.
+  const row = (await db.campaign.findUnique({ where: { id } })) as
+    | (Record<string, unknown> & {
+        cover_image?: string | null;
+        gallery_images?: string[] | null;
+      })
+    | null;
   await db.campaign.delete({ where: { id } });
+  if (row) {
+    void deleteFilesAction([
+      row.cover_image,
+      ...(row.gallery_images ?? []),
+    ]);
+  }
   revalidatePath('/admin/campaigns');
   return { success: true };
 }

@@ -20,6 +20,8 @@ interface Event {
   event_date: string | null;
   location: string | null;
   status: string;
+  created_at?: string | null;
+  created_by_admin_id?: string | null;
   updated_at?: string | null;
   updated_by_admin_id?: string | null;
 }
@@ -106,8 +108,9 @@ export function EventsTable({
             <TableRow>
               <TableHead>Title</TableHead>
               <TableHead>Date</TableHead>
-              <TableHead>Location</TableHead>
+              <TableHead className="w-32">Location</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Created</TableHead>
               <TableHead>Edited</TableHead>
               <TableHead className="w-12" />
             </TableRow>
@@ -115,7 +118,7 @@ export function EventsTable({
           <TableBody>
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-text-secondary py-8">
+                <TableCell colSpan={7} className="text-center text-text-secondary py-8">
                   {events.length === 0 ? 'No events yet' : 'No events match your filters'}
                 </TableCell>
               </TableRow>
@@ -135,11 +138,24 @@ export function EventsTable({
                       ? new Date(event.event_date).toLocaleDateString('en-AU')
                       : '—'}
                   </TableCell>
-                  <TableCell className="text-text-secondary">{event.location || '—'}</TableCell>
+                  <TableCell className="w-32 max-w-32 truncate text-text-secondary" title={event.location ?? undefined}>
+                    {event.location || '—'}
+                  </TableCell>
                   <TableCell><StatusBadge status={event.status} /></TableCell>
                   <TableCell>
                     <EditedByCell
-                      adminId={event.updated_by_admin_id}
+                      kind="created"
+                      createdBy={event.created_by_admin_id}
+                      createdAt={event.created_at}
+                      admins={admins}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <EditedByCell
+                      kind="edited"
+                      createdBy={event.created_by_admin_id}
+                      createdAt={event.created_at}
+                      updatedBy={event.updated_by_admin_id}
                       updatedAt={event.updated_at}
                       admins={admins}
                     />

@@ -6,11 +6,12 @@ This guide is for the content manager who is filling the events archive (last 4 
 
 ## 1. Before you start — image preparation
 
-All images must be **`.webp`** format. Use any free converter (e.g. squoosh.app).
+You can upload photos in any common format (**JPG, PNG, HEIC, WebP** — even straight from your phone). The site automatically resizes them, strips orientation issues, and converts every upload to WebP in the background — there's no need to use squoosh.app or any other converter anymore.
 
 | Image type | Where it shows | Recommended size | Aspect ratio |
 |---|---|---|---|
-| **Cover image** | Big hero photo on the event page (under the title) | 1280 × 620 px | ~16:9 (or 1280:620) |
+| **Cover image** | Small image floated next to the event description in the body of the page | ~1200 × 900 px | ~4:3 |
+| **Hero image** | Large banner at the top of the event page (under the title) | ~1280 × 620 px | ~16:9 (or 1280:620) |
 | **Gallery image** (archived events only) | The 6 photos in the "Звіти / Reports" block at the bottom of the archived event page | 800 × 800 px | 1:1 (square) |
 
 Tips:
@@ -42,8 +43,9 @@ Tips:
 | **Location** | e.g. `Bunnings Ashfield` or `Harbourside Shopping Centre` | What appears in the "Місце проведення / Location" card. |
 | **Map URL** | Paste a Google Maps link to the venue | Optional. Becomes the "відкрити на мапі" link. |
 | **URL (UA) / URL (EN)** | **Generated automatically from the title — there's nothing to type here.** Ukrainian letters are transliterated to Latin (`Подія в Києві` → `podiia-v-kyievi`). The URL preview below the label shows what the public URL will be after you save. | The URL is **locked once the event is saved** so existing share links keep working. If you ever need to change it later, message the developer. |
-| **Cover image** | Upload one `.webp` photo of the event | Required for the page to look complete. |
-| **Gallery images** | Upload up to 6 `.webp` square photos | **Only used when status = Archived.** First two appear next to the financial card; the other four fill the row below. Upload exactly 6 for the cleanest layout. |
+| **Cover card image** | Upload the **small** photo (~4:3) — the one that appears floated next to the description and on event cards | **Required.** Auto-converted to WebP on upload. |
+| **Hero image** | Upload the **large** banner (~16:9) — the one that fills the top of the event page | **Required.** Auto-converted to WebP on upload. |
+| **Gallery images** | Upload up to 6 square photos | **Only used when status = Archived.** First two appear next to the financial card; the other four fill the row below. Upload exactly 6 for the cleanest layout. |
 | **Tags** | Click `Looking for partners` and/or `Looking for volunteers` if relevant | Become the blue/yellow pills under the title. Skip both for archived events. |
 | **Show volunteer CTA** | Checkbox | Adds the "Стань волонтером" yellow block on the event page. Usually OFF for archived events. |
 
@@ -96,8 +98,8 @@ For each past event:
 
 1. Set **Status = Archived**
 2. Set **Date** to the actual date the event happened
-3. Upload **Cover image** (.webp)
-4. Upload **6 gallery images** (.webp, square)
+3. Upload **Cover card image** (small, ~4:3) **and** **Hero image** (large, ~16:9) — any common format, the site will convert them
+4. Upload **6 gallery images** (square)
 5. Fill **Financial report** with the income/expense lines and profit
 6. Fill **Title** + **Description** in UA and EN
 7. **URLs (UA + EN)** are generated automatically from the title at save time — nothing to do here. They're locked after the first save; if a duplicate or rename is needed, ask the developer.
@@ -111,8 +113,8 @@ Suggested slug pattern for the archive: `<venue>-<month>-<year>` (e.g. `bunnings
 
 ## 6. Common questions
 
-**Q: I uploaded a JPG by mistake — will it work?**
-A: Convert it to .webp first (squoosh.app, free). The site is optimized for .webp.
+**Q: I uploaded a JPG (or PNG, or HEIC from my phone) — will it work?**
+A: Yes — the site automatically converts every upload to WebP in the background and stores it in the right format. You can drag straight from your phone or camera; no need for squoosh.app.
 
 **Q: I have only 4 photos for an archived event — is that OK?**
 A: Yes. The layout adjusts. But 6 looks best.
@@ -133,9 +135,9 @@ A: The event saves but doesn't appear on the public site. Use Draft while still 
 
 ## 7. If something is broken
 
-- Form won't save → check Date and both Title fields (UA + EN) are filled. The URL is filled in automatically from the title.
-- Public page shows "404" → check Status is not Draft, and that the slug in the URL matches the slug in the admin.
-- Photos don't show → re-upload as .webp.
+- Form won't save → check that Date, both Title fields (UA + EN), and **both** image uploads (Cover card + Hero) are filled. The URL is filled in automatically from the title.
+- Public page shows "404" → check Status is not Draft, and that the URL in the browser matches the URL shown in the admin.
+- The big banner at the top is showing the small image (or vice versa) → make sure you've uploaded both **Cover card** and **Hero** in the form — they're separate slots now, the page won't reuse one for the other.
 - Description is blank on the public page → make sure both UA and EN textareas have text. Plain text only, paragraphs separated by a blank line.
 
 For anything else, message the developer.

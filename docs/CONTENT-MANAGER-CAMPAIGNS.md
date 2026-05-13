@@ -6,29 +6,19 @@ This guide is for the content manager who is creating fundraising campaigns in t
 
 ## 1. Before you start — image preparation
 
-All images must be **`.webp`** format. Use any free converter — [squoosh.app](https://squoosh.app) works in the browser and lets you see file size + quality side-by-side as you drag the quality slider.
+You can upload photos in any common format (**JPG, PNG, HEIC, WebP** — even straight from your phone). The site automatically resizes them, fixes orientation, and converts every upload to WebP in the background — there's no need to use squoosh.app or any other converter anymore.
 
 | Image type | Where it shows | Recommended size | Aspect ratio |
 |---|---|---|---|
 | **Cover image** | Big photo on the campaign page (next to the title + progress bar) and on the campaigns list card | 1200 × 1200 px | 1:1 (square) |
 
-**Make the file as small as possible while the photo still looks good.** Target file size:
-
-- **Cover image: 100–250 KB.** Anything under 300 KB is fine. If you're saving a 1 MB `.webp`, drop the quality slider in squoosh until the preview still looks sharp and the size drops into the target range. WebP usually looks great at quality 70–80.
-- **Hard limit: 4 MB.** The upload will reject anything larger, but you should never get close to that.
-
-How to do it in squoosh.app:
-1. Drag your photo in.
-2. On the right panel, set the format to **WebP**.
-3. Resize down to **1200 × 1200** if your photo is bigger (resize is in the same panel).
-4. Drag **Quality** down from the default until you see the file size drop below ~250 KB and the preview still looks clean. 75 is a good starting point.
-5. Click the download button (bottom right).
+- **Hard upload limit: 4 MB.** Bigger files are rejected. Anything from a modern phone camera is well under that.
+- The site re-encodes every upload at high quality (~85) so there's no extra savings to chase manually.
 
 Tips:
 - Keep faces visible and in focus — the cover is the first thing donors see.
 - Avoid hard-cropping people at the edges (the page may crop further on mobile).
 - Don't burn in logos or watermarks.
-- If your camera shot is much larger than 1200×1200, resize first — bigger source = bigger file, with no visible benefit on the site.
 
 ---
 
@@ -51,7 +41,7 @@ Tips:
 | **Status** | `Active` (live and accepting donations) **or** `Archived` (finished, kept as a record) | Use **Draft** while still working — the campaign won't show on the public site. |
 | **Sort Order** | Number controlling card order on the campaigns list. Lower = first. Leave `0` if you don't care. | Optional. |
 | **URL (UA) / URL (EN)** | **Generated automatically from the title — there's nothing to type here.** Ukrainian letters are transliterated to Latin (e.g. `Допомога Україні` → `dopomoha-ukraini`). The URL preview below the label shows what the public URL will look like after you save. | The URL is **locked once the campaign is saved** so existing donor / share links keep working. If you ever need to change it later, message the developer. |
-| **Cover image** | Upload one `.webp` photo (see Section 1 for size + format) | Required for the page to look complete. |
+| **Cover image** | Upload one photo (see Section 1 for size + format) | Required. Any format — auto-converted to WebP on upload. |
 
 ### Section "Content" (UA + EN tabs)
 
@@ -107,11 +97,11 @@ If something looks wrong, click the campaign in the admin table → **Edit**, fi
 
 ## 5. Help & troubleshooting
 
-**Q: I uploaded a JPG by mistake — will it work?**
-A: Convert it to `.webp` first (squoosh.app). The site is optimized for `.webp` and JPGs are larger for the same quality.
+**Q: I uploaded a JPG (or PNG, or HEIC from my phone) — will it work?**
+A: Yes — the site auto-converts every upload to WebP in the background and stores it in the right format. No need to use squoosh.app.
 
-**Q: My `.webp` is 2 MB — is that OK?**
-A: It will upload, but it's way too big. Drop the quality in squoosh until the preview still looks good and the file is under ~250 KB. Donors on mobile data will thank you.
+**Q: My file is huge — should I shrink it first?**
+A: Only if it's over 4 MB (the upload limit). Otherwise drop it in as-is — the site resizes everything down to a reasonable size (≤ 2000 px on the long edge) and re-encodes it on the way to storage.
 
 **Q: Can I change the slug after publishing?**
 A: Don't. If someone has shared the URL or it's indexed by Google, changing the slug breaks those links. Fix typos before going Active.
@@ -130,8 +120,8 @@ A: When the fundraiser is over (goal reached or the campaign closed). Archived c
 ## 6. If something is broken
 
 - Form won't save → check **Goal Amount**, both **Title** fields (UA + EN), both **Description** fields (UA + EN), and **Cover image** are filled. The URL is generated automatically from the title.
-- Public page shows "404" → check Status is not Draft, and that the slug in the URL matches the slug in the admin.
-- Photo doesn't show → re-upload as `.webp`. If still missing, check the file is under 4 MB.
+- Public page shows "404" → check Status is not Draft, and that the URL in the browser matches the one shown in the admin.
+- Photo doesn't show → check the file was under 4 MB; otherwise re-upload.
 - Description shows as one big paragraph → put a **blank line** between paragraphs in the textarea, not just a line break.
 
 For anything else, message the developer.

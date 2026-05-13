@@ -38,7 +38,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
     descriptionUa: typeof event?.description_ua === 'string' ? event.description_ua : '',
     descriptionEn: typeof event?.description_en === 'string' ? event.description_en : '',
     coverImage: event?.cover_image ?? '',
-    secondaryImage: event?.secondary_image ?? '',
+    heroImage: event?.hero_image ?? event?.secondary_image ?? '',
     galleryImages: (event?.gallery_images ?? []) as string[],
     date: event?.event_date ? String(event.event_date).split('T')[0] : event?.date ? String(event.date).split('T')[0] : '',
     startTime: event?.start_time ?? '',
@@ -165,22 +165,22 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
           value={form.coverImage}
           onChange={url => set('coverImage', url ?? '')}
           folder="events"
-          label="Cover image — large hero (.webp, ~16:9)"
+          label="Cover card image (~4:3)"
         />
 
         <ImageUpload
-          value={form.secondaryImage}
-          onChange={url => set('secondaryImage', url ?? '')}
+          value={form.heroImage}
+          onChange={url => set('heroImage', url ?? '')}
           folder="events"
-          label="Secondary image — smaller, shown next to the description (.webp, ~4:3). Leave empty to reuse the cover image."
+          label="Large hero (~16:9)"
         />
 
         <MultiImageUpload
           value={form.galleryImages}
           onChange={urls => set('galleryImages', urls)}
           folder="events"
-          label="Gallery images (archived events) — up to 6 photos"
-          requirements=".webp, ~1:1 (square). First two appear next to the financial card; the rest fill the row below."
+          label="Gallery images (~1:1, archived events) — up to 6 photos"
+          requirements="First two appear next to the financial card; the rest fill the row below."
           minImages={0}
         />
 

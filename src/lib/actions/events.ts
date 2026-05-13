@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { eventSchema } from '@/lib/validations';
+import { deleteFilesAction } from '@/lib/actions/upload';
 
 function toSnake(input: Record<string, unknown>) {
   return {
@@ -14,7 +15,7 @@ function toSnake(input: Record<string, unknown>) {
     description_ua: input.descriptionUa ?? null,
     description_en: input.descriptionEn ?? null,
     cover_image: input.coverImage ?? null,
-    secondary_image: input.secondaryImage ?? null,
+    hero_image: input.heroImage ?? null,
     gallery_images: input.galleryImages ?? [],
     event_date: input.date instanceof Date ? input.date.toISOString().split('T')[0] : input.date,
     start_time: input.startTime ?? null,
@@ -59,7 +60,23 @@ export async function updateEvent(id: string, formData: unknown) {
 
 export async function deleteEvent(id: string) {
   await requireSuperAdmin();
+  const row = (await db.event.findUnique({ where: { id } })) as
+    | (Record<string, unknown> & {
+        cover_image?: string | null;
+        hero_image?: string | null;
+        secondary_image?: string | null;
+        gallery_images?: string[] | null;
+      })
+    | null;
   await db.event.delete({ where: { id } });
+  if (row) {
+    void deleteFilesAction([
+      row.cover_image,
+      row.hero_image,
+      row.secondary_image,
+      ...(row.gallery_images ?? []),
+    ]);
+  }
   revalidatePath('/admin/events');
   return { success: true };
 }

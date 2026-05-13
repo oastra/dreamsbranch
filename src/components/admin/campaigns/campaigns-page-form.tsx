@@ -74,8 +74,7 @@ export function CampaignsPageForm({ settings }: Props) {
           value={heroImages}
           onChange={setHeroImages}
           folder="campaigns-hero"
-          label="Hero images"
-          requirements="Recommended: min 1200 × 900 px, landscape, JPG / WebP / PNG, under 4 MB each."
+          label="Hero images (landscape, ~4:3, min 1200 × 900)"
           minImages={1}
         />
       </div>

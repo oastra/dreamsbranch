@@ -653,20 +653,32 @@ export default async function EventDetailPage({
             {title}
           </h1>
 
-          {/* Cover image */}
+          {/* Hero image — the big 1280×620 banner. `hero_image` is the
+              project's "big" image; legacy events that pre-date the rename
+              still keep the value in `secondary_image`, so we honour that
+              as a fallback. We deliberately do NOT fall back to
+              `cover_image` — that's the small floated image used below,
+              and showing it here would duplicate the same picture twice. */}
           <div className="relative mb-6 aspect-[1280/620] overflow-hidden rounded-2xl bg-secondary-10 lg:mb-8">
-            {event.cover_image ? (
-              <Image
-                src={event.cover_image}
-                alt={title}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 100vw, 1200px"
-              />
-            ) : (
-              <ImagePlaceholder size="md" />
-            )}
+            {(() => {
+              const legacy = event as Event & {
+                hero_image?: string | null;
+                secondary_image?: string | null;
+              };
+              const hero = legacy.hero_image || legacy.secondary_image;
+              return hero ? (
+                <Image
+                  src={hero}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                />
+              ) : (
+                <ImagePlaceholder size="md" />
+              );
+            })()}
           </div>
 
           {/* Date/time + Location bar */}
@@ -712,12 +724,16 @@ export default async function EventDetailPage({
           </h2>
 
           <div className="prose-custom text-body text-text-primary">
-            {/* Floated secondary image — falls back to the cover when not set.
-                Wraps with description on tablet+, stacks on mobile. */}
+            {/* Small floated image next to the description.
+                Wraps with description on tablet+, stacks on mobile.
+                Uses `cover_image` (the small card image). For events
+                that pre-date the rename, also accept the legacy
+                `secondary_image` column. */}
             {(() => {
-              const floatedImage =
-                (event as Event & { secondary_image?: string | null })
-                  .secondary_image || event.cover_image;
+              const legacy = event as Event & {
+                secondary_image?: string | null;
+              };
+              const floatedImage = event.cover_image || legacy.secondary_image;
               return floatedImage ? (
                 <div className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
                   <Image

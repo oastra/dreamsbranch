@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { shopPhotoReportSchema } from '@/lib/validations';
+import { deleteFilesAction } from '@/lib/actions/upload';
 
 function toSnake(input: Record<string, unknown>) {
   const images = (input.images as Array<Record<string, unknown>> | undefined) ?? [];
@@ -49,7 +50,15 @@ export async function updateShopPhotoReport(id: string, formData: unknown) {
 
 export async function deleteShopPhotoReport(id: string) {
   await requireSuperAdmin();
+  const row = (await db.shopPhotoReport.findUnique({ where: { id } })) as
+    | (Record<string, unknown> & {
+        images?: Array<{ url?: string }> | null;
+      })
+    | null;
   await db.shopPhotoReport.delete({ where: { id } });
+  if (row?.images?.length) {
+    void deleteFilesAction(row.images.map((img) => img.url ?? null));
+  }
   revalidatePath('/admin/shop-photo-reports');
   revalidatePath('/[locale]/shop', 'page');
   return { success: true };

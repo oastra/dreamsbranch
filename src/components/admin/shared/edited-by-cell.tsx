@@ -1,10 +1,20 @@
 type Props = {
-  /** Admin who last touched this row. May be null for legacy data. */
-  adminId?: string | null;
+  /** Admin who created the row. May be null for legacy data. */
+  createdBy?: string | null;
+  /** ISO timestamp of when the row was created. */
+  createdAt?: string | null;
+  /** Admin who last touched the row. May be null for legacy data. */
+  updatedBy?: string | null;
   /** ISO timestamp of the last update. */
   updatedAt?: string | null;
   /** Map of admin id → display name, built once per page. */
   admins: Record<string, string>;
+  /**
+   * Which slice of activity to render. `created` and `edited` are used
+   * when the parent table has its own column for each. `both` (default)
+   * stacks them in one cell.
+   */
+  kind?: 'both' | 'created' | 'edited';
 };
 
 function timeAgo(iso: string): string {
@@ -21,16 +31,89 @@ function timeAgo(iso: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export function EditedByCell({ adminId, updatedAt, admins }: Props) {
-  const name = adminId ? admins[adminId] : null;
-  if (!name && !updatedAt) {
-    return <span className="text-text-tertiary">—</span>;
-  }
+function resolveName(adminId: string | null | undefined, admins: Record<string, string>): string | null {
+  if (!adminId) return null;
+  return admins[adminId] ?? 'Unknown';
+}
+
+/**
+ * Two-line admin activity cell:
+ *   Created: <name> · <relative time>
+ *   Edited:  <name> · <relative time>
+ *
+ * The "Edited" line is omitted when the row hasn't been updated since
+ * creation (same admin + timestamps within a few seconds) so the cell
+ * stays compact for fresh content.
+ */
+function Line({ name, iso }: { name: string | null; iso: string | null | undefined }) {
+  if (!name && !iso) return <span className="text-text-tertiary">—</span>;
   return (
     <div className="text-body-sm leading-tight">
       <div className="font-medium text-text-strong">{name ?? 'Unknown'}</div>
-      {updatedAt && (
-        <div className="text-text-tertiary">{timeAgo(updatedAt)}</div>
+      {iso && <div className="text-text-tertiary">{timeAgo(iso)}</div>}
+    </div>
+  );
+}
+
+export function EditedByCell({
+  createdBy,
+  createdAt,
+  updatedBy,
+  updatedAt,
+  admins,
+  kind = 'both',
+}: Props) {
+  const createdName = resolveName(createdBy, admins);
+  const updatedName = resolveName(updatedBy, admins);
+
+  if (kind === 'created') {
+    return <Line name={createdName} iso={createdAt} />;
+  }
+
+  // Treat "edited" as redundant when it matches the create event closely
+  // (within 5s) — keeps a freshly-created row's "Edited" cell from
+  // duplicating its own creation info.
+  const editedDuplicatesCreate =
+    createdBy === updatedBy &&
+    createdAt &&
+    updatedAt &&
+    Math.abs(new Date(updatedAt).getTime() - new Date(createdAt).getTime()) <
+      5000;
+
+  if (kind === 'edited') {
+    if (editedDuplicatesCreate) {
+      return <span className="text-text-tertiary">—</span>;
+    }
+    return <Line name={updatedName} iso={updatedAt} />;
+  }
+
+  // 'both' — stacked cell (kept for the single-column layout).
+  if (!createdName && !createdAt && !updatedName && !updatedAt) {
+    return <span className="text-text-tertiary">—</span>;
+  }
+  return (
+    <div className="text-body-sm leading-tight space-y-1">
+      {(createdName || createdAt) && (
+        <div>
+          <span className="text-text-tertiary">Created: </span>
+          <span className="font-medium text-text-strong">
+            {createdName ?? 'Unknown'}
+          </span>
+          {createdAt && (
+            <span className="text-text-tertiary"> · {timeAgo(createdAt)}</span>
+          )}
+        </div>
+      )}
+      {!editedDuplicatesCreate && (updatedName || updatedAt) && (
+        <div>
+          <span className="text-text-tertiary">Edited: </span>
+          <span className="font-medium text-text-strong">
+            {updatedName ?? 'Unknown'}
+          </span>
+          {updatedAt && (
+            <span className="text-text-tertiary"> · {timeAgo(updatedAt)}</span>
+          )}
+        </div>
       )}
     </div>
   );
