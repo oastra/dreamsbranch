@@ -111,6 +111,18 @@ function getMissingColumn(err: DbErr): string | null {
   return m?.[1] ?? null;
 }
 
+// Throws a DbWriteError on a non-recoverable failure so the caller can
+// surface the message back to the UI. Recoverable "column does not exist"
+// errors are still handled silently (column stripped + retried).
+export class DbWriteError extends Error {
+  code?: string;
+  constructor(message: string, code?: string) {
+    super(message);
+    this.name = 'DbWriteError';
+    this.code = code;
+  }
+}
+
 async function writeWithSlugFallback<T>(
   attempt: (row: Record<string, unknown>) => PromiseLike<{ data: T | null; error: DbErr }>,
   row: Record<string, unknown>,
@@ -128,7 +140,10 @@ async function writeWithSlugFallback<T>(
     delete current[col];
     ({ data, error } = await attempt(current));
   }
-  if (error) console.error(`[${context}]`, error);
+  if (error) {
+    console.error(`[${context}]`, error);
+    throw new DbWriteError(error.message ?? 'Database write failed', error.code);
+  }
   return data;
 }
 

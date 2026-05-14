@@ -1,9 +1,23 @@
 'use server';
 import { revalidatePath } from 'next/cache';
-import { db } from '@/lib/db';
+import { db, DbWriteError } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { articleSchema } from '@/lib/validations';
 import { deleteFilesAction } from '@/lib/actions/upload';
+
+// Map raw Postgres errors to a message a content manager will understand.
+function dbErrorMessage(err: unknown): string {
+  if (err instanceof DbWriteError) {
+    if (err.code === '23505') {
+      return 'An article with this URL already exists. Change the title and try again.';
+    }
+    if (err.code === '23502') {
+      return `A required field is empty: ${err.message}`;
+    }
+    return err.message;
+  }
+  return 'Failed to save article';
+}
 
 // Normalise the admin's date input (an `<input type="date">` "YYYY-MM-DD"
 // string) into a UTC-noon ISO timestamp. Noon avoids any timezone-shift
@@ -47,10 +61,14 @@ export async function createArticle(formData: unknown) {
     created_by_admin_id: admin.id,
     updated_by_admin_id: admin.id,
   };
-  const result = await db.newsArticle.create({ data: row });
-  if (!result) return { success: false, error: 'Failed to create article' };
-  revalidatePath('/admin/news');
-  return { success: true, id: (result as Record<string, unknown>).id };
+  try {
+    const result = await db.newsArticle.create({ data: row });
+    if (!result) return { success: false, error: 'Failed to create article' };
+    revalidatePath('/admin/news');
+    return { success: true, id: (result as Record<string, unknown>).id };
+  } catch (err) {
+    return { success: false, error: dbErrorMessage(err) };
+  }
 }
 
 export async function updateArticle(id: string, formData: unknown) {
@@ -61,10 +79,14 @@ export async function updateArticle(id: string, formData: unknown) {
     ...toSnake(parsed.data as Record<string, unknown>),
     updated_by_admin_id: admin.id,
   };
-  const result = await db.newsArticle.update({ where: { id }, data: row });
-  if (!result) return { success: false, error: 'Failed to update article' };
-  revalidatePath('/admin/news');
-  return { success: true };
+  try {
+    const result = await db.newsArticle.update({ where: { id }, data: row });
+    if (!result) return { success: false, error: 'Failed to update article' };
+    revalidatePath('/admin/news');
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: dbErrorMessage(err) };
+  }
 }
 
 export async function deleteArticle(id: string) {
