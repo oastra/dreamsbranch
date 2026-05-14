@@ -53,7 +53,7 @@ export const articleSchema = z.object({
   bodyUa: z.any().optional(),
   bodyEn: z.any().optional(),
   coverImage: z.string().optional(),
-  bodyImage: z.string().optional(),
+  bodyImage: z.string().min(1, 'In-text image is required'),
   galleryImages: z.array(z.string()).optional(),
   category: z.string().optional(),
   tags: z.array(z.string()).optional(),

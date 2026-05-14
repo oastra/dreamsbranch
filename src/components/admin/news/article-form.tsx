@@ -163,7 +163,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           value={form.bodyImage}
           onChange={url => set('bodyImage', url ?? '')}
           folder="news"
-          label="In-text image (~4:3) — optional, floats left of the body text"
+          label="In-text image (~4:3) * — floats left of the body text"
         />
 
         <MultiImageUpload
