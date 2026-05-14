@@ -301,26 +301,6 @@ type TiptapNode = {
   marks?: { type: string }[];
 };
 
-// Split a body into a one-block "lede" (the first paragraph or heading) and
-// the remaining "rest". Used to render an editorial-style intro paragraph
-// above the hero image, matching the Figma article spec. Works for both
-// Tiptap JSON and the legacy plain-string body shape.
-function splitLead(doc: unknown): { lead: unknown; rest: unknown } {
-  if (!doc) return { lead: null, rest: null };
-  if (typeof doc === 'string') {
-    const paras = doc.trim().split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
-    if (paras.length === 0) return { lead: null, rest: null };
-    return { lead: paras[0], rest: paras.length > 1 ? paras.slice(1).join('\n\n') : null };
-  }
-  if (typeof doc !== 'object') return { lead: null, rest: null };
-  const blocks = (doc as { content?: TiptapNode[] }).content ?? [];
-  if (blocks.length === 0) return { lead: null, rest: null };
-  return {
-    lead: { type: 'doc', content: [blocks[0]] },
-    rest: blocks.length > 1 ? { type: 'doc', content: blocks.slice(1) } : null,
-  };
-}
-
 function renderRichText(doc: unknown): React.ReactNode[] {
   if (!doc) return [];
 
@@ -497,9 +477,21 @@ export default async function NewsArticlePage({
     locale,
   );
   const coverImage = article.cover_image;
-  const bodyImage = (article as unknown as { body_image?: string | null }).body_image ?? null;
-  const galleryImages = ((article as unknown as { gallery_images?: string[] })
-    .gallery_images ?? []).filter(Boolean);
+  const extra = article as unknown as {
+    body_image?: string | null;
+    gallery_images?: string[];
+    lead_text_ua?: string | null;
+    lead_text_en?: string | null;
+    post_hero_text_ua?: string | null;
+    post_hero_text_en?: string | null;
+    outro_text_ua?: string | null;
+    outro_text_en?: string | null;
+  };
+  const bodyImage = extra.body_image ?? null;
+  const galleryImages = (extra.gallery_images ?? []).filter(Boolean);
+  const leadText = (locale === 'ua' ? extra.lead_text_ua : extra.lead_text_en) ?? '';
+  const postHeroText = (locale === 'ua' ? extra.post_hero_text_ua : extra.post_hero_text_en) ?? '';
+  const outroText = (locale === 'ua' ? extra.outro_text_ua : extra.outro_text_en) ?? '';
 
   return (
     <>
@@ -523,58 +515,63 @@ export default async function NewsArticlePage({
             {title}
           </h1>
 
-          {/* Lede — first body paragraph sits above the hero, NYT/Medium-
-              style intro. Renderer adds margin to <p>; suppress the trailing
-              one so the gap to the hero comes from the hero's own mb. */}
-          {(() => {
-            const { lead, rest } = splitLead(body);
-            return (
-              <>
-                {lead && (
-                  <div className="mb-6 text-body leading-relaxed text-text-primary lg:mb-8 [&_p:last-child]:mb-0">
-                    {renderRichText(lead)}
-                  </div>
-                )}
+          {/* 1. Lead text — sits between title and hero. 24px paragraph. */}
+          {leadText && (
+            <p className="mb-8 whitespace-pre-line text-h3 leading-relaxed text-text-primary lg:mb-10 lg:text-[24px]">
+              {leadText}
+            </p>
+          )}
 
-                {/* Cover image (hero). Object-contain so portrait or
-                    illustrative covers aren't cropped — show the full image,
-                    letterbox if its aspect doesn't fill the frame. */}
-                {coverImage && (
-                  <div className="relative mb-8 h-[340px] w-full overflow-hidden rounded-2xl bg-secondary-10 sm:h-[480px] lg:mb-10 lg:h-[560px]">
-                    <Image
-                      src={coverImage}
-                      alt={title}
-                      fill
-                      className="object-contain"
-                      sizes="(max-width: 1024px) 100vw, 1200px"
-                      priority
-                    />
-                  </div>
-                )}
+          {/* 2. Cover hero — full width. Object-contain so portrait or
+                illustrative covers aren't cropped; letterbox if needed. */}
+          {coverImage && (
+            <div className="relative mb-8 h-[340px] w-full overflow-hidden rounded-2xl bg-secondary-10 sm:h-[480px] lg:mb-10 lg:h-[560px]">
+              <Image
+                src={coverImage}
+                alt={title}
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 100vw, 1200px"
+                priority
+              />
+            </div>
+          )}
 
-                {/* Rest of body, with the in-text image floated left at md+
-                    so paragraphs wrap around it. Stacks above the text on
-                    mobile so nothing gets squashed. */}
-                {(rest || bodyImage) && (
-                  <div className="text-body text-text-primary">
-                    {bodyImage && (
-                      <div className="relative mb-6 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-6 md:w-[45%] lg:w-[42%]">
-                        <Image
-                          src={bodyImage}
-                          alt=""
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 45vw"
-                        />
-                      </div>
-                    )}
-                    {rest ? renderRichText(rest) : null}
-                    <div className="clear-both" />
-                  </div>
-                )}
-              </>
-            );
-          })()}
+          {/* 3. Post-hero text — between hero and the flex section. 24px. */}
+          {postHeroText && (
+            <p className="mb-8 whitespace-pre-line text-h3 leading-relaxed text-text-primary lg:mb-10 lg:text-[24px]">
+              {postHeroText}
+            </p>
+          )}
+
+          {/* 4. Side-by-side: in-text image left, main 18px body right.
+                Stacks image-first on mobile. Falls back to a body-only
+                section when the article has no in-text image. */}
+          {(bodyImage || body) && (
+            <div className={bodyImage ? 'grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10' : ''}>
+              {bodyImage && (
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary-10 md:order-1">
+                  <Image
+                    src={bodyImage}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+              )}
+              <div className="text-body text-text-primary md:order-2">
+                {renderRichText(body)}
+              </div>
+            </div>
+          )}
+
+          {/* 5. Outro text — full width, sits below the flex section. 24px. */}
+          {outroText && (
+            <p className="mt-10 whitespace-pre-line text-h3 leading-relaxed text-text-primary lg:mt-12 lg:text-[24px]">
+              {outroText}
+            </p>
+          )}
 
           {/* Gallery (below body, separate from rich text). Masonry-style
               CSS columns so portrait + landscape photos can mix without

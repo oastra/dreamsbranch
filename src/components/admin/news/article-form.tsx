@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -48,6 +49,12 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
     slugEn: article?.slug_en ?? article?.slug ?? '',
     bodyUa: article?.body_ua ?? '',
     bodyEn: article?.body_en ?? '',
+    leadTextUa: article?.lead_text_ua ?? '',
+    leadTextEn: article?.lead_text_en ?? '',
+    postHeroTextUa: article?.post_hero_text_ua ?? '',
+    postHeroTextEn: article?.post_hero_text_en ?? '',
+    outroTextUa: article?.outro_text_ua ?? '',
+    outroTextEn: article?.outro_text_en ?? '',
     coverImage: article?.cover_image ?? '',
     bodyImage: article?.body_image ?? '',
     galleryImages: (article?.gallery_images ?? []) as string[],
@@ -185,9 +192,23 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
                 <Input value={form.titleUa} onChange={e => handleTitleUaChange(e.target.value)} required />
               </div>
               <div>
+                <Label>Lead text (UA)</Label>
+                <p className="mb-1 text-xs text-text-secondary">
+                  Sits between the title and the hero image. Larger 24px paragraph (~3 lines).
+                </p>
+                <Textarea rows={3} value={form.leadTextUa} onChange={e => set('leadTextUa', e.target.value)} />
+              </div>
+              <div>
+                <Label>Post-hero text (UA)</Label>
+                <p className="mb-1 text-xs text-text-secondary">
+                  Sits between the hero image and the side-by-side image+body section. 24px (~3 lines).
+                </p>
+                <Textarea rows={3} value={form.postHeroTextUa} onChange={e => set('postHeroTextUa', e.target.value)} />
+              </div>
+              <div>
                 <Label>Body (UA)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Use the toolbar for headings and bold/italic. Aim for around {BODY_IDEAL_CHARS} characters (a bit more or less is fine).
+                  Main 18px article copy. Renders to the right of the in-text image. Toolbar handles headings + bold/italic. Aim for ~{BODY_IDEAL_CHARS} characters.
                 </p>
                 <RichTextEditor
                   value={form.bodyUa}
@@ -198,6 +219,13 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
                   {bodyCharCount(form.bodyUa)} characters (ideal: ~{BODY_IDEAL_CHARS})
                 </p>
               </div>
+              <div>
+                <Label>Outro text (UA)</Label>
+                <p className="mb-1 text-xs text-text-secondary">
+                  Sits below the side-by-side section, full width. 24px (~3 lines).
+                </p>
+                <Textarea rows={3} value={form.outroTextUa} onChange={e => set('outroTextUa', e.target.value)} />
+              </div>
             </>
           }
           en={
@@ -207,9 +235,23 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
                 <Input value={form.titleEn} onChange={e => handleTitleEnChange(e.target.value)} required />
               </div>
               <div>
+                <Label>Lead text (EN)</Label>
+                <p className="mb-1 text-xs text-text-secondary">
+                  Sits between the title and the hero image. Larger 24px paragraph (~3 lines).
+                </p>
+                <Textarea rows={3} value={form.leadTextEn} onChange={e => set('leadTextEn', e.target.value)} />
+              </div>
+              <div>
+                <Label>Post-hero text (EN)</Label>
+                <p className="mb-1 text-xs text-text-secondary">
+                  Sits between the hero image and the side-by-side image+body section. 24px (~3 lines).
+                </p>
+                <Textarea rows={3} value={form.postHeroTextEn} onChange={e => set('postHeroTextEn', e.target.value)} />
+              </div>
+              <div>
                 <Label>Body (EN)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Use the toolbar for headings and bold/italic. Aim for around {BODY_IDEAL_CHARS} characters (a bit more or less is fine).
+                  Main 18px article copy. Renders to the right of the in-text image. Toolbar handles headings + bold/italic. Aim for ~{BODY_IDEAL_CHARS} characters.
                 </p>
                 <RichTextEditor
                   value={form.bodyEn}
@@ -219,6 +261,13 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
                 <p className="mt-1 text-xs text-text-tertiary">
                   {bodyCharCount(form.bodyEn)} characters (ideal: ~{BODY_IDEAL_CHARS})
                 </p>
+              </div>
+              <div>
+                <Label>Outro text (EN)</Label>
+                <p className="mb-1 text-xs text-text-secondary">
+                  Sits below the side-by-side section, full width. 24px (~3 lines).
+                </p>
+                <Textarea rows={3} value={form.outroTextEn} onChange={e => set('outroTextEn', e.target.value)} />
               </div>
             </>
           }
