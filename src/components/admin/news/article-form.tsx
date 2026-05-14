@@ -16,6 +16,25 @@ import { slugify } from '@/lib/slug';
 
 const CATEGORIES = ['Fundraising', 'Events', 'Announcements', 'Reports', 'News', 'Other'];
 
+// Count plain-text characters in a body value that may be either a Tiptap JSON
+// doc (new rich-text editor) or a legacy plain string. Headings + bold marks +
+// image nodes contribute zero to the count.
+function bodyCharCount(value: unknown): number {
+  if (!value) return 0;
+  if (typeof value === 'string') return value.trim().length;
+  if (typeof value !== 'object') return 0;
+  type Node = { text?: string; content?: Node[] };
+  let count = 0;
+  const walk = (node: Node) => {
+    if (typeof node.text === 'string') count += node.text.length;
+    node.content?.forEach(walk);
+  };
+  (value as Node).content?.forEach(walk);
+  return count;
+}
+
+const BODY_IDEAL_CHARS = 1800;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ArticleForm({ article }: { article?: Record<string, any> }) {
   const router = useRouter();
@@ -141,11 +160,17 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
               </div>
               <div>
                 <Label>Body (UA)</Label>
+                <p className="mb-1 text-xs text-text-secondary">
+                  Use the toolbar for headings and bold/italic. Aim for around {BODY_IDEAL_CHARS} characters (a bit more or less is fine).
+                </p>
                 <RichTextEditor
                   value={form.bodyUa}
                   onChange={(val) => set('bodyUa', val)}
                   uploadFolder="news"
                 />
+                <p className="mt-1 text-xs text-text-tertiary">
+                  {bodyCharCount(form.bodyUa)} characters (ideal: ~{BODY_IDEAL_CHARS})
+                </p>
               </div>
             </>
           }
@@ -157,11 +182,17 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
               </div>
               <div>
                 <Label>Body (EN)</Label>
+                <p className="mb-1 text-xs text-text-secondary">
+                  Use the toolbar for headings and bold/italic. Aim for around {BODY_IDEAL_CHARS} characters (a bit more or less is fine).
+                </p>
                 <RichTextEditor
                   value={form.bodyEn}
                   onChange={(val) => set('bodyEn', val)}
                   uploadFolder="news"
                 />
+                <p className="mt-1 text-xs text-text-tertiary">
+                  {bodyCharCount(form.bodyEn)} characters (ideal: ~{BODY_IDEAL_CHARS})
+                </p>
               </div>
             </>
           }
