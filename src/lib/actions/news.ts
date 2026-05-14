@@ -5,6 +5,20 @@ import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { articleSchema } from '@/lib/validations';
 import { deleteFilesAction } from '@/lib/actions/upload';
 
+// Normalise the admin's date input (an `<input type="date">` "YYYY-MM-DD"
+// string) into a UTC-noon ISO timestamp. Noon avoids any timezone-shift
+// surprises that could nudge the displayed date by one day in either
+// direction depending on the visitor's locale.
+function toPublishedAt(value: unknown): string | null {
+  if (!value || typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  // Already a full ISO timestamp — use as-is.
+  if (trimmed.includes('T')) return trimmed;
+  // Plain "YYYY-MM-DD" — anchor at noon UTC.
+  return `${trimmed}T12:00:00.000Z`;
+}
+
 function toSnake(input: Record<string, unknown>) {
   return {
     title_ua: input.titleUa,
@@ -20,6 +34,7 @@ function toSnake(input: Record<string, unknown>) {
     tags: input.tags ?? [],
     is_featured: input.isFeatured ?? false,
     status: (input.status as string).toLowerCase(),
+    published_at: toPublishedAt(input.publishedAt),
   };
 }
 
@@ -27,12 +42,10 @@ export async function createArticle(formData: unknown) {
   const admin = await requireAdmin();
   const parsed = articleSchema.safeParse(formData);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
-  const snake = toSnake(parsed.data as Record<string, unknown>);
   const row = {
-    ...snake,
+    ...toSnake(parsed.data as Record<string, unknown>),
     created_by_admin_id: admin.id,
     updated_by_admin_id: admin.id,
-    ...(snake.status === 'published' ? { published_at: new Date().toISOString() } : {}),
   };
   const result = await db.newsArticle.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create article' };
@@ -44,22 +57,9 @@ export async function updateArticle(id: string, formData: unknown) {
   const admin = await requireAdmin();
   const parsed = articleSchema.safeParse(formData);
   if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
-  const snake = toSnake(parsed.data as Record<string, unknown>);
-  // First-time publish stamps published_at; re-saving an already-published
-  // article keeps the original date.
-  let publishedAtPatch: { published_at?: string } = {};
-  if (snake.status === 'published') {
-    const existing = (await db.newsArticle.findUnique({ where: { id } })) as
-      | (Record<string, unknown> & { published_at?: string | null })
-      | null;
-    if (!existing?.published_at) {
-      publishedAtPatch = { published_at: new Date().toISOString() };
-    }
-  }
   const row = {
-    ...snake,
+    ...toSnake(parsed.data as Record<string, unknown>),
     updated_by_admin_id: admin.id,
-    ...publishedAtPatch,
   };
   const result = await db.newsArticle.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update article' };

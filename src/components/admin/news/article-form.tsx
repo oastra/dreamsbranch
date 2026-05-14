@@ -53,6 +53,11 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
     category: article?.category ?? '',
     isFeatured: article?.is_featured ?? false,
     status: article?.status ?? 'DRAFT',
+    // Publish date is admin-controlled (backdating supported). New articles
+    // default to today; the editor can change it any time.
+    publishedAt: article?.published_at
+      ? String(article.published_at).slice(0, 10)
+      : new Date().toISOString().slice(0, 10),
   });
 
   const [dirty, setDirty] = useState(false);
@@ -107,7 +112,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <Label>Category</Label>
             <Select value={form.category} onValueChange={v => set('category', v)}>
@@ -126,6 +131,18 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
                 <SelectItem value="PUBLISHED">Published</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div>
+            <Label htmlFor="published-at">Publish date</Label>
+            <Input
+              id="published-at"
+              type="date"
+              value={form.publishedAt}
+              onChange={e => set('publishedAt', e.target.value)}
+            />
+            <p className="mt-1 text-xs text-text-tertiary">
+              Shown on the article and in the news listing. Backdate freely for older posts.
+            </p>
           </div>
         </div>
 

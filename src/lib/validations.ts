@@ -58,6 +58,7 @@ export const articleSchema = z.object({
   tags: z.array(z.string()).optional(),
   isFeatured: z.boolean().default(false),
   status: z.enum(['DRAFT', 'PUBLISHED']).default('DRAFT'),
+  publishedAt: z.string().optional(),
 });
 export type ArticleInput = z.infer<typeof articleSchema>;
 
