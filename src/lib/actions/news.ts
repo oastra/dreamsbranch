@@ -43,6 +43,7 @@ function toSnake(input: Record<string, unknown>) {
     body_ua: input.bodyUa ?? null,
     body_en: input.bodyEn ?? null,
     cover_image: input.coverImage ?? null,
+    body_image: input.bodyImage ?? null,
     gallery_images: (input.galleryImages as string[] | undefined) ?? [],
     category: input.category ?? null,
     tags: input.tags ?? [],
@@ -94,12 +95,17 @@ export async function deleteArticle(id: string) {
   const row = (await db.newsArticle.findUnique({ where: { id } })) as
     | (Record<string, unknown> & {
         cover_image?: string | null;
+        body_image?: string | null;
         gallery_images?: string[] | null;
       })
     | null;
   await db.newsArticle.delete({ where: { id } });
   if (row) {
-    void deleteFilesAction([row.cover_image, ...(row.gallery_images ?? [])]);
+    void deleteFilesAction([
+      row.cover_image,
+      row.body_image,
+      ...(row.gallery_images ?? []),
+    ]);
   }
   revalidatePath('/admin/news');
   return { success: true };

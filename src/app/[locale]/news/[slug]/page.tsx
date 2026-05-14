@@ -477,6 +477,7 @@ export default async function NewsArticlePage({
     locale,
   );
   const coverImage = article.cover_image;
+  const bodyImage = (article as unknown as { body_image?: string | null }).body_image ?? null;
   const galleryImages = ((article as unknown as { gallery_images?: string[] })
     .gallery_images ?? []).filter(Boolean);
 
@@ -502,9 +503,11 @@ export default async function NewsArticlePage({
             {title}
           </h1>
 
-          {/* Cover image (article hero) */}
+          {/* Cover image (article hero). Fixed heights per breakpoint
+              (mobile 340 / tablet 480 / desktop 560) so the hero never
+              looks too tall on portrait sources or too short on wide ones. */}
           {coverImage && (
-            <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-secondary-10 lg:mb-10">
+            <div className="relative mb-6 h-[340px] w-full overflow-hidden rounded-2xl bg-secondary-10 sm:h-[480px] lg:mb-6 lg:h-[560px]">
               <Image
                 src={coverImage}
                 alt={title}
@@ -516,9 +519,21 @@ export default async function NewsArticlePage({
             </div>
           )}
 
-          {/* Body (rich text — first image renders as full-width hero,
-              subsequent images float left so paragraphs wrap around them) */}
+          {/* Body. If the editor set an in-text image, it floats left of
+              the first paragraphs at md+; on mobile it stacks above the
+              text so nothing gets squashed. 24px gap matches the cover. */}
           <div className="text-body text-text-primary">
+            {bodyImage && (
+              <div className="relative mb-6 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-6 md:w-[45%] lg:w-[42%]">
+                <Image
+                  src={bodyImage}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 45vw"
+                />
+              </div>
+            )}
             {renderRichText(body)}
             <div className="clear-both" />
           </div>
@@ -527,11 +542,11 @@ export default async function NewsArticlePage({
               CSS columns so portrait + landscape photos can mix without
               cropping — each image renders at its natural aspect ratio. */}
           {galleryImages.length > 0 && (
-            <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-3">
+            <div className="mt-10 columns-1 gap-6 sm:columns-2 lg:columns-3">
               {galleryImages.map((src, i) => (
                 <div
                   key={`${src}-${i}`}
-                  className="mb-4 overflow-hidden rounded-xl bg-secondary-10 break-inside-avoid"
+                  className="mb-6 overflow-hidden rounded-xl bg-secondary-10 break-inside-avoid"
                 >
                   <Image
                     src={src}

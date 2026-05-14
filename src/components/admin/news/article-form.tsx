@@ -49,6 +49,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
     bodyUa: article?.body_ua ?? '',
     bodyEn: article?.body_en ?? '',
     coverImage: article?.cover_image ?? '',
+    bodyImage: article?.body_image ?? '',
     galleryImages: (article?.gallery_images ?? []) as string[],
     category: article?.category ?? '',
     isFeatured: article?.is_featured ?? false,
@@ -155,7 +156,14 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           value={form.coverImage}
           onChange={url => set('coverImage', url ?? '')}
           folder="news"
-          label="Cover image (~16:11 landscape) — shown in news listings + at the top of the article"
+          label="Cover image (~16:9 landscape) — hero at the top of the article + thumbnail in news listings"
+        />
+
+        <ImageUpload
+          value={form.bodyImage}
+          onChange={url => set('bodyImage', url ?? '')}
+          folder="news"
+          label="In-text image (~4:3) — optional, floats left of the body text"
         />
 
         <MultiImageUpload
