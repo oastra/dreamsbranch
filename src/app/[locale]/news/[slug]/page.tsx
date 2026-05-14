@@ -691,7 +691,7 @@ export default async function NewsArticlePage({
                   locale={locale}
                   title={a[titleKey]}
                   description={cardPreview(a)}
-                  coverImage={a.cover_image}
+                  coverImage={(a as unknown as { body_image?: string | null }).body_image ?? a.cover_image}
                   categoryLabel={getCategoryLabel(a.category, t)}
                   brandLabel="Dreams branch of UWAA"
                   publishedAt={a.published_at ?? (a as unknown as { created_at?: string }).created_at ?? null}

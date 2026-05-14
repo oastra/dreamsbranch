@@ -301,7 +301,7 @@ export default async function NewsPage({
               locale={locale}
               title={featured[titleKey]}
               description={cardPreview(featured)}
-              coverImage={featured.cover_image}
+              coverImage={(featured as unknown as { body_image?: string | null }).body_image ?? featured.cover_image}
               publishedAt={featured.published_at ?? (featured as unknown as { created_at?: string }).created_at ?? null}
               brandLabel="Dreams branch of UWAA"
               tagNewsLabel={t("news.tag_news")}
@@ -325,7 +325,7 @@ export default async function NewsPage({
                   slug: article.slug,
                   title: article[titleKey],
                   description: cardPreview(article),
-                  coverImage: article.cover_image,
+                  coverImage: (article as unknown as { body_image?: string | null }).body_image ?? article.cover_image,
                   categoryLabel: getCategoryLabel(article.category, t),
                   publishedAt: article.published_at ?? (article as unknown as { created_at?: string }).created_at ?? null,
                 }))}

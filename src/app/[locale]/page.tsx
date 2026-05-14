@@ -442,7 +442,7 @@ export default async function HomePage({
                       locale={locale}
                       title={article[newsTitleKey]}
                       description={newsCardPreview(article)}
-                      coverImage={article.cover_image}
+                      coverImage={(article as unknown as { body_image?: string | null }).body_image ?? article.cover_image}
                       categoryLabel={newsCategoryLabel}
                       brandLabel="Dreams branch of UWAA"
                       publishedAt={article.published_at}
@@ -459,7 +459,7 @@ export default async function HomePage({
                     locale={locale}
                     title={article[newsTitleKey]}
                     description={newsCardPreview(article)}
-                    coverImage={article.cover_image}
+                    coverImage={(article as unknown as { body_image?: string | null }).body_image ?? article.cover_image}
                     categoryLabel={newsCategoryLabel}
                     brandLabel="Dreams branch of UWAA"
                     publishedAt={article.published_at}

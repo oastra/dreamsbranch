@@ -61,7 +61,7 @@ export function NewsCard({
       className="group flex flex-col overflow-hidden rounded-2xl bg-white transition-shadow hover:shadow-card-hover"
     >
       {/* ── Image with yellow category pill ─────────────────────── */}
-      <div className="relative aspect-[16/11] bg-grey-40">
+      <div className="relative aspect-[4/3] bg-grey-40">
         {coverImage ? (
           <Image
             src={coverImage}
