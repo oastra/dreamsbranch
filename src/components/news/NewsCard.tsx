@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import ArrowRightUp from "@/components/icons/ArrowRightUp";
+import { ArrowUpRight } from "lucide-react";
 import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
 
 export interface NewsCardProps {
@@ -11,8 +11,8 @@ export interface NewsCardProps {
   coverImage: string | null;
   /** Yellow pill on the image (e.g. "Організатор"). */
   categoryLabel: string;
-  /** Blue pill in the content area (e.g. "Dreams branch of UWAA"). */
-  brandLabel: string;
+  /** Accepted for API compatibility but no longer rendered on the small card. */
+  brandLabel?: string;
   publishedAt: string | null;
 }
 
@@ -52,7 +52,6 @@ export function NewsCard({
   description,
   coverImage,
   categoryLabel,
-  brandLabel,
   publishedAt,
 }: NewsCardProps) {
   return (
@@ -81,28 +80,21 @@ export function NewsCard({
       {/* ── Content ─────────────────────────────────────────────── */}
       <div className="flex flex-1 flex-col gap-3 p-5 lg:p-6">
         {/* Date */}
-        <p className="text-body-sm font-semibold text-secondary">
+        <p className="text-h5 font-medium text-secondary-40">
           {formatDate(publishedAt, locale)}
         </p>
 
-        {/* Brand pill */}
-        <div>
-          <span className="inline-flex h-9 items-center justify-center rounded-full bg-secondary px-5 text-body-sm font-medium text-white">
-            {brandLabel}
-          </span>
-        </div>
-
         {/* Description preview */}
-        <p className="text-body-sm line-clamp-3 text-text-primary">
+        <p className="text-body line-clamp-3 text-text-primary/70">
           {description}
         </p>
 
         {/* Title row with arrow */}
         <div className="mt-auto flex items-start justify-between gap-3 pt-1">
-          <h3 className="text-h3 font-semibold text-text-strong line-clamp-2">
+          <h3 className="text-card-title  font-semibold text-text-strong line-clamp-2">
             {title}
           </h3>
-          <ArrowRightUp
+          <ArrowUpRight
             size={24}
             className="shrink-0 text-text-strong transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
           />
