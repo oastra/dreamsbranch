@@ -156,7 +156,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           value={form.coverImage}
           onChange={url => set('coverImage', url ?? '')}
           folder="news"
-          label="Cover image (~16:9 landscape) — thumbnail shown on the news listing page"
+          label="Cover image (~16:9 landscape) — hero at the top of the article + thumbnail in news listings"
         />
 
         <ImageUpload

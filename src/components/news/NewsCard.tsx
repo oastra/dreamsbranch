@@ -1,7 +1,7 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import ArrowRightUpIcon from '@/components/icons/ArrowRightUp';
-import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
+import Image from "next/image";
+import Link from "next/link";
+import ArrowRightUp from "@/components/icons/ArrowRightUp";
+import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
 
 export interface NewsCardProps {
   slug: string;
@@ -17,31 +17,31 @@ export interface NewsCardProps {
 }
 
 const MONTHS_UA = [
-  'січня',
-  'лютого',
-  'березня',
-  'квітня',
-  'травня',
-  'червня',
-  'липня',
-  'серпня',
-  'вересня',
-  'жовтня',
-  'листопада',
-  'грудня',
+  "січня",
+  "лютого",
+  "березня",
+  "квітня",
+  "травня",
+  "червня",
+  "липня",
+  "серпня",
+  "вересня",
+  "жовтня",
+  "листопада",
+  "грудня",
 ];
 
 function formatDate(iso: string | null, locale: string): string {
-  if (!iso) return '';
+  if (!iso) return "";
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  if (locale === 'ua') {
+  if (Number.isNaN(d.getTime())) return "";
+  if (locale === "ua") {
     return `${d.getDate()} ${MONTHS_UA[d.getMonth()]} ${d.getFullYear()}`;
   }
-  return new Intl.DateTimeFormat('en-US', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   }).format(d);
 }
 
@@ -68,7 +68,7 @@ export function NewsCard({
             alt={title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover"
+            className="object-contain"
           />
         ) : (
           <ImagePlaceholder size="sm" />
@@ -102,7 +102,7 @@ export function NewsCard({
           <h3 className="text-h3 font-semibold text-text-strong line-clamp-2">
             {title}
           </h3>
-          <ArrowRightUpIcon
+          <ArrowRightUp
             size={24}
             className="shrink-0 text-text-strong transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
           />
