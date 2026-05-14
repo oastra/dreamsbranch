@@ -163,21 +163,21 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           value={form.coverImage}
           onChange={url => set('coverImage', url ?? '')}
           folder="news"
-          label="Cover image (~16:9 landscape) — hero at the top of the article + thumbnail in news listings"
+          label="Cover image — hero at the top of the article + thumbnail in news listings. Recommended: 1600 × 1100 px landscape (16:11)."
         />
 
         <ImageUpload
           value={form.bodyImage}
           onChange={url => set('bodyImage', url ?? '')}
           folder="news"
-          label="In-text image (~4:3) * — floats left of the body text"
+          label="In-text image * — sits next to the body text. Recommended: 1200 × 900 px landscape (4:3)."
         />
 
         <MultiImageUpload
           value={form.galleryImages}
           onChange={urls => set('galleryImages', urls)}
           folder="news"
-          label="Gallery images (optional) — landscape and portrait both work, shown below the article in a masonry layout"
+          label="Gallery images (optional) — masonry grid below the article. Any orientation works (landscape, portrait, square). Recommended: 800 – 1200 px on the long edge."
           minImages={0}
         />
       </div>
