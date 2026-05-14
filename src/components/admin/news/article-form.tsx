@@ -170,8 +170,8 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           value={form.galleryImages}
           onChange={urls => set('galleryImages', urls)}
           folder="news"
-          label="Gallery images — landscape and portrait both work, shown below the article in a masonry layout"
-          minImages={1}
+          label="Gallery images (optional) — landscape and portrait both work, shown below the article in a masonry layout"
+          minImages={0}
         />
       </div>
 

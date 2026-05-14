@@ -79,11 +79,17 @@ export function MultiImageUpload({
     <div className="space-y-2">
       <div className="flex items-baseline justify-between">
         <p className="text-body-sm font-medium">{label}</p>
-        <p
-          className={`text-caption ${countBelowMin ? 'text-red-600' : 'text-text-tertiary'}`}
-        >
-          {value.length} / min {minImages}
-        </p>
+        {minImages > 0 ? (
+          <p
+            className={`text-caption ${countBelowMin ? 'text-red-600' : 'text-text-tertiary'}`}
+          >
+            {value.length} / min {minImages}
+          </p>
+        ) : value.length > 0 ? (
+          <p className="text-caption text-text-tertiary">
+            {value.length} {value.length === 1 ? 'image' : 'images'}
+          </p>
+        ) : null}
       </div>
       <p className="text-caption text-text-tertiary">
         Any format (JPG, PNG, HEIC, WebP) — auto-converted to WebP. Max 4 MB each.
