@@ -424,8 +424,8 @@ function renderInline(nodes?: TiptapNode[]): React.ReactNode {
     if (node.type === 'text') {
       const isBold = node.marks?.some((m) => m.type === 'bold');
       const isItalic = node.marks?.some((m) => m.type === 'italic');
-      if (isBold && isItalic) return <strong key={i}><em>{node.text}</em></strong>;
-      if (isBold) return <strong key={i}>{node.text}</strong>;
+      if (isBold && isItalic) return <strong key={i} className="text-text-strong"><em>{node.text}</em></strong>;
+      if (isBold) return <strong key={i} className="text-text-strong">{node.text}</strong>;
       if (isItalic) return <em key={i}>{node.text}</em>;
       return <span key={i}>{node.text}</span>;
     }
