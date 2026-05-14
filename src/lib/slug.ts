@@ -57,10 +57,16 @@ export async function resolveLocaleSlug(
   pathPrefix: string,
 ): Promise<{ row: Row | null; redirectTo: string | null }> {
   const localeKey = locale === 'ua' ? 'slugUa' : 'slugEn';
+  const otherKey = locale === 'ua' ? 'slugEn' : 'slugUa';
   const localeColumn: SlugColumn = locale === 'ua' ? 'slug_ua' : 'slug_en';
+
+  // 1. Direct hit on the current locale's slug column.
   const direct = await model.findUnique({ where: { [localeKey]: slug } });
   if (direct) return { row: direct, redirectTo: null };
 
+  // 2. Legacy single-`slug` column (pre per-locale-slugs migration). On match
+  //    we redirect to the canonical per-locale URL if we have one, otherwise
+  //    render the row as-is.
   const legacy = await model.findUnique({ where: { slug } });
   if (legacy) {
     const canonical = legacy[localeColumn] as string | undefined;
@@ -69,5 +75,18 @@ export async function resolveLocaleSlug(
     }
     return { row: legacy, redirectTo: null };
   }
+
+  // 3. Cross-locale hit — visitor pasted /ua/news/<english-slug> or vice-versa.
+  //    Redirect to the equivalent slug in the requested locale; if that column
+  //    is empty, just render the row at the existing URL.
+  const cross = await model.findUnique({ where: { [otherKey]: slug } });
+  if (cross) {
+    const canonical = cross[localeColumn] as string | undefined;
+    if (canonical && canonical !== slug) {
+      return { row: null, redirectTo: `${pathPrefix}/${canonical}` };
+    }
+    return { row: cross, redirectTo: null };
+  }
+
   return { row: null, redirectTo: null };
 }

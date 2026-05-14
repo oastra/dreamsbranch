@@ -1,155 +1,172 @@
-import { Suspense } from 'react';
-import { CalendarArrowUp } from 'lucide-react';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from "react";
+import { CalendarArrowUp } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { db } from '@/lib/db';
-import { NewsGrid, type NewsGridItem } from '@/components/news/NewsGrid';
-import { FeaturedNewsCard } from '@/components/news/FeaturedNewsCard';
-import { SupportSection } from '@/components/shared/SupportSection';
-import { ContactSection } from '@/components/contact/ContactSection';
-import SearchIcon from '@/components/icons/SearchIcon';
-import DecorArrowIcon from '@/components/icons/DecorArrowIcon';
-import type { NewsArticle } from '@/types/database';
+import { db } from "@/lib/db";
+import { NewsGrid, type NewsGridItem } from "@/components/news/NewsGrid";
+import { FeaturedNewsCard } from "@/components/news/FeaturedNewsCard";
+import { SupportSection } from "@/components/shared/SupportSection";
+import { ContactSection } from "@/components/contact/ContactSection";
+import SearchIcon from "@/components/icons/SearchIcon";
+import DecorArrowIcon from "@/components/icons/DecorArrowIcon";
+import type { NewsArticle } from "@/types/database";
 
 // ─── Mock data ───────────────────────────────────────────────────────────────
 
 type ArticlePreview = Pick<
   NewsArticle,
-  | 'id'
-  | 'slug'
-  | 'title_ua'
-  | 'title_en'
-  | 'body_ua'
-  | 'body_en'
-  | 'cover_image'
-  | 'category'
-  | 'tags'
-  | 'is_featured'
-  | 'status'
-  | 'published_at'
+  | "id"
+  | "slug"
+  | "title_ua"
+  | "title_en"
+  | "body_ua"
+  | "body_en"
+  | "cover_image"
+  | "category"
+  | "tags"
+  | "is_featured"
+  | "status"
+  | "published_at"
 >;
 
 const MOCK_ARTICLES: ArticlePreview[] = [
   {
-    id: 'mock-n1',
-    slug: 'stay-online',
-    title_ua: 'Залишайся Онлайн',
-    title_en: 'Stay Online',
+    id: "mock-n1",
+    slug: "stay-online",
+    title_ua: "Залишайся Онлайн",
+    title_en: "Stay Online",
     body_ua:
-      '27 квітня перегляд кінострічки «Ти — космос» — це досвід, який радше проживаєш, ніж просто дивишся.\n\nФільм огортає глядача тишею, паузами й напівтонами, де кожен кадр дихає самотністю, пошуком і ніжною надією.',
+      "27 квітня перегляд кінострічки «Ти — космос» — це досвід, який радше проживаєш, ніж просто дивишся.\n\nФільм огортає глядача тишею, паузами й напівтонами, де кожен кадр дихає самотністю, пошуком і ніжною надією.",
     body_en:
       'On 27 April, watching the film "You Are the Universe" is an experience you live through rather than simply observe.\n\nThe film wraps the viewer in silence, pauses and halftones, where every frame breathes solitude, longing and tender hope.',
     cover_image: null,
-    category: 'organiser',
+    category: "organiser",
     tags: [],
     is_featured: true,
-    status: 'published',
-    published_at: '2026-04-27T10:00:00Z',
+    status: "published",
+    published_at: "2026-04-27T10:00:00Z",
   },
   {
-    id: 'mock-n2',
-    slug: 'world-protests-ukraine',
-    title_ua: 'Світ протестує проти примусу України до капітуляції',
-    title_en: 'The world protests against forcing Ukraine to capitulate',
-    body_ua: 'У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом, проводили паралелі з Мюнхенським 1938 року. Світ протестує проти примусу України до капітуляції!',
-    body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
+    id: "mock-n2",
+    slug: "world-protests-ukraine",
+    title_ua: "Світ протестує проти примусу України до капітуляції",
+    title_en: "The world protests against forcing Ukraine to capitulate",
+    body_ua:
+      "У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом, проводили паралелі з Мюнхенським 1938 року. Світ протестує проти примусу України до капітуляції!",
+    body_en:
+      "In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.",
     cover_image: null,
-    category: 'organiser',
+    category: "organiser",
     tags: [],
     is_featured: false,
-    status: 'published',
-    published_at: '2026-03-10T10:00:00Z',
+    status: "published",
+    published_at: "2026-03-10T10:00:00Z",
   },
   {
-    id: 'mock-n3',
-    slug: 'world-protests-ukraine-2',
-    title_ua: 'Світ протестує проти примусу України до капітуляції',
-    title_en: 'The world protests against forcing Ukraine to capitulate',
-    body_ua: 'У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.',
-    body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
+    id: "mock-n3",
+    slug: "world-protests-ukraine-2",
+    title_ua: "Світ протестує проти примусу України до капітуляції",
+    title_en: "The world protests against forcing Ukraine to capitulate",
+    body_ua:
+      "У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.",
+    body_en:
+      "In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.",
     cover_image: null,
-    category: 'organiser',
+    category: "organiser",
     tags: [],
     is_featured: false,
-    status: 'published',
-    published_at: '2026-03-08T10:00:00Z',
+    status: "published",
+    published_at: "2026-03-08T10:00:00Z",
   },
   {
-    id: 'mock-n4',
-    slug: 'world-protests-ukraine-3',
-    title_ua: 'Світ протестує проти примусу України до капітуляції',
-    title_en: 'The world protests against forcing Ukraine to capitulate',
-    body_ua: 'У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.',
-    body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
+    id: "mock-n4",
+    slug: "world-protests-ukraine-3",
+    title_ua: "Світ протестує проти примусу України до капітуляції",
+    title_en: "The world protests against forcing Ukraine to capitulate",
+    body_ua:
+      "У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.",
+    body_en:
+      "In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.",
     cover_image: null,
-    category: 'organiser',
+    category: "organiser",
     tags: [],
     is_featured: false,
-    status: 'published',
-    published_at: '2026-03-05T10:00:00Z',
+    status: "published",
+    published_at: "2026-03-05T10:00:00Z",
   },
   {
-    id: 'mock-n5',
-    slug: 'world-protests-ukraine-3',
-    title_ua: 'Світ протестує проти примусу України до капітуляції',
-    title_en: 'The world protests against forcing Ukraine to capitulate',
-    body_ua: 'У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.',
-    body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
+    id: "mock-n5",
+    slug: "world-protests-ukraine-3",
+    title_ua: "Світ протестує проти примусу України до капітуляції",
+    title_en: "The world protests against forcing Ukraine to capitulate",
+    body_ua:
+      "У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.",
+    body_en:
+      "In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.",
     cover_image: null,
-    category: 'organiser',
+    category: "organiser",
     tags: [],
     is_featured: false,
-    status: 'published',
-    published_at: '2026-03-05T10:00:00Z',
+    status: "published",
+    published_at: "2026-03-05T10:00:00Z",
   },
   {
-    id: 'mock-n6',
-    slug: 'world-protests-ukraine-3',
-    title_ua: 'Світ протестує проти примусу України до капітуляції',
-    title_en: 'The world protests against forcing Ukraine to capitulate',
-    body_ua: 'У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.',
-    body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
+    id: "mock-n6",
+    slug: "world-protests-ukraine-3",
+    title_ua: "Світ протестує проти примусу України до капітуляції",
+    title_en: "The world protests against forcing Ukraine to capitulate",
+    body_ua:
+      "У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.",
+    body_en:
+      "In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.",
     cover_image: null,
-    category: 'organiser',
+    category: "organiser",
     tags: [],
     is_featured: false,
-    status: 'published',
-    published_at: '2026-03-05T10:00:00Z',
+    status: "published",
+    published_at: "2026-03-05T10:00:00Z",
   },
   {
-    id: 'mock-n7',
-    slug: 'world-protests-ukraine-3',
-    title_ua: 'Світ протестує проти примусу України до капітуляції',
-    title_en: 'The world protests against forcing Ukraine to capitulate',
-    body_ua: 'У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.',
-    body_en: 'In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.',
+    id: "mock-n7",
+    slug: "world-protests-ukraine-3",
+    title_ua: "Світ протестує проти примусу України до капітуляції",
+    title_en: "The world protests against forcing Ukraine to capitulate",
+    body_ua:
+      "У десятках міст по всьому світу активісти виступили проти примусу, що вимагає Україну поступитись територією та суверенітетом.",
+    body_en:
+      "In dozens of cities around the world, activists spoke out against coercion that demands Ukraine cede territory and sovereignty.",
     cover_image: null,
-    category: 'some one else',
+    category: "some one else",
     tags: [],
     is_featured: false,
-    status: 'published',
-    published_at: '2026-03-05T10:00:00Z',
+    status: "published",
+    published_at: "2026-03-05T10:00:00Z",
   },
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function extractPlainText(richText: unknown): string {
-  if (typeof richText === 'string') return richText;
-  if (!richText || typeof richText !== 'object') return '';
+  if (typeof richText === "string") return richText;
+  if (!richText || typeof richText !== "object") return "";
 
-  const doc = richText as { content?: Array<{ content?: Array<{ text?: string }> }> };
-  if (!doc.content) return '';
+  const doc = richText as {
+    content?: Array<{ content?: Array<{ text?: string }> }>;
+  };
+  if (!doc.content) return "";
 
   return doc.content
-    .flatMap((block) => block.content?.map((inline) => inline.text ?? '') ?? [])
-    .join(' ')
+    .flatMap((block) => block.content?.map((inline) => inline.text ?? "") ?? [])
+    .join(" ")
     .slice(0, 300);
 }
 
-function getCategoryLabel(category: string, t: (key: string) => string): string {
+function getCategoryLabel(
+  category: string,
+  t: (key: string) => string,
+): string {
   const map: Record<string, string> = {
-    organiser: t('news.category_organiser'),
+    organiser: t("news.category_organiser"),
   };
   return map[category] ?? category;
 }
@@ -169,7 +186,9 @@ export default async function NewsPage({
   let articles: ArticlePreview[] = [];
 
   try {
-    const fetched = await db.newsArticle.findMany({ where: { status: 'PUBLISHED' } });
+    const fetched = await db.newsArticle.findMany({
+      where: { status: "PUBLISHED" },
+    });
     articles = fetched as unknown as ArticlePreview[];
   } catch {
     // DB not reachable
@@ -177,8 +196,8 @@ export default async function NewsPage({
 
   if (articles.length === 0) articles = MOCK_ARTICLES;
 
-  const titleKey = locale === 'ua' ? 'title_ua' : 'title_en';
-  const bodyKey = locale === 'ua' ? 'body_ua' : 'body_en';
+  const titleKey = locale === "ua" ? "title_ua" : "title_en";
+  const bodyKey = locale === "ua" ? "body_ua" : "body_en";
 
   // Featured = first featured article, or first article
   const featured = articles.find((a) => a.is_featured) ?? articles[0];
@@ -194,7 +213,7 @@ export default async function NewsPage({
                 Left-aligned on mobile/tablet (squiggle hangs off the h1 line).
                 Centered with a constrained measure on desktop. */}
             <div className="max-w-[68%] sm:max-w-[64%] md:max-w-[60%] lg:mx-auto lg:max-w-[760px] lg:text-center">
-              <p className="text-body-sm mb-2 font-semibold text-text-strong">
+              <p className="text-subheading mb-2 font-medium text-text-strong">
                 Dreams branch of UWAA
               </p>
 
@@ -206,7 +225,7 @@ export default async function NewsPage({
                   hang past the centred column to the page's right edge. */}
               <div className="relative mb-4 inline-block md:mb-6 lg:mb-8 lg:block">
                 <h1 className="text-display text-secondary">
-                  {t('news.title')}
+                  {t("news.title")}
                 </h1>
 
                 {/* Mobile/tablet squiggle: bottom-right of h1 text */}
@@ -223,8 +242,8 @@ export default async function NewsPage({
                 />
               </div>
 
-              <p className="text-body text-text-primary lg:mx-auto lg:max-w-[60ch]">
-                {t('news.description')}
+              <p className="text-text-primary md:text-h3 lg:mx-auto lg:max-w-[60ch]">
+                {t("news.description")}
               </p>
             </div>
           </div>
@@ -238,7 +257,7 @@ export default async function NewsPage({
               />
               <input
                 type="text"
-                placeholder={t('news.search')}
+                placeholder={t("news.search")}
                 className="h-[52px] w-full rounded-full border border-border bg-white pr-5 pl-12 text-body text-text-strong outline-none transition-colors focus:border-secondary lg:h-[54px]"
               />
             </div>
@@ -246,7 +265,7 @@ export default async function NewsPage({
             {/* Tablet/mobile: circular icon-only button */}
             <button
               type="button"
-              aria-label={t('news.sort_date')}
+              aria-label={t("news.sort_date")}
               className="inline-flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-secondary text-white transition-opacity hover:opacity-90 lg:hidden"
             >
               <CalendarArrowUp size={22} strokeWidth={1.75} />
@@ -258,7 +277,7 @@ export default async function NewsPage({
               className="hidden h-[54px] shrink-0 items-center justify-center gap-2 rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90 lg:inline-flex"
             >
               <CalendarArrowUp size={20} strokeWidth={1.75} />
-              {t('news.sort_date')}
+              {t("news.sort_date")}
             </button>
           </div>
         </div>
@@ -274,10 +293,10 @@ export default async function NewsPage({
               title={featured[titleKey]}
               description={extractPlainText(featured[bodyKey])}
               coverImage={featured.cover_image}
-              publishedAt={featured.published_at}
+              publishedAt={featured.published_at ?? (featured as unknown as { created_at?: string }).created_at ?? null}
               brandLabel="Dreams branch of UWAA"
-              tagNewsLabel={t('news.tag_news')}
-              learnMoreLabel={t('news.learn_more')}
+              tagNewsLabel={t("news.tag_news")}
+              learnMoreLabel={t("news.learn_more")}
             />
           </div>
         </section>
@@ -291,7 +310,7 @@ export default async function NewsPage({
               <NewsGrid
                 locale={locale}
                 brandLabel="Dreams branch of UWAA"
-                showMoreLabel={t('news.show_more')}
+                showMoreLabel={t("news.show_more")}
                 items={rest.map<NewsGridItem>((article) => ({
                   id: article.id,
                   slug: article.slug,
@@ -299,7 +318,7 @@ export default async function NewsPage({
                   description: extractPlainText(article[bodyKey]),
                   coverImage: article.cover_image,
                   categoryLabel: getCategoryLabel(article.category, t),
-                  publishedAt: article.published_at,
+                  publishedAt: article.published_at ?? (article as unknown as { created_at?: string }).created_at ?? null,
                 }))}
               />
             </Suspense>
@@ -312,8 +331,8 @@ export default async function NewsPage({
 
       {/* ── Contact form (reusable) ──────────────────────────────── */}
       <ContactSection
-        title={t('news.contact_title')}
-        description={t('news.contact_description')}
+        title={t("news.contact_title")}
+        description={t("news.contact_description")}
       />
     </>
   );

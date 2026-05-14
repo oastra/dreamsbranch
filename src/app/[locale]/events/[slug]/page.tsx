@@ -571,16 +571,19 @@ export default async function EventDetailPage({
   let event: Event | null = null;
   let related: Event[] = [];
 
-  try {
-    const { row, redirectTo } = await resolveLocaleSlug(
-      db.event,
-      slug,
-      locale,
-      `/${locale}/events`,
-    );
-    if (redirectTo) redirect(redirectTo);
-    if (row) event = row as unknown as Event;
+  // resolveLocaleSlug must run OUTSIDE any try/catch — Next's redirect() and
+  // notFound() throw a special framework error that any catch would swallow,
+  // turning legitimate redirects into 404s.
+  const { row, redirectTo } = await resolveLocaleSlug(
+    db.event,
+    slug,
+    locale,
+    `/${locale}/events`,
+  );
+  if (redirectTo) redirect(redirectTo);
+  if (row) event = row as unknown as Event;
 
+  try {
     const fetchedRelated = await db.event.findMany({
       where: { status: "ACTIVE" },
       take: 12,
@@ -589,7 +592,7 @@ export default async function EventDetailPage({
       (e) => e.slug !== slug,
     );
   } catch {
-    // DB not reachable
+    // Related is best-effort.
   }
 
   // Fallback to mock

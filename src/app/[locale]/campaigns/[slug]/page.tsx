@@ -305,17 +305,20 @@ export default async function CampaignDetailPage({
   let donors: DonorPreview[] = [];
   let relatedCampaigns: Campaign[] = [];
 
-  try {
-    const { row, redirectTo } = await resolveLocaleSlug(
-      db.campaign,
-      slug,
-      locale,
-      `/${locale}/campaigns`,
-    );
-    if (redirectTo) redirect(redirectTo);
-    if (row) {
-      campaign = row as unknown as Campaign;
+  // resolveLocaleSlug must run OUTSIDE any try/catch — Next's redirect() and
+  // notFound() throw a special framework error that any catch would swallow,
+  // turning legitimate redirects into 404s.
+  const { row, redirectTo } = await resolveLocaleSlug(
+    db.campaign,
+    slug,
+    locale,
+    `/${locale}/campaigns`,
+  );
+  if (redirectTo) redirect(redirectTo);
+  if (row) campaign = row as unknown as Campaign;
 
+  if (campaign) {
+    try {
       // Fetch recent donors for this campaign — 10 so the inline list shows
       // 5 and the "Подивитись більше" side panel can surface the next 5.
       const fetchedDonors = await db.donation.findMany({
@@ -348,9 +351,9 @@ export default async function CampaignDetailPage({
       relatedCampaigns = (fetchedRelated as unknown as Campaign[]).filter(
         (c) => c.slug !== slug,
       );
+    } catch {
+      // Donors / related are best-effort.
     }
-  } catch {
-    // DB not reachable
   }
 
   // Fallback to mock — uses the shared listing catalog so every slug shown on

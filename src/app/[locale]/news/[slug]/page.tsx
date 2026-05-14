@@ -426,16 +426,19 @@ export default async function NewsArticlePage({
   let article: ArticleDetail | null = null;
   let related: ArticleDetail[] = [];
 
-  try {
-    const { row, redirectTo } = await resolveLocaleSlug(
-      db.newsArticle,
-      slug,
-      locale,
-      `/${locale}/news`,
-    );
-    if (redirectTo) redirect(redirectTo);
-    if (row) article = row as unknown as ArticleDetail;
+  // resolveLocaleSlug must run OUTSIDE the try/catch — Next's redirect() and
+  // notFound() throw a special framework error that any catch would swallow,
+  // turning legitimate redirects into 404s.
+  const { row, redirectTo } = await resolveLocaleSlug(
+    db.newsArticle,
+    slug,
+    locale,
+    `/${locale}/news`,
+  );
+  if (redirectTo) redirect(redirectTo);
+  if (row) article = row as unknown as ArticleDetail;
 
+  try {
     const fetchedRelated = await db.newsArticle.findMany({
       where: { status: 'PUBLISHED' },
       take: 3,
@@ -444,7 +447,7 @@ export default async function NewsArticlePage({
       (a) => a.slug !== slug,
     );
   } catch {
-    // DB not reachable
+    // Related is best-effort — fall back to mocks below if it fails.
   }
 
   // Fallback to mock
@@ -469,7 +472,10 @@ export default async function NewsArticlePage({
 
   const title = article[titleKey];
   const body = article[bodyKey];
-  const publishDate = formatDate(article.published_at, locale);
+  const publishDate = formatDate(
+    article.published_at ?? (article as unknown as { created_at?: string }).created_at ?? null,
+    locale,
+  );
   const coverImage = article.cover_image;
   const galleryImages = ((article as unknown as { gallery_images?: string[] })
     .gallery_images ?? []).filter(Boolean);
@@ -578,7 +584,7 @@ export default async function NewsArticlePage({
                   coverImage={a.cover_image}
                   categoryLabel={getCategoryLabel(a.category, t)}
                   brandLabel="Dreams branch of UWAA"
-                  publishedAt={a.published_at}
+                  publishedAt={a.published_at ?? (a as unknown as { created_at?: string }).created_at ?? null}
                 />
               ))}
             </div>
