@@ -523,20 +523,23 @@ export default async function NewsArticlePage({
             <div className="clear-both" />
           </div>
 
-          {/* Gallery (below body, separate from rich text) */}
+          {/* Gallery (below body, separate from rich text). Masonry-style
+              CSS columns so portrait + landscape photos can mix without
+              cropping — each image renders at its natural aspect ratio. */}
           {galleryImages.length > 0 && (
-            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-3">
               {galleryImages.map((src, i) => (
                 <div
                   key={`${src}-${i}`}
-                  className="relative aspect-[4/3] overflow-hidden rounded-xl bg-secondary-10"
+                  className="mb-4 overflow-hidden rounded-xl bg-secondary-10 break-inside-avoid"
                 >
                   <Image
                     src={src}
                     alt=""
-                    fill
-                    className="object-cover"
+                    width={0}
+                    height={0}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="block h-auto w-full"
                   />
                 </div>
               ))}
