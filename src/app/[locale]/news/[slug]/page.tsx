@@ -418,6 +418,9 @@ function renderListItem(node: TiptapNode): React.ReactNode {
 function renderInline(nodes?: TiptapNode[]): React.ReactNode {
   if (!nodes) return null;
   return nodes.map((node, i) => {
+    // Tiptap hard break (Shift+Enter inside a paragraph) — render as <br>
+    // so editors get a tight inline line break with no paragraph margin.
+    if (node.type === 'hardBreak') return <br key={i} />;
     if (node.type === 'text') {
       const isBold = node.marks?.some((m) => m.type === 'bold');
       const isItalic = node.marks?.some((m) => m.type === 'italic');
