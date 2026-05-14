@@ -218,7 +218,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
               <div>
                 <Label>Body (UA)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Main 18px article copy. Renders to the right of the in-text image. Toolbar handles headings + bold/italic. Aim for ~{BODY_IDEAL_CHARS} characters.
+                  Main 18px article copy. Renders to the right of the in-text image. Toolbar handles headings + bold/italic + lists. Press <strong>Enter</strong> for a new paragraph (with breathing room) or <strong>Shift+Enter</strong> for a tight line break on the next line — useful for stacking lines without bullets. Aim for ~{BODY_IDEAL_CHARS} characters.
                 </p>
                 <RichTextEditor
                   value={form.bodyUa}
@@ -270,7 +270,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
               <div>
                 <Label>Body (EN)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Main 18px article copy. Renders to the right of the in-text image. Toolbar handles headings + bold/italic. Aim for ~{BODY_IDEAL_CHARS} characters.
+                  Main 18px article copy. Renders to the right of the in-text image. Toolbar handles headings + bold/italic + lists. Press <strong>Enter</strong> for a new paragraph (with breathing room) or <strong>Shift+Enter</strong> for a tight line break on the next line — useful for stacking lines without bullets. Aim for ~{BODY_IDEAL_CHARS} characters.
                 </p>
                 <RichTextEditor
                   value={form.bodyEn}
