@@ -750,7 +750,7 @@ export default async function NewsArticlePage({
 
       {/* ── More news ────────────────────────────────────────────── */}
       {related.length > 0 && (
-        <section className="section bg-bg">
+        <section className="section bg-secondary-10">
           <div className="container-page">
             <div className="mb-8 flex items-center justify-between">
               <h2 className="text-h2 text-text-strong">
