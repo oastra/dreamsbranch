@@ -313,7 +313,7 @@ function renderRichText(doc: unknown): React.ReactNode[] {
     return trimmed.split(/\n{2,}/).map((para, i) => (
       <p
         key={i}
-        className="mb-5 whitespace-pre-line text-[18px] leading-relaxed text-text-primary"
+        className="mb-5 whitespace-pre-line text-[16px] leading-relaxed text-text-primary lg:text-[18px]"
       >
         {para.trim()}
       </p>
@@ -335,10 +335,10 @@ function renderRichText(doc: unknown): React.ReactNode[] {
         return <h3 key={i} className="mt-8 mb-4 text-h3 font-bold text-text-strong lg:text-[24px]">{text}</h3>;
       }
       case 'paragraph':
-        return <p key={i} className="mb-5 text-[18px] leading-relaxed text-text-primary">{renderInline(node.content)}</p>;
+        return <p key={i} className="mb-5 text-[16px] leading-relaxed text-text-primary lg:text-[18px]">{renderInline(node.content)}</p>;
       case 'bulletList':
         return (
-          <ul key={i} className="mb-5 list-disc space-y-2 pl-6 text-[18px] leading-relaxed text-text-primary marker:text-secondary">
+          <ul key={i} className="mb-5 list-disc space-y-2 pl-6 text-[16px] leading-relaxed text-text-primary lg:text-[18px] marker:text-secondary">
             {(node.content ?? []).map((item, j) => (
               <li key={j}>{renderListItem(item)}</li>
             ))}
@@ -346,7 +346,7 @@ function renderRichText(doc: unknown): React.ReactNode[] {
         );
       case 'orderedList':
         return (
-          <ol key={i} className="mb-5 list-decimal space-y-2 pl-6 text-[18px] leading-relaxed text-text-primary marker:text-secondary">
+          <ol key={i} className="mb-5 list-decimal space-y-2 pl-6 text-[16px] leading-relaxed text-text-primary lg:text-[18px] marker:text-secondary">
             {(node.content ?? []).map((item, j) => (
               <li key={j}>{renderListItem(item)}</li>
             ))}
@@ -564,7 +564,7 @@ export default async function NewsArticlePage({
 
           {/* 1. Lead text — sits between title and hero. 24px paragraph. */}
           {leadText && (
-            <p className="mb-8 whitespace-pre-line text-h3 leading-relaxed text-text-primary lg:mb-10 lg:text-[24px]">
+            <p className="mb-8 whitespace-pre-line text-[18px] leading-relaxed text-text-primary lg:mb-10 lg:text-[24px]">
               {leadText}
             </p>
           )}
@@ -586,7 +586,7 @@ export default async function NewsArticlePage({
 
           {/* 3. Post-hero text — between hero and the flex section. 24px. */}
           {postHeroText && (
-            <p className="mb-8 whitespace-pre-line text-h3 leading-relaxed text-text-primary lg:mb-10 lg:text-[24px]">
+            <p className="mb-8 whitespace-pre-line text-[18px] leading-relaxed text-text-primary lg:mb-10 lg:text-[24px]">
               {postHeroText}
             </p>
           )}
@@ -615,7 +615,7 @@ export default async function NewsArticlePage({
 
           {/* 5. Outro text — full width, sits below the flex section. 24px. */}
           {outroText && (
-            <p className="mt-10 whitespace-pre-line text-h3 leading-relaxed text-text-primary lg:mt-12 lg:text-[24px]">
+            <p className="mt-10 whitespace-pre-line text-[18px] leading-relaxed text-text-primary lg:mt-12 lg:text-[24px]">
               {outroText}
             </p>
           )}
