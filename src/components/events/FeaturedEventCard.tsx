@@ -1,7 +1,7 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { ImagePlaceholder } from '@/components/shared/ImagePlaceholder';
-import { Button } from '@/components/ui/button';
+import Image from "next/image";
+import Link from "next/link";
+import { ImagePlaceholder } from "@/components/shared/ImagePlaceholder";
+import { Button } from "@/components/ui/button";
 
 export interface FeaturedEventCardProps {
   slug: string;
@@ -24,18 +24,34 @@ export interface FeaturedEventCardProps {
   joinLabel: string;
 }
 
+const UA_MONTHS = [
+  "січня", "лютого", "березня", "квітня", "травня", "червня",
+  "липня", "серпня", "вересня", "жовтня", "листопада", "грудня",
+];
+
 function formatDate(dateStr: string, locale: string): string {
   const date = new Date(dateStr);
-  return date.toLocaleDateString(locale === 'ua' ? 'uk-UA' : 'en-AU', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
+  if (locale === "ua") {
+    return `${date.getDate()} ${UA_MONTHS[date.getMonth()]} ${date.getFullYear()} року`;
+  }
+  return date.toLocaleDateString("en-AU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 }
 
+// Strip seconds from a "HH:mm:ss" or "HH:mm" string so the rendered
+// time stays compact ("11:00" not "11:00:00"). Range uses an en-dash
+// to match the Figma.
+function trimSeconds(t: string): string {
+  return t.split(":").slice(0, 2).join(":");
+}
+
 function formatTime(start: string, end: string | null): string {
-  if (end) return `${start} - ${end.replace(':', '-')}`;
-  return start;
+  const s = trimSeconds(start);
+  if (!end) return s;
+  return `${s} – ${trimSeconds(end)}`;
 }
 
 export function FeaturedEventCard({
@@ -69,12 +85,12 @@ export function FeaturedEventCard({
           <span className="inline-flex items-center rounded-full bg-[#3DC472] px-4 py-1.5 text-body-sm font-medium text-white">
             {tagLabels.active}
           </span>
-          {tags.includes('looking_for_partners') && (
+          {tags.includes("looking_for_partners") && (
             <span className="inline-flex items-center rounded-full bg-secondary px-4 py-1.5 text-body-sm font-medium text-white">
               {tagLabels.looking_for_partners}
             </span>
           )}
-          {tags.includes('looking_for_volunteers') && (
+          {tags.includes("looking_for_volunteers") && (
             <span className="inline-flex items-center rounded-full bg-primary px-4 py-1.5 text-body-sm font-medium text-text-strong">
               {tagLabels.looking_for_volunteers}
             </span>
@@ -85,17 +101,21 @@ export function FeaturedEventCard({
   );
 
   const dateLocation = (
-    <div className="flex flex-col gap-6 sm:flex-row sm:gap-12">
-      <div>
-        <p className="text-body-sm text-text-secondary">{dateTimeLabel}</p>
-        <p className="mt-1 text-body font-medium text-text-strong">
+    <div className="flex flex-col gap-4 sm:flex-row">
+      <div className="flex flex-col gap-[10px]">
+        <p className="text-body text-text-primary">{dateTimeLabel}</p>
+        <p className="mt-1 text-secondary text-text-primary">
           {formatDate(eventDate, locale)}
         </p>
-        <p className="text-body text-text-strong">{formatTime(startTime, endTime)}</p>
+        <p className="text-secondary text-text-primary">
+          {formatTime(startTime, endTime)}
+        </p>
       </div>
       <div>
         <p className="text-body-sm text-text-secondary">{locationLabel}</p>
-        <p className="mt-1 text-body font-medium text-text-strong">{location}</p>
+        <p className="mt-1 text-body font-medium text-text-strong">
+          {location}
+        </p>
         {locationMapUrl && (
           <a
             href={locationMapUrl}
@@ -150,7 +170,7 @@ export function FeaturedEventCard({
         <div className="relative min-h-[500px]">{imageBlock}</div>
 
         <div className="flex flex-col gap-5 p-8 lg:p-10">
-          <h3 className="text-h2 font-medium text-text-strong">{title}</h3>
+          <h3 className="text-h2 text-text-strong">{title}</h3>
           {tagPills}
           <p className="text-body text-text-strong">{description}</p>
           {dateLocation}
@@ -162,7 +182,7 @@ export function FeaturedEventCard({
       <div className="flex flex-col gap-5 p-6 sm:p-8 lg:hidden">
         <h3 className="text-h3 font-medium text-text-strong">{title}</h3>
         {tagPills}
-        <p className="text-body text-text-strong">{description}</p>
+        <p className="text-secondary text-text-primary">{description}</p>
         <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl">
           {imageBlock}
         </div>

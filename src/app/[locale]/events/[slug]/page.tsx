@@ -540,18 +540,31 @@ function renderInline(nodes?: TiptapNode[]): React.ReactNode {
   });
 }
 
+const UA_MONTHS = [
+  "січня", "лютого", "березня", "квітня", "травня", "червня",
+  "липня", "серпня", "вересня", "жовтня", "листопада", "грудня",
+];
+
 function formatDate(dateStr: string, locale: string): string {
   const date = new Date(dateStr);
-  return date.toLocaleDateString(locale === "ua" ? "uk-UA" : "en-AU", {
+  if (locale === "ua") {
+    return `${date.getDate()} ${UA_MONTHS[date.getMonth()]} ${date.getFullYear()} року`;
+  }
+  return date.toLocaleDateString("en-AU", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 }
 
+function trimSeconds(t: string): string {
+  return t.split(":").slice(0, 2).join(":");
+}
+
 function formatTime(start: string, end: string | null): string {
-  if (end) return `${start} – ${end}`;
-  return start;
+  const s = trimSeconds(start);
+  if (!end) return s;
+  return `${s} – ${trimSeconds(end)}`;
 }
 
 import React from "react";
