@@ -86,11 +86,19 @@ export function EventsList({
     const m = selectedMonth.getMonth();
     const y = selectedMonth.getFullYear();
     return events.filter((ev) => {
-      const d = new Date(ev.eventDate);
-      if (d.getMonth() !== m || d.getFullYear() !== y) return false;
-      if (filter === 'active') return !ev.isArchived;
+      // Archived events ignore the month picker — they're shown regardless
+      // so visitors always see them under the featured card. Active events
+      // stay month-bounded so the upcoming view doesn't bleed into the past.
+      if (filter === 'active') {
+        if (ev.isArchived) return false;
+        const d = new Date(ev.eventDate);
+        return d.getMonth() === m && d.getFullYear() === y;
+      }
       if (filter === 'archive') return ev.isArchived;
-      return true;
+      // 'all' tab — keep active in the selected month, plus every archived.
+      if (ev.isArchived) return true;
+      const d = new Date(ev.eventDate);
+      return d.getMonth() === m && d.getFullYear() === y;
     });
   }, [events, filter, selectedMonth]);
 
