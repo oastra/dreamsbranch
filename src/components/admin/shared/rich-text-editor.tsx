@@ -10,6 +10,8 @@ import {
   Heading2,
   Heading3,
   Image as ImageIcon,
+  List,
+  ListOrdered,
   Loader2,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -72,7 +74,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm max-w-none min-h-[300px] focus:outline-none px-4 py-3 text-text-primary [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-3 [&_strong]:font-semibold [&_img]:rounded-lg [&_img]:my-3 [&_img]:max-w-full',
+          'prose prose-sm max-w-none min-h-[300px] focus:outline-none px-4 py-3 text-text-primary [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-3 [&_strong]:font-semibold [&_img]:rounded-lg [&_img]:my-3 [&_img]:max-w-full [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-3 [&_li]:mb-1 [&_li_p]:mb-0',
       },
     },
     onUpdate: ({ editor }) => {
@@ -149,6 +151,21 @@ export function RichTextEditor({
           label="Italic"
         >
           <Italic className="h-4 w-4" />
+        </ToolbarButton>
+        <Divider />
+        <ToolbarButton
+          active={editor.isActive('bulletList')}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          label="Bullet list"
+        >
+          <List className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
+          active={editor.isActive('orderedList')}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          label="Numbered list"
+        >
+          <ListOrdered className="h-4 w-4" />
         </ToolbarButton>
         {withImages && (
           <>

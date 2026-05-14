@@ -336,6 +336,22 @@ function renderRichText(doc: unknown): React.ReactNode[] {
       }
       case 'paragraph':
         return <p key={i} className="mb-5 text-body leading-relaxed text-text-primary">{renderInline(node.content)}</p>;
+      case 'bulletList':
+        return (
+          <ul key={i} className="mb-5 list-disc space-y-2 pl-6 text-body leading-relaxed text-text-primary marker:text-secondary">
+            {(node.content ?? []).map((item, j) => (
+              <li key={j}>{renderListItem(item)}</li>
+            ))}
+          </ul>
+        );
+      case 'orderedList':
+        return (
+          <ol key={i} className="mb-5 list-decimal space-y-2 pl-6 text-body leading-relaxed text-text-primary marker:text-secondary">
+            {(node.content ?? []).map((item, j) => (
+              <li key={j}>{renderListItem(item)}</li>
+            ))}
+          </ol>
+        );
       case 'image': {
         imageCount += 1;
         // First image renders full-width hero. Subsequent images float
@@ -365,6 +381,37 @@ function renderRichText(doc: unknown): React.ReactNode[] {
       default:
         return null;
     }
+  });
+}
+
+// A Tiptap listItem usually wraps its content in a paragraph node. Walk
+// through and pull out the inline text so the <li> doesn't end up with an
+// extra <p> margin that breaks the list rhythm.
+function renderListItem(node: TiptapNode): React.ReactNode {
+  if (!node.content) return null;
+  return node.content.map((child, i) => {
+    if (child.type === 'paragraph') {
+      return <span key={i}>{renderInline(child.content)}</span>;
+    }
+    if (child.type === 'bulletList') {
+      return (
+        <ul key={i} className="mt-1 list-disc space-y-1 pl-6">
+          {(child.content ?? []).map((nested, j) => (
+            <li key={j}>{renderListItem(nested)}</li>
+          ))}
+        </ul>
+      );
+    }
+    if (child.type === 'orderedList') {
+      return (
+        <ol key={i} className="mt-1 list-decimal space-y-1 pl-6">
+          {(child.content ?? []).map((nested, j) => (
+            <li key={j}>{renderListItem(nested)}</li>
+          ))}
+        </ol>
+      );
+    }
+    return null;
   });
 }
 
