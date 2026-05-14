@@ -35,6 +35,10 @@ function bodyCharCount(value: unknown): number {
 }
 
 const BODY_IDEAL_CHARS = 1800;
+// Plain-text section sizes — three lines of body copy at the public 24px
+// rendering ≈ 250 characters each. Editors get a live counter below the
+// textarea so they can land in the visual sweet spot.
+const SECTION_IDEAL_CHARS = 250;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ArticleForm({ article }: { article?: Record<string, any> }) {
@@ -194,16 +198,22 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
               <div>
                 <Label>Lead text (UA)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Sits between the title and the hero image. Larger 24px paragraph (~3 lines).
+                  Sits between the title and the hero image. Larger 24px paragraph. Aim for around {SECTION_IDEAL_CHARS} characters.
                 </p>
                 <Textarea rows={3} value={form.leadTextUa} onChange={e => set('leadTextUa', e.target.value)} />
+                <p className="mt-1 text-xs text-text-tertiary">
+                  {form.leadTextUa.length} characters (ideal: ~{SECTION_IDEAL_CHARS})
+                </p>
               </div>
               <div>
                 <Label>Post-hero text (UA)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Sits between the hero image and the side-by-side image+body section. 24px (~3 lines).
+                  Sits between the hero image and the side-by-side image+body section. 24px paragraph. Aim for around {SECTION_IDEAL_CHARS} characters.
                 </p>
                 <Textarea rows={3} value={form.postHeroTextUa} onChange={e => set('postHeroTextUa', e.target.value)} />
+                <p className="mt-1 text-xs text-text-tertiary">
+                  {form.postHeroTextUa.length} characters (ideal: ~{SECTION_IDEAL_CHARS})
+                </p>
               </div>
               <div>
                 <Label>Body (UA)</Label>
@@ -222,9 +232,12 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
               <div>
                 <Label>Outro text (UA)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Sits below the side-by-side section, full width. 24px (~3 lines).
+                  Sits below the side-by-side section, full width. 24px paragraph. Aim for around {SECTION_IDEAL_CHARS} characters.
                 </p>
                 <Textarea rows={3} value={form.outroTextUa} onChange={e => set('outroTextUa', e.target.value)} />
+                <p className="mt-1 text-xs text-text-tertiary">
+                  {form.outroTextUa.length} characters (ideal: ~{SECTION_IDEAL_CHARS})
+                </p>
               </div>
             </>
           }
@@ -237,16 +250,22 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
               <div>
                 <Label>Lead text (EN)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Sits between the title and the hero image. Larger 24px paragraph (~3 lines).
+                  Sits between the title and the hero image. Larger 24px paragraph. Aim for around {SECTION_IDEAL_CHARS} characters.
                 </p>
                 <Textarea rows={3} value={form.leadTextEn} onChange={e => set('leadTextEn', e.target.value)} />
+                <p className="mt-1 text-xs text-text-tertiary">
+                  {form.leadTextEn.length} characters (ideal: ~{SECTION_IDEAL_CHARS})
+                </p>
               </div>
               <div>
                 <Label>Post-hero text (EN)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Sits between the hero image and the side-by-side image+body section. 24px (~3 lines).
+                  Sits between the hero image and the side-by-side image+body section. 24px paragraph. Aim for around {SECTION_IDEAL_CHARS} characters.
                 </p>
                 <Textarea rows={3} value={form.postHeroTextEn} onChange={e => set('postHeroTextEn', e.target.value)} />
+                <p className="mt-1 text-xs text-text-tertiary">
+                  {form.postHeroTextEn.length} characters (ideal: ~{SECTION_IDEAL_CHARS})
+                </p>
               </div>
               <div>
                 <Label>Body (EN)</Label>
@@ -265,9 +284,12 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
               <div>
                 <Label>Outro text (EN)</Label>
                 <p className="mb-1 text-xs text-text-secondary">
-                  Sits below the side-by-side section, full width. 24px (~3 lines).
+                  Sits below the side-by-side section, full width. 24px paragraph. Aim for around {SECTION_IDEAL_CHARS} characters.
                 </p>
                 <Textarea rows={3} value={form.outroTextEn} onChange={e => set('outroTextEn', e.target.value)} />
+                <p className="mt-1 text-xs text-text-tertiary">
+                  {form.outroTextEn.length} characters (ideal: ~{SECTION_IDEAL_CHARS})
+                </p>
               </div>
             </>
           }
