@@ -106,9 +106,20 @@ function normTag(row: Record<string, unknown>) {
 type DbErr = { code?: string; message?: string } | null;
 
 function getMissingColumn(err: DbErr): string | null {
-  if (!err || err.code !== '42703') return null;
-  const m = /column .*?"?(\w+)"?.* does not exist/i.exec(err.message ?? '');
-  return m?.[1] ?? null;
+  if (!err) return null;
+  const msg = err.message ?? '';
+  // Postgres "column does not exist" (42703) — the SQL actually executed.
+  if (err.code === '42703') {
+    const m = /column .*?"?(\w+)"?.* does not exist/i.exec(msg);
+    if (m) return m[1];
+  }
+  // PostgREST schema-cache miss (PGRST204) — Supabase rejects the request
+  // before SQL runs because its cached schema doesn't yet know the column.
+  // Same recovery: strip the column and retry so a write doesn't break
+  // while a migration is still propagating.
+  const cacheMatch = /Could not find the '(\w+)' column/i.exec(msg);
+  if (cacheMatch) return cacheMatch[1];
+  return null;
 }
 
 // Throws a DbWriteError on a non-recoverable failure so the caller can

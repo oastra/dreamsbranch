@@ -476,7 +476,6 @@ export default async function NewsArticlePage({
     article.published_at ?? (article as unknown as { created_at?: string }).created_at ?? null,
     locale,
   );
-  const coverImage = article.cover_image;
   const bodyImage = (article as unknown as { body_image?: string | null }).body_image ?? null;
   const galleryImages = ((article as unknown as { gallery_images?: string[] })
     .gallery_images ?? []).filter(Boolean);
@@ -484,7 +483,7 @@ export default async function NewsArticlePage({
   return (
     <>
       {/* ── Article header + body ────────────────────────────────── */}
-      <article className="bg-white pt-6 pb-10 lg:pt-10 lg:pb-16">
+      <article className="bg-white pt-6 pb-16 lg:pt-10 lg:pb-24">
         <div className="container-page">
           {/* Breadcrumb + date row */}
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -499,43 +498,30 @@ export default async function NewsArticlePage({
           </div>
 
           {/* Title */}
-          <h1 className="mt-6 mb-6 text-[24px] font-bold leading-[120%] text-text-strong md:text-[28px] lg:mt-8 lg:mb-8 lg:text-[40px] lg:leading-[110%]">
+          <h1 className="mt-6 mb-8 text-[24px] font-bold leading-[120%] text-text-strong md:text-[28px] lg:mt-8 lg:mb-10 lg:text-[40px] lg:leading-[110%]">
             {title}
           </h1>
 
-          {/* Cover image (article hero). Fixed heights per breakpoint
-              (mobile 340 / tablet 480 / desktop 560) so the hero never
-              looks too tall on portrait sources or too short on wide ones. */}
-          {coverImage && (
-            <div className="relative mb-6 h-[340px] w-full overflow-hidden rounded-2xl bg-secondary-10 sm:h-[480px] lg:mb-6 lg:h-[560px]">
-              <Image
-                src={coverImage}
-                alt={title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 1200px"
-                priority
-              />
-            </div>
-          )}
-
-          {/* Body. If the editor set an in-text image, it floats left of
-              the first paragraphs at md+; on mobile it stacks above the
-              text so nothing gets squashed. 24px gap matches the cover. */}
-          <div className="text-body text-text-primary">
+          {/* Side-by-side: body text on the left, in-text image on the
+              right at md+. On mobile they stack (image first so the page
+              has a visual anchor before the wall of text). When there's
+              no body image, the text gets the full width. */}
+          <div className={bodyImage ? 'grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12' : ''}>
             {bodyImage && (
-              <div className="relative mb-6 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-6 md:w-[45%] lg:w-[42%]">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary-10 md:order-2">
                 <Image
                   src={bodyImage}
                   alt=""
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 45vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
                 />
               </div>
             )}
-            {renderRichText(body)}
-            <div className="clear-both" />
+            <div className="text-body text-text-primary md:order-1">
+              {renderRichText(body)}
+            </div>
           </div>
 
           {/* Gallery (below body, separate from rich text). Masonry-style
