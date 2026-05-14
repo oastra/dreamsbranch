@@ -85,21 +85,33 @@ export function EventsList({
   const filtered = useMemo(() => {
     const m = selectedMonth.getMonth();
     const y = selectedMonth.getFullYear();
-    return events.filter((ev) => {
-      // Archived events ignore the month picker — they're shown regardless
-      // so visitors always see them under the featured card. Active events
-      // stay month-bounded so the upcoming view doesn't bleed into the past.
-      if (filter === 'active') {
-        if (ev.isArchived) return false;
-        const d = new Date(ev.eventDate);
-        return d.getMonth() === m && d.getFullYear() === y;
-      }
-      if (filter === 'archive') return ev.isArchived;
-      // 'all' tab — keep active in the selected month, plus every archived.
-      if (ev.isArchived) return true;
+    const inSelectedMonth = (ev: EventListItem) => {
       const d = new Date(ev.eventDate);
       return d.getMonth() === m && d.getFullYear() === y;
+    };
+
+    const monthBounded = events.filter((ev) => {
+      // Archived events ignore the month picker — always shown so visitors
+      // always see them under the featured card. Active events stay month-
+      // bounded so the upcoming view doesn't bleed into the past.
+      if (filter === 'active') return !ev.isArchived && inSelectedMonth(ev);
+      if (filter === 'archive') return ev.isArchived;
+      // 'all' tab — active in selected month + every archived event.
+      return ev.isArchived || inSelectedMonth(ev);
     });
+
+    // Empty-state fallback: if nothing matches the current filter+month,
+    // show older events that match the filter (newest first) so the page
+    // never goes blank.
+    if (monthBounded.length > 0) return monthBounded;
+    const fallback = events.filter((ev) => {
+      if (filter === 'active') return !ev.isArchived;
+      if (filter === 'archive') return ev.isArchived;
+      return true;
+    });
+    return [...fallback].sort(
+      (a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime(),
+    );
   }, [events, filter, selectedMonth]);
 
   const featured = filtered[0];
