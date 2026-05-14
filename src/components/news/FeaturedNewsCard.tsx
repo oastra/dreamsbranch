@@ -63,7 +63,7 @@ export function FeaturedNewsCard({
   return (
     <article className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-0">
       {/* ── Image ───────────────────────────────────────────────── */}
-      <div className="relative aspect-[5/4] overflow-hidden rounded-2xl bg-grey-40 md:aspect-auto md:rounded-r-none">
+      <div className="relative aspect-[16/11] overflow-hidden rounded-2xl bg-grey-40 md:aspect-auto md:rounded-r-none">
         {coverImage ? (
           <Image
             src={coverImage}
