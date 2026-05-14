@@ -34,7 +34,7 @@ function bodyCharCount(value: unknown): number {
   return count;
 }
 
-const BODY_IDEAL_CHARS = 1800;
+const BODY_IDEAL_CHARS = 800;
 // Plain-text section sizes — three lines of body copy at the public 24px
 // rendering ≈ 250 characters each. Editors get a live counter below the
 // textarea so they can land in the visual sweet spot.
