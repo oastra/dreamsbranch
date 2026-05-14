@@ -163,6 +163,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           onChange={urls => set('galleryImages', urls)}
           folder="news"
           label="Gallery images (~4:3) — shown in a grid below the article body"
+          minImages={1}
         />
       </div>
 
