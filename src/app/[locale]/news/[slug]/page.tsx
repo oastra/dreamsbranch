@@ -569,21 +569,21 @@ export default async function NewsArticlePage({
             </p>
           )}
 
-          {/* 2. Cover hero. Renders at a fixed height per breakpoint
-                (280 / 400 / 480), width auto-sizes to the image's natural
-                aspect, centered. No pillarboxing on portrait/square sources
-                and no cropping of any aspect — the visible bounding box
-                always equals the image. */}
+          {/* 2. Cover hero — fills the container width at fixed heights per
+                breakpoint (280 / 400 / 480). Object-cover so the image fills
+                the frame edge-to-edge; upload landscape at ~2.4:1 (e.g.
+                1920×800) to avoid noticeable cropping on desktop. */}
           {coverImage && (
-            <Image
-              src={coverImage}
-              alt={title}
-              width={0}
-              height={0}
-              sizes="(max-width: 640px) auto, (max-width: 1024px) auto, auto"
-              className="mx-auto mb-8 block h-[280px] w-auto rounded-2xl sm:h-[400px] lg:mb-10 lg:h-[480px]"
-              priority
-            />
+            <div className="relative mb-8 h-[280px] w-full overflow-hidden rounded-2xl bg-secondary-10 sm:h-[400px] lg:mb-10 lg:h-[480px]">
+              <Image
+                src={coverImage}
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 1280px"
+                priority
+              />
+            </div>
           )}
 
           {/* 3. Post-hero text — between hero and the flex section. 24px. */}
