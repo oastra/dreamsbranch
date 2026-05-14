@@ -167,7 +167,7 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           value={form.coverImage}
           onChange={url => set('coverImage', url ?? '')}
           folder="news"
-          label="Cover image — used for BOTH the article hero and the news listing thumbnail. Recommended: 1600 × 1100 px (16:11) — fits both slots exactly with no cropping."
+          label="Cover image — used for BOTH the article hero and the news listing thumbnail. Recommended: 1600 × 1100 px (16:11). Fits the listing card exactly; the hero crops top/bottom slightly — keep your subject centered."
         />
 
         <ImageUpload
