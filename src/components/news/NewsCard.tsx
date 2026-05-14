@@ -52,6 +52,7 @@ export function NewsCard({
   description,
   coverImage,
   categoryLabel,
+
   publishedAt,
 }: NewsCardProps) {
   return (
@@ -60,7 +61,7 @@ export function NewsCard({
       className="group flex flex-col overflow-hidden rounded-2xl bg-white transition-shadow hover:shadow-card-hover"
     >
       {/* ── Image with yellow category pill ─────────────────────── */}
-      <div className="relative aspect-[4/3] bg-grey-40">
+      <div className="relative w-[300px] h-[220px] md:w-[576px] md:h-[286px] lg:w-[588px] lg:h-[320px] bg-grey-40">
         {coverImage ? (
           <Image
             src={coverImage}
@@ -84,8 +85,15 @@ export function NewsCard({
           {formatDate(publishedAt, locale)}
         </p>
 
+        {/* Brand pill
+        <div>
+          <span className="inline-flex h-9 items-center justify-center rounded-full bg-secondary px-5 text-body-sm font-medium text-white">
+            {brandLabel}
+          </span>
+        </div> */}
+
         {/* Description preview */}
-        <p className="text-body line-clamp-3 text-text-primary/70">
+        <p className="text-body line-clamp-3 text-text-primary/90">
           {description}
         </p>
 

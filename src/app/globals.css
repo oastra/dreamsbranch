@@ -58,6 +58,9 @@ body {
   @apply text-[24px] leading-[110%] font-medium md:text-[36px];
 }
 
+@utility card-title {
+  @apply text-[16px] leading-[120%] tracking-[0] font-medium md:text-[20px];
+}
 @utility text-secondary {
   @apply text-[18px] leading-[120%] tracking-[0] font-normal;
 }
