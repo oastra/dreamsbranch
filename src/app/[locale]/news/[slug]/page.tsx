@@ -711,7 +711,7 @@ export default async function NewsArticlePage({
 
           {/* 5. Outro text — full width, sits below the flex section. 24px. */}
           {outroText && (
-            <p className="mt-10 whitespace-pre-line text-[18px] leading-relaxed text-text-primary sm:text-[24px] lg:mt-12">
+            <p className="mt-6 whitespace-pre-line text-[18px] leading-relaxed text-text-primary sm:text-[24px] lg:mt-8">
               {outroText}
             </p>
           )}
@@ -739,12 +739,14 @@ export default async function NewsArticlePage({
           )}
 
           {/* ── Share section ─────────────────────────────────── */}
-          <ShareSection
-            copyLinkLabel={t("news.copy_link")}
-            copiedLabel={t("news.copy_link_copied")}
-            shareLabel={t("news.share")}
-            ariaLabel={t("news.share_aria")}
-          />
+          <div className="mt-10 lg:mt-16">
+            <ShareSection
+              copyLinkLabel={t("news.copy_link")}
+              copiedLabel={t("news.copy_link_copied")}
+              shareLabel={t("news.share")}
+              ariaLabel={t("news.share_aria")}
+            />
+          </div>
         </div>
       </article>
 
