@@ -516,6 +516,12 @@ export default async function NewsArticlePage({
 
   const titleKey = locale === 'ua' ? 'title_ua' : 'title_en';
   const bodyKey = locale === 'ua' ? 'body_ua' : 'body_en';
+  const leadKey = locale === 'ua' ? 'lead_text_ua' : 'lead_text_en';
+  const cardPreview = (a: ArticleDetail): string => {
+    const lead = (a as unknown as Record<string, string | null | undefined>)[leadKey];
+    if (lead && lead.trim()) return lead.trim();
+    return extractPlainText(a[bodyKey]);
+  };
 
   const title = article[titleKey];
   const body = article[bodyKey];
@@ -682,7 +688,7 @@ export default async function NewsArticlePage({
                   slug={a.slug}
                   locale={locale}
                   title={a[titleKey]}
-                  description={extractPlainText(a[bodyKey])}
+                  description={cardPreview(a)}
                   coverImage={a.cover_image}
                   categoryLabel={getCategoryLabel(a.category, t)}
                   brandLabel="Dreams branch of UWAA"

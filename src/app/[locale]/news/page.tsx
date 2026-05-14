@@ -198,6 +198,15 @@ export default async function NewsPage({
 
   const titleKey = locale === "ua" ? "title_ua" : "title_en";
   const bodyKey = locale === "ua" ? "body_ua" : "body_en";
+  const leadKey = locale === "ua" ? "lead_text_ua" : "lead_text_en";
+
+  // Card preview text — prefer the editor-controlled lead_text; fall back
+  // to the first body paragraph for legacy articles that don't have one.
+  const cardPreview = (a: ArticlePreview): string => {
+    const lead = (a as unknown as Record<string, string | null | undefined>)[leadKey];
+    if (lead && lead.trim()) return lead.trim();
+    return extractPlainText(a[bodyKey]);
+  };
 
   // Featured = first featured article, or first article
   const featured = articles.find((a) => a.is_featured) ?? articles[0];
@@ -291,7 +300,7 @@ export default async function NewsPage({
               slug={featured.slug}
               locale={locale}
               title={featured[titleKey]}
-              description={extractPlainText(featured[bodyKey])}
+              description={cardPreview(featured)}
               coverImage={featured.cover_image}
               publishedAt={featured.published_at ?? (featured as unknown as { created_at?: string }).created_at ?? null}
               brandLabel="Dreams branch of UWAA"
@@ -315,7 +324,7 @@ export default async function NewsPage({
                   id: article.id,
                   slug: article.slug,
                   title: article[titleKey],
-                  description: extractPlainText(article[bodyKey]),
+                  description: cardPreview(article),
                   coverImage: article.cover_image,
                   categoryLabel: getCategoryLabel(article.category, t),
                   publishedAt: article.published_at ?? (article as unknown as { created_at?: string }).created_at ?? null,

@@ -161,6 +161,12 @@ export default async function HomePage({
     locale === "ua" ? "title_ua" : "title_en";
   const newsBodyKey: "body_ua" | "body_en" =
     locale === "ua" ? "body_ua" : "body_en";
+  const newsLeadKey = locale === "ua" ? "lead_text_ua" : "lead_text_en";
+  const newsCardPreview = (a: (typeof newsArticles)[number]): string => {
+    const lead = (a as unknown as Record<string, string | null | undefined>)[newsLeadKey];
+    if (lead && lead.trim()) return lead.trim();
+    return extractPlainText(a[newsBodyKey]);
+  };
   const newsCategoryLabel = tNews("category_organiser");
 
   return (
@@ -435,7 +441,7 @@ export default async function HomePage({
                       slug={article.slug}
                       locale={locale}
                       title={article[newsTitleKey]}
-                      description={extractPlainText(article[newsBodyKey])}
+                      description={newsCardPreview(article)}
                       coverImage={article.cover_image}
                       categoryLabel={newsCategoryLabel}
                       brandLabel="Dreams branch of UWAA"
@@ -452,7 +458,7 @@ export default async function HomePage({
                     slug={article.slug}
                     locale={locale}
                     title={article[newsTitleKey]}
-                    description={extractPlainText(article[newsBodyKey])}
+                    description={newsCardPreview(article)}
                     coverImage={article.cover_image}
                     categoryLabel={newsCategoryLabel}
                     brandLabel="Dreams branch of UWAA"
