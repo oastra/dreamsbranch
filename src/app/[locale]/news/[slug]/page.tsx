@@ -578,14 +578,12 @@ export default async function NewsArticlePage({
             </p>
           )}
 
-          {/* 2. Cover hero — compact fixed heights per breakpoint
-                (240 / 340 / 420). Single cover_image upload feeds both
-                this hero and the listing card thumbnail; the card uses
-                its full 16:11 aspect, the hero crops top/bottom of the
-                same image to fit a wider frame. Center the photo subject
-                so neither crop loses important content. */}
+          {/* 2. Cover hero — 3:1 aspect, full container width. Image
+                upload at 1920×640 (3:1) fills the frame at every
+                breakpoint with zero cropping. Height auto-scales with
+                viewport (~120 mobile / 320 tablet / 430 desktop). */}
           {coverImage && (
-            <div className="relative mb-8 h-[240px] w-full overflow-hidden rounded-2xl bg-secondary-10 sm:h-[340px] lg:mb-10 lg:h-[420px]">
+            <div className="relative mb-8 aspect-[3/1] w-full overflow-hidden rounded-2xl bg-secondary-10 lg:mb-10">
               <Image
                 src={coverImage}
                 alt={title}
@@ -633,23 +631,22 @@ export default async function NewsArticlePage({
             </p>
           )}
 
-          {/* Gallery (below body, separate from rich text). Masonry-style
-              CSS columns so portrait + landscape photos can mix without
-              cropping — each image renders at its natural aspect ratio. */}
+          {/* Gallery — clean square grid. Editors upload at 1:1 (1000×1000)
+              so the grid stays predictable: every tile is the same size,
+              no cropping when the source matches the aspect. */}
           {galleryImages.length > 0 && (
-            <div className="mt-10 columns-1 gap-6 sm:columns-2 lg:columns-3">
+            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {galleryImages.map((src, i) => (
                 <div
                   key={`${src}-${i}`}
-                  className="mb-6 overflow-hidden rounded-xl bg-secondary-10 break-inside-avoid"
+                  className="relative aspect-square overflow-hidden rounded-xl bg-secondary-10"
                 >
                   <Image
                     src={src}
                     alt=""
-                    width={0}
-                    height={0}
+                    fill
+                    className="object-cover"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="block h-auto w-full"
                   />
                 </div>
               ))}

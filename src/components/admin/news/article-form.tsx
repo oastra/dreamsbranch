@@ -167,21 +167,21 @@ export function ArticleForm({ article }: { article?: Record<string, any> }) {
           value={form.coverImage}
           onChange={url => set('coverImage', url ?? '')}
           folder="news"
-          label="Cover image — used for BOTH the article hero and the news listing thumbnail. Recommended: 1600 × 1100 px (16:11). Fits the listing card exactly; the hero crops top/bottom slightly — keep your subject centered."
+          label="Cover image — article-page hero. Upload at 1920 × 640 px (3:1 cinema/banner) for an exact, no-crop fit at every screen size."
         />
 
         <ImageUpload
           value={form.bodyImage}
           onChange={url => set('bodyImage', url ?? '')}
           folder="news"
-          label="In-text image * — sits next to the body text. Recommended: 1200 × 900 px landscape (4:3)."
+          label="In-text image * — sits next to the body text on the article page AND is reused as the thumbnail on news listing cards. Upload at 1200 × 900 px (4:3) — exact fit in both slots."
         />
 
         <MultiImageUpload
           value={form.galleryImages}
           onChange={urls => set('galleryImages', urls)}
           folder="news"
-          label="Gallery images (optional) — masonry grid below the article. Any orientation works (landscape, portrait, square). Recommended: 800 – 1200 px on the long edge."
+          label="Gallery images (optional) — square grid below the article. Upload at 1000 × 1000 px (1:1) — every tile the same size, no cropping."
           minImages={0}
         />
       </div>
