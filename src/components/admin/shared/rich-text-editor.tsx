@@ -74,7 +74,7 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm max-w-none min-h-[300px] focus:outline-none px-4 py-3 text-text-primary [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-3 [&_strong]:font-semibold [&_img]:rounded-lg [&_img]:my-3 [&_img]:max-w-full [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-3 [&_li]:mb-1 [&_li_p]:mb-0',
+          'prose prose-sm max-w-none min-h-[300px] focus:outline-none px-4 py-3 text-text-primary [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:text-[24px] [&_h3]:font-medium [&_h3]:leading-[120%] [&_h3]:my-4 [&_p]:mb-3 [&_strong]:font-semibold [&_img]:rounded-lg [&_img]:my-3 [&_img]:max-w-full [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-3 [&_li]:mb-1 [&_li_p]:mb-0',
       },
     },
     onUpdate: ({ editor }) => {

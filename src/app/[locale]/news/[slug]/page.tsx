@@ -332,7 +332,7 @@ function renderRichText(doc: unknown): React.ReactNode[] {
         const level = (node.attrs?.level as number) ?? 3;
         const text = renderInline(node.content);
         if (level === 2) return <h2 key={i} className="mt-8 mb-4 text-h2 font-bold text-text-strong">{text}</h2>;
-        return <h3 key={i} className="mt-8 mb-4 text-h3 font-bold text-text-strong lg:text-[24px]">{text}</h3>;
+        return <h3 key={i} className="my-4 text-[24px] font-medium leading-[120%] text-text-strong">{text}</h3>;
       }
       case 'paragraph':
         return <p key={i} className="mb-5 text-[16px] leading-relaxed text-text-primary sm:text-[18px]">{renderInline(node.content)}</p>;
