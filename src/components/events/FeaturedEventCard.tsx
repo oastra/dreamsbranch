@@ -48,6 +48,15 @@ function trimSeconds(t: string): string {
   return t.split(":").slice(0, 2).join(":");
 }
 
+// Take just the first sentence of a description so the featured-card
+// preview stays compact. Matches up to and including the first ., !, or ?.
+// Falls back to the whole string if there's no sentence-ending punctuation.
+function firstSentence(text: string): string {
+  if (!text) return "";
+  const match = text.match(/^[^.!?]+[.!?]/);
+  return (match ? match[0] : text).trim();
+}
+
 function formatTime(start: string, end: string | null): string {
   const s = trimSeconds(start);
   if (!end) return s;
@@ -172,7 +181,7 @@ export function FeaturedEventCard({
         <div className="flex flex-col gap-5 p-8 lg:p-10">
           <h3 className="text-h2 text-text-strong">{title}</h3>
           {tagPills}
-          <p className="text-body text-text-strong">{description}</p>
+          <p className="text-body text-text-strong">{firstSentence(description)}</p>
           {dateLocation}
           <div className="mt-auto pt-2">{buttons}</div>
         </div>
@@ -182,7 +191,7 @@ export function FeaturedEventCard({
       <div className="flex flex-col gap-5 p-6 sm:p-8 lg:hidden">
         <h3 className="text-h3 font-medium text-text-strong">{title}</h3>
         {tagPills}
-        <p className="text-secondary text-text-primary">{description}</p>
+        <p className="text-secondary text-text-primary">{firstSentence(description)}</p>
         <div className="relative aspect-16/10 w-full overflow-hidden rounded-2xl">
           {imageBlock}
         </div>
