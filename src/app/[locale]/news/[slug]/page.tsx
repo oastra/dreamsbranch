@@ -575,12 +575,12 @@ export default async function NewsArticlePage({
             </p>
           )}
 
-          {/* 2. Cover hero — fills the container width at fixed heights per
-                breakpoint (280 / 400 / 480). Object-cover so the image fills
-                the frame edge-to-edge; upload landscape at ~2.4:1 (e.g.
-                1920×800) to avoid noticeable cropping on desktop. */}
+          {/* 2. Cover hero — same 16:11 aspect as the news listing cards
+                so a single upload (1600 × 1100) fills both slots perfectly
+                with no cropping. Hero scales to container width; height
+                follows the aspect. */}
           {coverImage && (
-            <div className="relative mb-8 h-[280px] w-full overflow-hidden rounded-2xl bg-secondary-10 sm:h-[400px] lg:mb-10 lg:h-[480px]">
+            <div className="relative mb-8 aspect-[16/11] w-full overflow-hidden rounded-2xl bg-secondary-10 lg:mb-10">
               <Image
                 src={coverImage}
                 alt={title}
