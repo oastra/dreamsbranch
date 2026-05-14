@@ -338,7 +338,7 @@ function renderRichText(doc: unknown): React.ReactNode[] {
         return <p key={i} className="mb-5 text-[16px] leading-relaxed text-text-primary sm:text-[18px]">{renderInline(node.content)}</p>;
       case 'bulletList':
         return (
-          <ul key={i} className="mb-5 list-disc space-y-2 pl-6 text-[16px] leading-relaxed text-text-primary sm:text-[18px] marker:text-secondary">
+          <ul key={i} className="mb-5 list-disc pl-6 text-[16px] leading-snug text-text-primary sm:text-[18px]">
             {(node.content ?? []).map((item, j) => (
               <li key={j}>{renderListItem(item)}</li>
             ))}
@@ -346,7 +346,7 @@ function renderRichText(doc: unknown): React.ReactNode[] {
         );
       case 'orderedList':
         return (
-          <ol key={i} className="mb-5 list-decimal space-y-2 pl-6 text-[16px] leading-relaxed text-text-primary sm:text-[18px] marker:text-secondary">
+          <ol key={i} className="mb-5 list-decimal pl-6 text-[16px] leading-snug text-text-primary sm:text-[18px]">
             {(node.content ?? []).map((item, j) => (
               <li key={j}>{renderListItem(item)}</li>
             ))}
