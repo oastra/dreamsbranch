@@ -48,6 +48,7 @@ export default async function DonatePage({
             formCard={
               <DonationFormCard
                 labels={{
+                  formHeading: t("donate.form_heading"),
                   frequencyOnce: t("donate.frequency_once"),
                   frequencyMonthly: t("donate.frequency_monthly"),
                   amountLabel: t("donate.amount_label"),
@@ -61,6 +62,10 @@ export default async function DonatePage({
                   fastPayPaypalAria: t("donate.fast_pay_paypal_aria"),
                   fastPayAppleAria: t("donate.fast_pay_apple_aria"),
                   fastPayGoogleAria: t("donate.fast_pay_google_aria"),
+                  displayNameLabel: t("donate.display_name_label"),
+                  displayNamePlaceholder: t("donate.display_name_placeholder"),
+                  emailLabel: t("donate.email_label"),
+                  emailPlaceholder: t("donate.email_placeholder"),
                 }}
               />
             }

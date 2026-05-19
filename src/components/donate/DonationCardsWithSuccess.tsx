@@ -2,8 +2,13 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
+import { Elements } from "@stripe/react-stripe-js";
+import { getStripe } from "@/lib/stripe/client";
+import { DonationProvider } from "@/components/donate/DonationContext";
 
 const SUCCESS_DURATION_MS = 20_000;
+
+const stripePromise = getStripe();
 
 type Props = {
   formCard: ReactNode;
@@ -75,9 +80,13 @@ export function DonationCardsWithSuccess({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-8">
-      {formCard}
-      {paymentCard}
-    </div>
+    <Elements stripe={stripePromise}>
+      <DonationProvider campaignSlug="general-fund">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-8">
+          {formCard}
+          {paymentCard}
+        </div>
+      </DonationProvider>
+    </Elements>
   );
 }

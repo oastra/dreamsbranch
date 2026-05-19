@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ApplePayWordmark from "@/components/icons/payments/ApplePayWordmark";
 import GooglePayWordmark from "@/components/icons/payments/GooglePayWordmark";
 import PayPalWordmark from "@/components/icons/payments/PayPalWordmark";
-
-type Frequency = "once" | "monthly";
+import { useDonation } from "@/components/donate/DonationContext";
 
 export type DonationFormLabels = {
+  formHeading: string;
   frequencyOnce: string;
   frequencyMonthly: string;
   amountLabel: string;
@@ -19,25 +19,50 @@ export type DonationFormLabels = {
   fastPayPaypalAria: string;
   fastPayAppleAria: string;
   fastPayGoogleAria: string;
+  displayNameLabel: string;
+  displayNamePlaceholder: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  anonymousLabel?: string;
 };
 
+type Variant = "page" | "campaign";
+
 type Props = {
-  defaultFrequency?: Frequency;
-  defaultAmount?: number;
   labels: DonationFormLabels;
+  // "page" = standalone /donate (frequency toggle, no anonymous checkbox).
+  // "campaign" = modal flow (no frequency toggle, shows anonymous checkbox).
+  variant?: Variant;
 };
 
 const PRESETS = [25, 50, 75, 100, 150];
 const MIN_AMOUNT = 0;
 const MAX_AMOUNT = 100000;
 
-export function DonationFormCard({
-  defaultFrequency = "once",
-  defaultAmount = 10,
-  labels,
-}: Props) {
-  const [frequency, setFrequency] = useState<Frequency>(defaultFrequency);
-  const [amount, setAmount] = useState<number>(defaultAmount);
+export function DonationFormCard({ labels, variant = "page" }: Props) {
+  const {
+    amount,
+    setAmount,
+    frequency,
+    setFrequency,
+    displayName,
+    setDisplayName,
+    isAnonymous,
+    setIsAnonymous,
+    email,
+    setEmail,
+  } = useDonation();
+
+  // /donate prefill from `?amount=` (campaign cards now open a modal, but a
+  // shared link with the param still works).
+  useEffect(() => {
+    if (variant !== "page") return;
+    const raw = new URLSearchParams(window.location.search).get("amount");
+    if (!raw) return;
+    const parsed = parseFloat(raw);
+    if (Number.isNaN(parsed)) return;
+    setAmount(Math.max(MIN_AMOUNT, Math.min(MAX_AMOUNT, parsed)));
+  }, [variant, setAmount]);
 
   useEffect(() => {
     function reset() {
@@ -45,7 +70,7 @@ export function DonationFormCard({
     }
     window.addEventListener("donate:reset-amount", reset);
     return () => window.removeEventListener("donate:reset-amount", reset);
-  }, []);
+  }, [setAmount]);
 
   function clampAmount(value: number) {
     if (Number.isNaN(value)) return MIN_AMOUNT;
@@ -59,53 +84,65 @@ export function DonationFormCard({
   }
 
   function addPreset(value: number) {
-    setAmount((current) => clampAmount(current + value));
+    setAmount(clampAmount(amount + value));
   }
 
   function handleFastPay(method: "paypal" | "apple" | "google") {
-    // TODO: wire up the selected fast-pay method (PayPal / Apple Pay / Google
-    // Pay) once the donations checkout backend is in place.
+    // TODO: wire up fast-pay (PayPal + Stripe PaymentRequestButton for
+    // Apple/Google Pay) in Phase 3.
     void method;
   }
 
   return (
-    <div className="rounded-[30px] bg-secondary-10 p-5 pb-8 sm:p-6 sm:pb-8 lg:p-8">
-      {/* ── Frequency toggle ────────────────────────────────── */}
-      <div
-        role="tablist"
-        aria-label={labels.amountLabel}
-        className="flex gap-1 rounded-full bg-white/60 p-1.5"
-      >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={frequency === "once"}
-          onClick={() => setFrequency("once")}
-          className={`flex-1 rounded-full py-2.5 text-body font-semibold transition-colors ${
-            frequency === "once"
-              ? "bg-primary text-text-strong"
-              : "text-text-strong hover:bg-white"
-          }`}
-        >
-          {labels.frequencyOnce}
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={frequency === "monthly"}
-          onClick={() => setFrequency("monthly")}
-          className={`flex-1 rounded-full py-2.5 text-body font-semibold transition-colors ${
-            frequency === "monthly"
-              ? "bg-primary text-text-strong"
-              : "text-text-strong hover:bg-white"
-          }`}
-        >
-          {labels.frequencyMonthly}
-        </button>
+    <div className="rounded-[30px] bg-secondary-10 p-5 pb-6 sm:p-6 lg:p-7">
+      {/* ── Heading ─────────────────────────────────────────── */}
+      <div className="mb-4 flex items-center justify-center gap-2">
+        <span aria-hidden="true" className="text-[24px] leading-none">
+          🤝
+        </span>
+        <h2 className="text-[24px] font-medium leading-[120%] text-text-strong">
+          {labels.formHeading}
+        </h2>
       </div>
 
+      {/* ── Frequency toggle (page variant only) ────────────── */}
+      {variant === "page" && (
+        <div
+          role="tablist"
+          aria-label={labels.amountLabel}
+          className="flex gap-1 rounded-full bg-white/60 p-1.5"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={frequency === "once"}
+            onClick={() => setFrequency("once")}
+            className={`flex-1 rounded-full py-2.5 text-body font-semibold transition-colors ${
+              frequency === "once"
+                ? "bg-primary text-text-strong"
+                : "text-text-strong hover:bg-white"
+            }`}
+          >
+            {labels.frequencyOnce}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={frequency === "monthly"}
+            onClick={() => setFrequency("monthly")}
+            className={`flex-1 rounded-full py-2.5 text-body font-semibold transition-colors ${
+              frequency === "monthly"
+                ? "bg-primary text-text-strong"
+                : "text-text-strong hover:bg-white"
+            }`}
+          >
+            {labels.frequencyMonthly}
+          </button>
+        </div>
+      )}
+
       {/* ── Amount input ────────────────────────────────────── */}
-      <div className="mt-6 flex items-end justify-between gap-3 border-b border-white pb-3 sm:mt-8">
+      <div className="mt-5 flex items-end justify-between gap-3 border-b border-white pb-3 sm:mt-6">
         <input
           type="text"
           inputMode="decimal"
@@ -119,8 +156,7 @@ export function DonationFormCard({
         </span>
       </div>
 
-      {/* ── Preset pills ─────────────────────────────────────
-          Mobile: 3-col grid (wraps to 3 + 2). Tablet+: 5-col grid. */}
+      {/* ── Preset pills ───────────────────────────────────── */}
       <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-5 sm:gap-3">
         {PRESETS.map((value) => (
           <button
@@ -138,8 +174,7 @@ export function DonationFormCard({
         ))}
       </div>
 
-      {/* ── Monthly helper copy ──────────────────────────────
-          Only shown when the recurring tab is active. */}
+      {/* ── Monthly helper copy ───────────────────────────── */}
       {frequency === "monthly" && (
         <div className="mt-5 text-center sm:mt-6">
           <p className="text-body-sm text-text-primary">
@@ -151,8 +186,8 @@ export function DonationFormCard({
         </div>
       )}
 
-      {/* ── "Швидка оплата" divider with side lines ─────────── */}
-      <div className="my-6 flex items-center gap-4 sm:my-8">
+      {/* ── "Швидка оплата" divider ────────────────────────── */}
+      <div className="my-5 flex items-center gap-4 sm:my-6">
         <hr className="flex-1 border-white" />
         <span className="text-body font-semibold text-text-strong">
           {labels.fastPayTitle}
@@ -187,6 +222,54 @@ export function DonationFormCard({
           <GooglePayWordmark width={50} height={32} />
         </button>
       </div>
+
+      {/* ── Public display name ─────────────────────────────── */}
+      <label className="mt-5 block sm:mt-6">
+        <span className="mb-1.5 block text-body font-normal text-text-strong">
+          {labels.displayNameLabel}
+        </span>
+        <input
+          type="text"
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
+          placeholder={labels.displayNamePlaceholder}
+          aria-label={labels.displayNameLabel}
+          disabled={isAnonymous}
+          className="h-12 w-full rounded-full border border-text-strong/15 bg-white px-4 text-body text-text-strong placeholder:text-text-secondary focus:border-secondary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+        />
+      </label>
+
+      {/* ── Email (only needed for monthly subscriptions) ──── */}
+      {frequency === "monthly" && (
+        <label className="mt-3 block">
+          <span className="mb-1.5 block text-body font-normal text-text-strong">
+            {labels.emailLabel}
+          </span>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={labels.emailPlaceholder}
+            aria-label={labels.emailLabel}
+            autoComplete="email"
+            required
+            className="h-12 w-full rounded-full border border-text-strong/15 bg-white px-4 text-body text-text-strong placeholder:text-text-secondary focus:border-secondary focus:outline-none"
+          />
+        </label>
+      )}
+
+      {/* ── Anonymous checkbox (campaign variant only) ──────── */}
+      {variant === "campaign" && labels.anonymousLabel && (
+        <label className="mt-3 flex cursor-pointer items-center gap-2 text-body text-text-primary">
+          <input
+            type="checkbox"
+            checked={isAnonymous}
+            onChange={(e) => setIsAnonymous(e.target.checked)}
+            className="h-4 w-4 rounded border-text-strong/30 text-secondary focus:ring-secondary"
+          />
+          {labels.anonymousLabel}
+        </label>
+      )}
     </div>
   );
 }

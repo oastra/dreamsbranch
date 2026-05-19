@@ -1,9 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import {
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import type { StripeCardNumberElementOptions } from "@stripe/stripe-js";
 import MastercardMark from "@/components/icons/payments/MastercardMark";
 import VisaMark from "@/components/icons/payments/VisaMark";
 import { Button } from "@/components/ui/button";
+import { useDonation } from "@/components/donate/DonationContext";
 
 export type CardPaymentLabels = {
   sectionTitle: string;
@@ -22,52 +31,129 @@ export type CardPaymentLabels = {
 
 type Props = {
   labels: CardPaymentLabels;
+  onCancel?: () => void;
+  onSuccess?: () => void;
 };
 
-// ── Helpers ──────────────────────────────────────────────────
-function detectBrand(cardNumber: string): "visa" | "mastercard" | "unknown" {
-  const digits = cardNumber.replace(/\D/g, "");
-  if (digits.startsWith("4")) return "visa";
-  if (/^(5[1-5]|2[2-7])/.test(digits)) return "mastercard";
-  return "unknown";
-}
+const ELEMENT_BASE_STYLE: StripeCardNumberElementOptions["style"] = {
+  base: {
+    fontSize: "16px",
+    color: "#0E1525",
+    fontFamily: "inherit",
+    "::placeholder": { color: "#90969F" },
+  },
+  invalid: { color: "#B42318" },
+};
 
-function formatCardNumber(raw: string): string {
-  const digits = raw.replace(/\D/g, "").slice(0, 19);
-  return digits.replace(/(.{4})/g, "$1 ").trim();
-}
-
-function formatExpiry(raw: string): string {
-  // Accept "0624", "06/24", "06 / 2024" — normalise to "MM / YYYY".
-  const digits = raw.replace(/\D/g, "").slice(0, 6);
-  if (digits.length === 0) return "";
-  if (digits.length <= 2) return digits;
-  return `${digits.slice(0, 2)} / ${digits.slice(2)}`;
-}
-
-// ── Component ────────────────────────────────────────────────
-export function CardPaymentCard({ labels }: Props) {
+export function CardPaymentCard({ labels, onCancel, onSuccess }: Props) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const donation = useDonation();
   const [name, setName] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [number, setNumber] = useState("");
-  const [cvv, setCvv] = useState("");
+  const [brand, setBrand] = useState<"visa" | "mastercard" | "unknown">(
+    "unknown",
+  );
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const brand = detectBrand(number);
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // TODO: integrate the card-payment provider (Stripe Elements / similar)
-    // once the donations checkout backend is in place.
+    setErrorMsg(null);
+
+    if (!stripe || !elements) return;
+    if (!donation.campaignSlug) {
+      setErrorMsg("Missing campaign reference");
+      return;
+    }
+    if (donation.amount <= 0) {
+      setErrorMsg("Choose an amount");
+      return;
+    }
+
+    const cardNumber = elements.getElement(CardNumberElement);
+    if (!cardNumber) return;
+
+    if (donation.frequency === "monthly" && !donation.email) {
+      setErrorMsg("Email is required for monthly donations");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      // 1. Ask our backend for a client_secret. Once = PaymentIntent;
+      //    monthly = a Subscription whose first invoice's PaymentIntent we
+      //    confirm here. Both flows end with stripe.confirmCardPayment.
+      const endpoint =
+        donation.frequency === "monthly"
+          ? "/api/stripe/subscription"
+          : "/api/stripe/payment-intent";
+
+      const payload =
+        donation.frequency === "monthly"
+          ? {
+              campaignSlug: donation.campaignSlug,
+              amount: donation.amount,
+              email: donation.email,
+              displayName: donation.isAnonymous ? "" : donation.displayName,
+              isAnonymous: donation.isAnonymous,
+            }
+          : {
+              campaignSlug: donation.campaignSlug,
+              amount: donation.amount,
+              displayName: donation.isAnonymous ? "" : donation.displayName,
+              isAnonymous: donation.isAnonymous,
+            };
+
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = (await res.json()) as
+        | { clientSecret: string }
+        | { error: string };
+      if (!res.ok || !("clientSecret" in data)) {
+        throw new Error(
+          "error" in data ? data.error : "Could not start payment",
+        );
+      }
+
+      // 2. Confirm card payment client-side. Card data never touches our server.
+      const confirm = await stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: {
+          card: cardNumber,
+          billing_details: {
+            name: name || donation.displayName || undefined,
+            email: donation.email || undefined,
+          },
+        },
+      });
+
+      if (confirm.error) {
+        throw new Error(confirm.error.message ?? "Payment failed");
+      }
+
+      // Success! Webhook (payment_intent.succeeded / invoice.paid) writes the
+      // donation row.
+      onSuccess?.();
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Payment failed");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function handleCancel() {
     setName("");
-    setExpiry("");
-    setNumber("");
-    setCvv("");
+    setErrorMsg(null);
+    elements?.getElement(CardNumberElement)?.clear();
+    elements?.getElement(CardExpiryElement)?.clear();
+    elements?.getElement(CardCvcElement)?.clear();
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("donate:reset-amount"));
     }
+    onCancel?.();
   }
 
   return (
@@ -84,12 +170,8 @@ export function CardPaymentCard({ labels }: Props) {
           {labels.formTitle}
         </p>
 
-        {/* ── Fields ───────────────────────────────────────────
-            Mobile: number → name → expiry → cvv (via `order` on flat flex).
-            Tablet+: each wrapper becomes a flex row: (name + expiry) / (number + cvv). */}
+        {/* ── Fields ─────────────────────────────────────────── */}
         <div className="mt-4 flex flex-col gap-4 sm:mt-5">
-          {/* Row 1 on tablet+: Name + Expiry. `contents` lets children participate
-              in the outer flex on mobile so `order` works across rows. */}
           <div className="contents sm:flex sm:gap-4">
             <Field
               label={labels.nameLabel}
@@ -110,26 +192,24 @@ export function CardPaymentCard({ labels }: Props) {
               label={labels.expiryLabel}
               className="order-3 sm:order-2 sm:w-[112px] sm:flex-none"
             >
-              <input
-                type="text"
-                inputMode="numeric"
-                autoComplete="cc-exp"
-                value={expiry}
-                onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-                placeholder={labels.expiryPlaceholder}
-                aria-label={labels.expiryLabel}
-                className="h-12 w-full rounded-full border border-text-strong/15 bg-white px-4 text-body text-text-strong placeholder:text-text-secondary focus:border-secondary focus:outline-none"
-              />
+              <div className="flex h-12 items-center rounded-full border border-text-strong/15 bg-white px-4">
+                <CardExpiryElement
+                  options={{
+                    style: ELEMENT_BASE_STYLE,
+                    placeholder: labels.expiryPlaceholder,
+                  }}
+                  className="w-full"
+                />
+              </div>
             </Field>
           </div>
 
-          {/* Row 2 on tablet+: Number + CVV */}
           <div className="contents sm:flex sm:gap-4">
             <Field
               label={labels.numberLabel}
               className="order-1 sm:order-1 sm:flex-1"
             >
-              <div className="relative">
+              <div className="relative flex h-12 items-center rounded-full border border-text-strong/15 bg-white pl-14 pr-4">
                 <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
                   {brand === "visa" ? (
                     <VisaMark width={36} height={24} />
@@ -137,15 +217,18 @@ export function CardPaymentCard({ labels }: Props) {
                     <MastercardMark width={36} height={24} />
                   )}
                 </span>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="cc-number"
-                  value={number}
-                  onChange={(e) => setNumber(formatCardNumber(e.target.value))}
-                  placeholder={labels.numberPlaceholder}
-                  aria-label={labels.numberLabel}
-                  className="h-12 w-full rounded-full border border-text-strong/15 bg-white pl-14 pr-4 text-body text-text-strong placeholder:text-text-secondary focus:border-secondary focus:outline-none"
+                <CardNumberElement
+                  options={{
+                    style: ELEMENT_BASE_STYLE,
+                    placeholder: labels.numberPlaceholder,
+                    showIcon: false,
+                  }}
+                  onChange={(e) => {
+                    if (e.brand === "visa") setBrand("visa");
+                    else if (e.brand === "mastercard") setBrand("mastercard");
+                    else setBrand("unknown");
+                  }}
+                  className="w-full"
                 />
               </div>
             </Field>
@@ -154,21 +237,22 @@ export function CardPaymentCard({ labels }: Props) {
               label={labels.cvvLabel}
               className="order-4 sm:order-2 sm:w-[112px] sm:flex-none"
             >
-              <input
-                type="text"
-                inputMode="numeric"
-                autoComplete="cc-csc"
-                value={cvv}
-                onChange={(e) =>
-                  setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))
-                }
-                placeholder={labels.cvvPlaceholder}
-                aria-label={labels.cvvLabel}
-                className="h-12 w-full rounded-full border border-text-strong/15 bg-white px-4 text-body text-text-strong placeholder:text-text-secondary focus:border-secondary focus:outline-none"
-              />
+              <div className="flex h-12 items-center rounded-full border border-text-strong/15 bg-white px-4">
+                <CardCvcElement
+                  options={{
+                    style: ELEMENT_BASE_STYLE,
+                    placeholder: labels.cvvPlaceholder,
+                  }}
+                  className="w-full"
+                />
+              </div>
             </Field>
           </div>
         </div>
+
+        {errorMsg && (
+          <p className="mt-4 text-body-sm text-[#B42318]">{errorMsg}</p>
+        )}
 
         {/* ── Actions ─────────────────────────────────────── */}
         <div className="mt-6 flex flex-col items-center gap-4 sm:mt-8 sm:flex-row sm:justify-between sm:gap-6">
@@ -177,6 +261,7 @@ export function CardPaymentCard({ labels }: Props) {
             size="xl"
             shape="pill"
             className="w-full sm:w-auto sm:flex-1 lg:max-w-[280px]"
+            disabled={!stripe || submitting}
           >
             {labels.submit}
           </Button>
@@ -193,7 +278,6 @@ export function CardPaymentCard({ labels }: Props) {
   );
 }
 
-// ── Field wrapper ────────────────────────────────────────────
 function Field({
   label,
   className = "",

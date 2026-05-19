@@ -14,7 +14,7 @@ import {
 } from "@/components/campaigns/CampaignShareCard";
 import { CampaignDonorsList } from "@/components/campaigns/CampaignDonorsList";
 import { CopyLinkButton } from "@/components/campaigns/CopyLinkButton";
-import { Button } from "@/components/ui/button";
+import { CampaignSupportGrid } from "@/components/campaigns/CampaignSupportGrid";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import type { Campaign, Donation } from "@/types/database";
@@ -591,19 +591,50 @@ export default async function CampaignDetailPage({
                     <h3 className="text-h3 mb-6 text-center font-semibold text-text-strong">
                       {t("donation.choose_amount")}
                     </h3>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                      {presets.map((amount) => (
-                        <DonationAmountCard
-                          key={amount}
-                          label={`$${amount}`}
-                          ctaLabel={t("campaigns.support_btn")}
-                        />
-                      ))}
-                      <DonationAmountCard
-                        label={t("donation.custom").toUpperCase()}
-                        ctaLabel={t("campaigns.support_btn")}
-                      />
-                    </div>
+                    <CampaignSupportGrid
+                      presets={presets}
+                      customLabel={t("donation.custom").toUpperCase()}
+                      ctaLabel={t("campaigns.support_btn")}
+                      closeLabel={t("donate.modal_close")}
+                      campaignSlug={campaign.slug}
+                      formLabels={{
+                        formHeading: t("donate.form_heading"),
+                        frequencyOnce: t("donate.frequency_once"),
+                        frequencyMonthly: t("donate.frequency_monthly"),
+                        amountLabel: t("donate.amount_label"),
+                        amountCurrency: t("donate.amount_currency"),
+                        presetAriaTemplate: t("donate.preset_aria", {
+                          value: "{value}",
+                        }),
+                        monthlyLabel: t("donate.monthly_label"),
+                        monthlyCancelNote: t("donate.monthly_cancel_note"),
+                        fastPayTitle: t("donate.fast_pay_title"),
+                        fastPayPaypalAria: t("donate.fast_pay_paypal_aria"),
+                        fastPayAppleAria: t("donate.fast_pay_apple_aria"),
+                        fastPayGoogleAria: t("donate.fast_pay_google_aria"),
+                        displayNameLabel: t("donate.display_name_label"),
+                        displayNamePlaceholder: t(
+                          "donate.display_name_placeholder",
+                        ),
+                        emailLabel: t("donate.email_label"),
+                        emailPlaceholder: t("donate.email_placeholder"),
+                        anonymousLabel: t("donate.anonymous_checkbox"),
+                      }}
+                      cardLabels={{
+                        sectionTitle: t("donate.card_section_title"),
+                        formTitle: t("donate.card_form_title"),
+                        nameLabel: t("donate.card_name_label"),
+                        namePlaceholder: t("donate.card_name_placeholder"),
+                        expiryLabel: t("donate.card_expiry_label"),
+                        expiryPlaceholder: t("donate.card_expiry_placeholder"),
+                        numberLabel: t("donate.card_number_label"),
+                        numberPlaceholder: t("donate.card_number_placeholder"),
+                        cvvLabel: t("donate.card_cvv_label"),
+                        cvvPlaceholder: t("donate.card_cvv_placeholder"),
+                        submit: t("donate.submit"),
+                        cancel: t("donate.cancel"),
+                      }}
+                    />
                   </div>
                 </div>
               ) : (
@@ -835,23 +866,3 @@ function FaqPanel({ items }: { items: FaqItem[] }) {
   );
 }
 
-function DonationAmountCard({
-  label,
-  ctaLabel,
-}: {
-  label: string;
-  ctaLabel: string;
-}) {
-  return (
-    <div className="flex flex-col items-center gap-5 rounded-[20px] border border-[#A8B6CC]/40 bg-white px-6 py-6 sm:py-8">
-      <span className="text-h2 font-medium text-text-strong">{label}</span>
-      <Button
-        type="button"
-        shape="pill"
-        className="h-11 w-full px-6"
-      >
-        {ctaLabel}
-      </Button>
-    </div>
-  );
-}
