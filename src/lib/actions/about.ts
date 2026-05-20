@@ -14,10 +14,6 @@ export async function updateAboutSettings(formData: unknown) {
   const row = {
     hero_images: d.heroImages,
     team_images: d.teamImages,
-    years_value: d.yearsValue,
-    members_value: d.membersValue,
-    raised_value: d.raisedValue,
-    transparency_value: d.transparencyValue,
     faq_items: d.faqItems,
   };
   const result = await db.aboutSetting.update({ data: row });

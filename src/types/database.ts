@@ -19,34 +19,22 @@ export type Database = {
           faq_items: Json
           hero_images: string[]
           id: number
-          members_value: string
-          raised_value: string
           team_images: string[]
-          transparency_value: string
           updated_at: string
-          years_value: string
         }
         Insert: {
           faq_items?: Json
           hero_images?: string[]
           id?: number
-          members_value?: string
-          raised_value?: string
           team_images?: string[]
-          transparency_value?: string
           updated_at?: string
-          years_value?: string
         }
         Update: {
           faq_items?: Json
           hero_images?: string[]
           id?: number
-          members_value?: string
-          raised_value?: string
           team_images?: string[]
-          transparency_value?: string
           updated_at?: string
-          years_value?: string
         }
         Relationships: []
       }
@@ -146,33 +134,99 @@ export type Database = {
         }
         Relationships: []
       }
+      catering_page_settings: {
+        Row: {
+          faq_items: Json
+          id: number
+          updated_at: string
+        }
+        Insert: {
+          faq_items?: Json
+          id?: number
+          updated_at?: string
+        }
+        Update: {
+          faq_items?: Json
+          id?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      catering_events: {
+        Row: {
+          created_at: string
+          created_by_admin_id: string | null
+          description_en: string
+          description_ua: string
+          id: string
+          images: string[]
+          location_en: string
+          location_ua: string
+          sort_order: number
+          title_en: string
+          title_ua: string
+          updated_at: string
+          updated_by_admin_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by_admin_id?: string | null
+          description_en?: string
+          description_ua?: string
+          id?: string
+          images?: string[]
+          location_en?: string
+          location_ua?: string
+          sort_order?: number
+          title_en?: string
+          title_ua?: string
+          updated_at?: string
+          updated_by_admin_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by_admin_id?: string | null
+          description_en?: string
+          description_ua?: string
+          id?: string
+          images?: string[]
+          location_en?: string
+          location_ua?: string
+          sort_order?: number
+          title_en?: string
+          title_ua?: string
+          updated_at?: string
+          updated_by_admin_id?: string | null
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           created_at: string
-          email: string
+          email: string | null
           id: string
           is_read: boolean
-          message: string
+          message: string | null
           name: string
           phone: string | null
           tag: Database["public"]["Enums"]["contact_tag"]
         }
         Insert: {
           created_at?: string
-          email: string
+          email?: string | null
           id?: string
           is_read?: boolean
-          message: string
+          message?: string | null
           name: string
           phone?: string | null
           tag?: Database["public"]["Enums"]["contact_tag"]
         }
         Update: {
           created_at?: string
-          email?: string
+          email?: string | null
           id?: string
           is_read?: boolean
-          message?: string
+          message?: string | null
           name?: string
           phone?: string | null
           tag?: Database["public"]["Enums"]["contact_tag"]
@@ -326,16 +380,21 @@ export type Database = {
           hero_description_en: string
           hero_description_ua: string
           hero_image_url: string | null
+          hero_images: string[]
           hero_subtitle_en: string
           hero_subtitle_ua: string
           hero_title_en: string
           hero_title_ua: string
           hero_video_url: string | null
           id: number
+          members_value: string
+          raised_value: string
           stats_campaigns: number
           stats_people: number
           stats_raised: number
+          transparency_value: string
           updated_at: string
+          years_value: string
         }
         Insert: {
           cta_description_en?: string
@@ -345,16 +404,21 @@ export type Database = {
           hero_description_en?: string
           hero_description_ua?: string
           hero_image_url?: string | null
+          hero_images?: string[]
           hero_subtitle_en?: string
           hero_subtitle_ua?: string
           hero_title_en?: string
           hero_title_ua?: string
           hero_video_url?: string | null
           id?: number
+          members_value?: string
+          raised_value?: string
           stats_campaigns?: number
           stats_people?: number
           stats_raised?: number
+          transparency_value?: string
           updated_at?: string
+          years_value?: string
         }
         Update: {
           cta_description_en?: string
@@ -364,16 +428,21 @@ export type Database = {
           hero_description_en?: string
           hero_description_ua?: string
           hero_image_url?: string | null
+          hero_images?: string[]
           hero_subtitle_en?: string
           hero_subtitle_ua?: string
           hero_title_en?: string
           hero_title_ua?: string
           hero_video_url?: string | null
           id?: number
+          members_value?: string
+          raised_value?: string
           stats_campaigns?: number
           stats_people?: number
           stats_raised?: number
+          transparency_value?: string
           updated_at?: string
+          years_value?: string
         }
         Relationships: []
       }
@@ -625,6 +694,7 @@ export type Database = {
           rating: number
           role_en: string | null
           role_ua: string | null
+          section: Database["public"]["Enums"]["shop_section"] | null
           sort_order: number
           status: Database["public"]["Enums"]["content_status"]
           updated_at: string
@@ -640,6 +710,7 @@ export type Database = {
           rating?: number
           role_en?: string | null
           role_ua?: string | null
+          section?: Database["public"]["Enums"]["shop_section"] | null
           sort_order?: number
           status?: Database["public"]["Enums"]["content_status"]
           updated_at?: string
@@ -655,6 +726,7 @@ export type Database = {
           rating?: number
           role_en?: string | null
           role_ua?: string | null
+          section?: Database["public"]["Enums"]["shop_section"] | null
           sort_order?: number
           status?: Database["public"]["Enums"]["content_status"]
           updated_at?: string
@@ -850,6 +922,12 @@ export type ReportUpdate       = Database["public"]["Tables"]["reports"]["Update
 
 export type ContactSubmission       = Database["public"]["Tables"]["contact_submissions"]["Row"]
 export type ContactSubmissionInsert = Database["public"]["Tables"]["contact_submissions"]["Insert"]
+
+export type CateringEvent       = Database["public"]["Tables"]["catering_events"]["Row"]
+export type CateringEventInsert = Database["public"]["Tables"]["catering_events"]["Insert"]
+export type CateringEventUpdate = Database["public"]["Tables"]["catering_events"]["Update"]
+
+export type CateringPageSettings = Database["public"]["Tables"]["catering_page_settings"]["Row"]
 
 export type AdminUser          = Database["public"]["Tables"]["admin_users"]["Row"]
 export type AdminUserInsert    = Database["public"]["Tables"]["admin_users"]["Insert"]

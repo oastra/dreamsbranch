@@ -8,22 +8,45 @@ import { useState } from "react";
 import FacebookIcon from "@/components/icons/FacebookIcon";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { NavItem } from "@/components/navigation/nav-item";
+import { NavItemDropdown } from "@/components/navigation/nav-item-dropdown";
 import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { MobileNav } from "@/components/navigation/mobile-nav";
 import { Button } from "@/components/ui/button";
 
-const NAV_ITEMS = [
+type NavChildKey =
+  | "shop.handmade"
+  | "shop.from_ukraine"
+  | "shop.cuisine"
+  | "shop.catering";
+
+type NavChild = { key: NavChildKey; href: string; labelKey: string };
+
+type NavItemDef = {
+  key: string;
+  href: string;
+  children?: readonly NavChild[];
+};
+
+const SHOP_CHILDREN: readonly NavChild[] = [
+  { key: "shop.handmade", href: "/shop/handmade", labelKey: "shop.offerings.handmade" },
+  { key: "shop.from_ukraine", href: "/shop/from-ukraine", labelKey: "shop.offerings.from_ukraine" },
+  { key: "shop.cuisine", href: "/shop/cuisine", labelKey: "shop.offerings.ukrainian_cuisine" },
+  { key: "shop.catering", href: "/shop/catering", labelKey: "shop.offerings.catering" },
+];
+
+const NAV_ITEMS: readonly NavItemDef[] = [
   { key: "about", href: "/about" },
   { key: "campaigns", href: "/campaigns" },
   { key: "events", href: "/events" },
   { key: "news", href: "/news" },
   { key: "reports", href: "/reports" },
-  { key: "shop", href: "/shop" },
+  { key: "shop", href: "/shop", children: SHOP_CHILDREN },
   { key: "contact", href: "/contact" },
-] as const;
+];
 
 export function Header() {
   const t = useTranslations("nav");
+  const tRoot = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -43,7 +66,15 @@ export function Header() {
     return clean === href || clean.startsWith(href + "/");
   }
 
-  const navItems = NAV_ITEMS.map((item) => ({ ...item, label: t(item.key) }));
+  const navItems = NAV_ITEMS.map((item) => ({
+    ...item,
+    label: t(item.key),
+    children: item.children?.map((c) => ({
+      key: c.key,
+      href: c.href,
+      label: tRoot(c.labelKey),
+    })),
+  }));
 
   return (
     <header className="z-50 mb-5">
@@ -64,14 +95,24 @@ export function Header() {
 
             {/* Desktop nav */}
             <nav className="hidden lg:flex items-center text-secondary gap-1">
-              {navItems.map((item) => (
-                <NavItem
-                  key={item.key}
-                  href={item.href}
-                  label={item.label}
-                  isActive={isActive(item.href)}
-                />
-              ))}
+              {navItems.map((item) =>
+                item.children && item.children.length > 0 ? (
+                  <NavItemDropdown
+                    key={item.key}
+                    label={item.label}
+                    children={item.children}
+                    isActive={isActive(item.href)}
+                    isChildActive={isActive}
+                  />
+                ) : (
+                  <NavItem
+                    key={item.key}
+                    href={item.href}
+                    label={item.label}
+                    isActive={isActive(item.href)}
+                  />
+                ),
+              )}
             </nav>
 
             {/* Desktop actions */}

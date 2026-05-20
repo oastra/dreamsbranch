@@ -767,6 +767,85 @@ export const db = {
     },
   },
 
+  // ── catering_events ───────────────────────────────────────────────────────────
+  // NOTE: migration supabase/migrations/20260520000003_catering_events.sql
+  // creates this table but is not yet applied to remote — `as never` casts
+  // bypass the literal-table-name check until the types are regenerated.
+  cateringEvent: {
+    async findMany() {
+      const sb = createAdminClient();
+      const { data } = await sb
+        .from('catering_events' as never)
+        .select('*')
+        .order('sort_order')
+        .order('created_at', { ascending: false });
+      return (data ?? []) as unknown as import('@/types/database').CateringEvent[];
+    },
+
+    async findUnique({ where }: { where: { id: string } }) {
+      const sb = createAdminClient();
+      const { data } = await sb
+        .from('catering_events' as never)
+        .select('*')
+        .eq('id', where.id)
+        .maybeSingle();
+      return (data ?? null) as unknown as import('@/types/database').CateringEvent | null;
+    },
+
+    async create({ data }: { data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const { data: created } = await sb
+        .from('catering_events' as never)
+        .insert(data as never)
+        .select()
+        .single();
+      return (created ?? null) as unknown as import('@/types/database').CateringEvent | null;
+    },
+
+    async update({ where, data }: { where: { id: string }; data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const { data: updated } = await sb
+        .from('catering_events' as never)
+        .update(data as never)
+        .eq('id', where.id)
+        .select()
+        .single();
+      return (updated ?? null) as unknown as import('@/types/database').CateringEvent | null;
+    },
+
+    async delete({ where }: { where: { id: string } }) {
+      const sb = createAdminClient();
+      await sb.from('catering_events' as never).delete().eq('id', where.id);
+    },
+  },
+
+  // ── catering_page_settings (singleton row id=1) ───────────────────────────────
+  // NOTE: migration supabase/migrations/20260520000004_catering_page_settings.sql
+  // creates this table; `as never` bypasses literal-name check until remote
+  // types are regenerated.
+  cateringSetting: {
+    async findFirst() {
+      const sb = createAdminClient();
+      const { data } = await sb
+        .from('catering_page_settings' as never)
+        .select('*')
+        .eq('id', 1)
+        .single();
+      return (data ?? null) as unknown as import('@/types/database').CateringPageSettings | null;
+    },
+
+    async update({ data }: { data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const { data: updated } = await sb
+        .from('catering_page_settings' as never)
+        .update({ ...data, updated_at: new Date().toISOString() } as never)
+        .eq('id', 1)
+        .select()
+        .single();
+      return (updated ?? null) as unknown as import('@/types/database').CateringPageSettings | null;
+    },
+  },
+
   // ── about_page_settings (singleton row id=1) ──────────────────────────────────
   aboutSetting: {
     async findFirst() {

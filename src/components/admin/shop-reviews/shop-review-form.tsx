@@ -32,6 +32,7 @@ export function ShopReviewForm({ review }: { review?: Record<string, any> }) {
     avatar: review?.avatar ?? '',
     sortOrder: review?.sort_order ?? 0,
     status: review?.status ?? 'DRAFT',
+    section: ((review?.section ?? '') as string),
   });
 
   const [dirty, setDirty] = useState(false);
@@ -45,7 +46,10 @@ export function ShopReviewForm({ review }: { review?: Record<string, any> }) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    const payload = { ...form };
+    const payload = {
+      ...form,
+      section: form.section ? form.section : null,
+    };
     const result = isEdit
       ? await updateShopReview(review!.id, payload)
       : await createShopReview(payload);
@@ -95,6 +99,25 @@ export function ShopReviewForm({ review }: { review?: Record<string, any> }) {
                 <SelectItem value="ARCHIVED">Archived</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="md:col-span-2">
+            <Label>Show on</Label>
+            <Select
+              value={form.section || '__all__'}
+              onValueChange={(v) => set('section', !v || v === '__all__' ? '' : v)}
+            >
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">All shop pages</SelectItem>
+                <SelectItem value="handmade">Handmade</SelectItem>
+                <SelectItem value="from_ukraine">From Ukraine</SelectItem>
+                <SelectItem value="cuisine">Ukrainian cuisine</SelectItem>
+                <SelectItem value="catering">Catering</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="mt-1 text-caption text-text-tertiary">
+              &quot;All shop pages&quot; → review is visible everywhere a shop reviews block is rendered. Pick a section to scope it to that page only.
+            </p>
           </div>
         </div>
       </div>

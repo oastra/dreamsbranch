@@ -1,14 +1,24 @@
 "use client";
 
-import { Mail } from "lucide-react";
+import { useState } from "react";
+import { Mail, ChevronDown } from "lucide-react";
 import FacebookIcon from "@/components/icons/FacebookIcon";
+import { Link } from "@/i18n/routing";
 import { NavItem } from "./nav-item";
+import { cn } from "@/lib/utils";
 import type { Locale } from "next-intl";
+
+interface MobileNavChild {
+  key: string;
+  href: string;
+  label: string;
+}
 
 interface MobileNavItem {
   key: string;
   href: string;
   label: string;
+  children?: MobileNavChild[];
 }
 
 interface MobileNavProps {
@@ -27,20 +37,72 @@ export function MobileNav({
   isActive,
 }: MobileNavProps) {
   const targetLocale = currentLocale === "ua" ? "EN" : "UA";
+  const [openKey, setOpenKey] = useState<string | null>(null);
 
   return (
     <div className="lg:hidden border-t border-border bg-surface-primary">
       <nav className="container-page py-2">
-        {items.map((item) => (
-          <NavItem
-            key={item.key}
-            href={item.href}
-            label={item.label}
-            isActive={isActive(item.href)}
-            onClick={onClose}
-            className="block w-full px-4 py-4 border-b border-border"
-          />
-        ))}
+        {items.map((item) => {
+          const hasChildren = !!item.children?.length;
+          const isOpen = openKey === item.key;
+          const active = isActive(item.href);
+
+          if (!hasChildren) {
+            return (
+              <NavItem
+                key={item.key}
+                href={item.href}
+                label={item.label}
+                isActive={active}
+                onClick={onClose}
+                className="block w-full px-4 py-4 border-b border-border"
+              />
+            );
+          }
+
+          return (
+            <div key={item.key}>
+              <button
+                type="button"
+                onClick={() => setOpenKey(isOpen ? null : item.key)}
+                aria-expanded={isOpen}
+                className={cn(
+                  "flex w-full items-center justify-between px-4 py-4 border-b border-border rounded-full text-secondary font-regular transition-colors text-left",
+                  active
+                    ? "bg-primary text-text-primary-80"
+                    : "text-text-primary hover:text-secondary",
+                )}
+              >
+                <span>{item.label}</span>
+                <ChevronDown
+                  className={cn(
+                    "w-4 h-4 shrink-0 transition-transform",
+                    isOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              {isOpen &&
+                item.children!.map((child) => {
+                  const childActive = isActive(child.href);
+                  return (
+                    <Link
+                      key={child.key}
+                      href={child.href}
+                      onClick={onClose}
+                      className={cn(
+                        "block w-full pl-8 pr-4 py-3 border-b border-border text-body transition-colors",
+                        childActive
+                          ? "text-secondary"
+                          : "text-text-secondary hover:text-secondary",
+                      )}
+                    >
+                      {child.label}
+                    </Link>
+                  );
+                })}
+            </div>
+          );
+        })}
 
         <div className="pt-5 pb-4 flex items-center gap-3">
           <button

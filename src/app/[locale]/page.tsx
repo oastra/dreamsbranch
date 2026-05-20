@@ -13,13 +13,13 @@ import { HomePhotoReports } from "@/components/home/HomePhotoReports";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import type {
-  AboutPageSettings,
   Campaign,
   Event,
+  HomePageSettings,
   NewsArticle,
 } from "@/types/database";
 
-const HERO_SLIDES: HeroSlide[] = [
+const FALLBACK_HERO_SLIDES: HeroSlide[] = [
   {
     src: "/images/fundaraising/backup-power-station-mobile-gadgets-charged-outdoor.webp",
     alt: "",
@@ -103,10 +103,14 @@ export default async function HomePage({
   const tCampaigns = await getTranslations({ locale, namespace: "campaigns" });
   const tNews = await getTranslations({ locale, namespace: "news" });
 
-  // Reuse the about-page settings as the single source of truth for the
-  // headline numbers — they're already editable via /admin/about-settings.
+  // Home page settings — owns the hero carousel and the four headline
+  // result numbers (also rendered on /about). Edited via /admin/home-settings.
   const settings =
-    (await db.aboutSetting.findFirst()) as AboutPageSettings | null;
+    (await db.homeSetting.findFirst()) as HomePageSettings | null;
+  const heroSlides: HeroSlide[] =
+    (settings?.hero_images ?? []).length > 0
+      ? settings!.hero_images.map((src) => ({ src, alt: "" }))
+      : FALLBACK_HERO_SLIDES;
   const yearsValue = settings?.years_value || tAbout("results.years_value");
   const membersValue =
     settings?.members_value || tAbout("results.members_value");
@@ -209,7 +213,7 @@ export default async function HomePage({
               CTAs sit at the bottom edge of the column, lining up with
               the image's bottom edge. */}
           <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2">
-            <HeroCarousel slides={HERO_SLIDES} />
+            <HeroCarousel slides={heroSlides} />
           </div>
 
           {/* Lead + description + CTAs */}

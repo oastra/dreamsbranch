@@ -24,6 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { resolvePublicUrl } from "@/lib/actions/resolve-public-url";
 
 interface AdminUser {
   id: string;
@@ -32,19 +33,38 @@ interface AdminUser {
   role: string;
 }
 
-const navItems = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Campaigns", href: "/admin/campaigns", icon: Heart },
-  { label: "Events", href: "/admin/events", icon: Calendar },
-  { label: "News", href: "/admin/news", icon: Newspaper },
-  { label: "Reports", href: "/admin/reports", icon: FileText },
-  { label: "Donations", href: "/admin/donations", icon: DollarSign },
-  { label: "Contact Inbox", href: "/admin/contacts", icon: Inbox },
-  { label: "Home Page", href: "/admin/home-settings", icon: Home },
-  { label: "About Page", href: "/admin/about-settings", icon: Info },
-  { label: "Campaigns Page", href: "/admin/campaigns-settings", icon: HandCoins },
-  { label: "Shop Photo Reports", href: "/admin/shop-photo-reports", icon: ShoppingBag },
-  { label: "Shop Reviews", href: "/admin/shop-reviews", icon: Star },
+type NavItem = { label: string; href: string; icon: typeof Heart };
+type NavGroup = { heading: string | null; items: NavItem[] };
+
+const navGroups: NavGroup[] = [
+  {
+    heading: null,
+    items: [
+      { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+      { label: "Campaigns", href: "/admin/campaigns", icon: Heart },
+      { label: "Events", href: "/admin/events", icon: Calendar },
+      { label: "News", href: "/admin/news", icon: Newspaper },
+      { label: "Reports", href: "/admin/reports", icon: FileText },
+      { label: "Donations", href: "/admin/donations", icon: DollarSign },
+      { label: "Contact Inbox", href: "/admin/contacts", icon: Inbox },
+    ],
+  },
+  {
+    heading: "Pages",
+    items: [
+      { label: "Home Page", href: "/admin/home-settings", icon: Home },
+      { label: "About Page", href: "/admin/about-settings", icon: Info },
+      { label: "Campaigns Page", href: "/admin/campaigns-settings", icon: HandCoins },
+      { label: "Catering Page", href: "/admin/catering-page", icon: HandCoins },
+    ],
+  },
+  {
+    heading: "Shop",
+    items: [
+      { label: "Photo Reports", href: "/admin/shop-photo-reports", icon: ShoppingBag },
+      { label: "Reviews", href: "/admin/shop-reviews", icon: Star },
+    ],
+  },
 ];
 
 const superAdminItems = [
@@ -59,6 +79,12 @@ export function AdminSidebar({ user }: { user: AdminUser }) {
   function isActive(href: string): boolean {
     if (href === "/admin") return pathname === "/admin";
     return pathname.startsWith(href);
+  }
+
+  async function handleViewSite(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    const url = await resolvePublicUrl(pathname);
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   async function handleSignOut() {
@@ -94,6 +120,7 @@ export function AdminSidebar({ user }: { user: AdminUser }) {
       <nav className="flex-1 p-4 space-y-1">
         <a
           href="/"
+          onClick={handleViewSite}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-body font-medium text-secondary hover:bg-secondary-10 transition-colors"
@@ -103,24 +130,33 @@ export function AdminSidebar({ user }: { user: AdminUser }) {
         </a>
         <div className="my-2 border-t border-border" />
 
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-body font-medium transition-colors",
-                isActive(item.href)
-                  ? "bg-brand-blue-light text-brand-blue"
-                  : "text-text-secondary hover:bg-surface-secondary hover:text-text-primary",
-              )}
-            >
-              <Icon className="w-5 h-5 shrink-0" />
-              {item.label}
-            </Link>
-          );
-        })}
+        {navGroups.map((group, gi) => (
+          <div key={group.heading ?? `g-${gi}`} className={cn(gi > 0 && "pt-4 mt-4 border-t border-border")}>
+            {group.heading && (
+              <p className="px-3 mb-2 text-caption text-text-tertiary uppercase tracking-wider">
+                {group.heading}
+              </p>
+            )}
+            {group.items.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-body font-medium transition-colors",
+                    isActive(item.href)
+                      ? "bg-brand-blue-light text-brand-blue"
+                      : "text-text-secondary hover:bg-surface-secondary hover:text-text-primary",
+                  )}
+                >
+                  <Icon className="w-5 h-5 shrink-0" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
 
         {user.role === "SUPER_ADMIN" && (
           <>

@@ -15,9 +15,10 @@ import { cn } from '@/lib/utils';
 interface Contact {
   id: string;
   name: string;
-  email: string;
+  email: string | null;
+  phone?: string | null;
   tag: string;
-  message: string;
+  message: string | null;
   is_read: boolean;
   created_at: string;
 }
@@ -66,7 +67,9 @@ export function ContactsTable({
     const q = search.trim().toLowerCase();
     if (!q) return contacts;
     return contacts.filter((c) =>
-      `${c.name} ${c.email} ${c.message}`.toLowerCase().includes(q),
+      `${c.name} ${c.email ?? ''} ${c.phone ?? ''} ${c.message ?? ''}`
+        .toLowerCase()
+        .includes(q),
     );
   }, [contacts, search]);
 
@@ -145,11 +148,19 @@ export function ContactsTable({
                   {c.name}
                   {!c.is_read && <span className="ml-2 w-2 h-2 rounded-full bg-brand-blue inline-block" />}
                 </TableCell>
-                <TableCell>
-                  <a href={`mailto:${c.email}`} className="hover:underline">{c.email}</a>
+                <TableCell className="text-text-secondary">
+                  {c.email ? (
+                    <a href={`mailto:${c.email}`} className="hover:underline">{c.email}</a>
+                  ) : c.phone ? (
+                    <a href={`tel:${c.phone}`} className="hover:underline">{c.phone}</a>
+                  ) : (
+                    '—'
+                  )}
                 </TableCell>
                 <TableCell><Badge variant="outline" className="text-xs">{c.tag}</Badge></TableCell>
-                <TableCell className="max-w-xs truncate text-text-secondary">{c.message}</TableCell>
+                <TableCell className="max-w-xs truncate text-text-secondary">
+                  {c.message ?? <span className="italic text-text-tertiary">(quick lead — no message)</span>}
+                </TableCell>
                 <TableCell>
                   {!c.is_read && (
                     <Button size="sm" variant="outline" disabled={marking === c.id} onClick={() => handleMarkRead(c.id)}>

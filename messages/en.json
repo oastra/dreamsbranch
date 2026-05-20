@@ -206,7 +206,67 @@
       "item_sweet": "Sweet boxes",
       "item_custom": "Custom menu",
       "cta": "Learn more",
-      "image_alt": "Ukrainian catering dishes"
+      "image_alt": "Ukrainian catering dishes",
+      "hero_subtitle": "A taste of Ukraine — for your celebration",
+      "hero_description": "We cook Ukrainian dishes with love and respect for tradition, so you can feel the warmth of home even thousands of miles away. Our catering is a chance to share our culture with friends and community — without spending the day in the kitchen.",
+      "hero_cta": "Our services",
+      "events_title": "What our events look like",
+      "prev_event_aria": "Previous event",
+      "next_event_aria": "Next event",
+      "process_title": "From request to a flawless table",
+      "step_1_title": "Consultation",
+      "step_1_text": "You describe the event; we help you choose the menu and the services you need",
+      "step_2_title": "Preparation",
+      "step_2_text": "We agree on the decor and bring the equipment and our team at the right time",
+      "step_3_title": "Execution",
+      "step_3_text": "Our team serves, looks after the guests and cleans up. You — relax",
+      "services_title": "Our services",
+      "service_image_alt": "Catering service",
+      "service_full": {
+        "title": "Full-service celebration",
+        "description": "We turn your celebrations into worry-free time off. From an authentic menu to the final clean-up — we create an atmosphere of warm Ukrainian hospitality where every detail is thought through for you.",
+        "bullets": [
+          { "label": "Full planning", "text": "menu development from your favourite Ukrainian dishes" },
+          { "label": "Look and service", "text": "professional plating and themed décor of the venue" },
+          { "label": "On-event support", "text": "preparation and serving by our team" },
+          { "label": "Cleanliness and comfort", "text": "full clean-up of the venue after the event" },
+          { "label": "Price", "text": "from AUD50 per person (all profits to the Armed Forces of Ukraine)" }
+        ],
+        "cta": "Book a celebration"
+      },
+      "service_delivery": {
+        "title": "We'll cook and deliver",
+        "description": "You pick the format and menu — we take care of the rest. Our team handles the full cooking-and-logistics cycle so you can focus on your guests while we look after the authentic flavours and timely delivery.",
+        "bullets": [
+          { "label": "Personalised planning", "text": "menu agreed with your preferences, the theme of the event, and the right portion count" },
+          { "label": "Home taste and quality", "text": "professional cooking in our kitchen with only fresh ingredients and traditional recipes" },
+          { "label": "Logistics taken care of", "text": "careful delivery and setup at the time and location that work for you" },
+          { "label": "Price", "text": "from AUD50 per person (all profits to the Armed Forces of Ukraine)" }
+        ],
+        "cta": "Order delivery"
+      },
+      "service_kitchen": {
+        "title": "We'll cook in your kitchen",
+        "description": "A professional solution for events at venues with kitchens. Our team comes to you and prepares the agreed menu on-site, delivering restaurant-level service and full quality control.",
+        "bullets": [
+          { "label": "Work in a professional kitchen", "text": "we cook on your equipment, following all standards" },
+          { "label": "Full service cycle", "text": "from styling the room to professional table service" },
+          { "label": "Cooking and serving", "text": "skilful execution and timely service throughout the event" },
+          { "label": "Spotless clean-up", "text": "we take care of cleaning the kitchen and workspaces afterwards" },
+          { "label": "Price", "text": "from AUD50 per person (all profits to the Armed Forces of Ukraine)" }
+        ],
+        "cta": "Discuss the details"
+      },
+      "faq_title": "Frequently asked questions",
+      "cta_title": "Ready to discuss your event?",
+      "cta_description": "Leave a request and our event manager will get in touch with you to put together the perfect proposal and quote a price",
+      "cta_name_label": "Name",
+      "cta_phone_label": "Phone",
+      "cta_field_placeholder": "Text",
+      "cta_submit": "Send",
+      "cta_image_alt": "Catering dishes",
+      "cta_success": "Thanks! We'll be in touch shortly.",
+      "cta_error": "Couldn't send — please try again."
     },
     "product": {
       "breadcrumb_aria": "Breadcrumb",

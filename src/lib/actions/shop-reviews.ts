@@ -17,6 +17,7 @@ function toSnake(input: Record<string, unknown>) {
     avatar: input.avatar || null,
     status: (input.status as string).toLowerCase(),
     sort_order: input.sortOrder ?? 0,
+    section: (input.section as string | null | undefined) ?? null,
   };
 }
 

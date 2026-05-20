@@ -1,11 +1,18 @@
 import { ReviewsCarousel, type Review } from "@/components/shop/ReviewsCarousel";
 import { MOCK_SHOP_REVIEWS } from "@/lib/mocks/shop-reviews";
 import { db } from "@/lib/db";
-import type { ShopReview } from "@/types/database";
+import type { ShopReview, ShopSection } from "@/types/database";
 import { getTranslations } from "next-intl/server";
 
 type Props = {
   locale: string;
+  /**
+   * Restrict to reviews scoped to this section. When set, only reviews
+   * with `section = <value>` are shown — section-less ("All shop pages")
+   * reviews are excluded. When omitted, the section falls back to its
+   * legacy behaviour: show every review.
+   */
+  section?: ShopSection;
 };
 
 type ReviewSource = {
@@ -20,14 +27,16 @@ type ReviewSource = {
   avatar: string | null;
 };
 
-export async function ShopReviewsSection({ locale }: Props) {
+export async function ShopReviewsSection({ locale, section }: Props) {
   const t = await getTranslations({ locale });
 
   // Try DB first; fall back to mocks if empty/unreachable.
   let source: ReviewSource[] = [];
   try {
+    const where: Record<string, unknown> = { status: "ACTIVE" };
+    if (section) where.section = section;
     const fetched = (await db.shopReview.findMany({
-      where: { status: "ACTIVE" },
+      where,
     })) as unknown as ShopReview[];
     source = fetched.map((r) => ({
       id: r.id,
@@ -44,7 +53,10 @@ export async function ShopReviewsSection({ locale }: Props) {
     // DB unreachable — fall through.
   }
 
-  if (source.length === 0) {
+  // Only fall back to mocks for the legacy "all sections" mode. When a
+  // specific section is requested, an empty result means "no reviews
+  // scoped here yet" — show nothing rather than unrelated mocks.
+  if (source.length === 0 && !section) {
     source = MOCK_SHOP_REVIEWS.map((r) => ({
       id: r.id,
       name_ua: r.name_ua,

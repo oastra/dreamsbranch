@@ -13,7 +13,11 @@ import { SectionHeading } from "@/components/shared/SectionHeading";
 import { ResultsSection } from "@/components/shared/ResultsSection";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
-import type { AboutPageSettings, FaqItem } from "@/types/database";
+import type {
+  AboutPageSettings,
+  FaqItem,
+  HomePageSettings,
+} from "@/types/database";
 
 export default async function Page({
   params,
@@ -24,8 +28,10 @@ export default async function Page({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "about" });
 
-  const settings =
-    (await db.aboutSetting.findFirst()) as AboutPageSettings | null;
+  const [settings, homeSettings] = await Promise.all([
+    db.aboutSetting.findFirst() as Promise<AboutPageSettings | null>,
+    db.homeSetting.findFirst() as Promise<HomePageSettings | null>,
+  ]);
 
   const heroSlides: CarouselSlide[] =
     (settings?.hero_images ?? []).length > 0
@@ -63,11 +69,12 @@ export default async function Page({
           { q: t("faq.q5"), a: t("faq.a5") },
         ];
 
-  const yearsValue = settings?.years_value || t("results.years_value");
-  const membersValue = settings?.members_value || t("results.members_value");
-  const raisedValue = settings?.raised_value || t("results.raised_value");
+  const yearsValue = homeSettings?.years_value || t("results.years_value");
+  const membersValue =
+    homeSettings?.members_value || t("results.members_value");
+  const raisedValue = homeSettings?.raised_value || t("results.raised_value");
   const transparencyValue =
-    settings?.transparency_value || t("results.transparency_value");
+    homeSettings?.transparency_value || t("results.transparency_value");
 
   return (
     <>

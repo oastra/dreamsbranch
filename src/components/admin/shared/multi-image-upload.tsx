@@ -14,6 +14,7 @@ interface MultiImageUploadProps {
   label?: string;
   requirements?: string;
   minImages?: number;
+  maxImages?: number;
 }
 
 export function MultiImageUpload({
@@ -23,6 +24,7 @@ export function MultiImageUpload({
   label = 'Images',
   requirements,
   minImages = 4,
+  maxImages,
 }: MultiImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -53,7 +55,13 @@ export function MultiImageUpload({
     }
     setUploading(false);
     if (inputRef.current) inputRef.current.value = '';
-    if (uploaded.length) onChange([...value, ...uploaded]);
+    if (uploaded.length) {
+      const combined = [...value, ...uploaded];
+      if (maxImages && combined.length > maxImages) {
+        toast.error(`Only ${maxImages} images allowed — extras were discarded`);
+      }
+      onChange(maxImages ? combined.slice(0, maxImages) : combined);
+    }
   }
 
   function confirmRemove() {
@@ -74,6 +82,7 @@ export function MultiImageUpload({
   }
 
   const countBelowMin = value.length < minImages;
+  const atMax = maxImages !== undefined && value.length >= maxImages;
 
   return (
     <div className="space-y-2">
@@ -83,7 +92,9 @@ export function MultiImageUpload({
           <p
             className={`text-caption ${countBelowMin ? 'text-red-600' : 'text-text-tertiary'}`}
           >
-            {value.length} / min {minImages}
+            {value.length} / {maxImages !== undefined && maxImages === minImages
+              ? maxImages
+              : `min ${minImages}${maxImages !== undefined ? `, max ${maxImages}` : ''}`}
           </p>
         ) : value.length > 0 ? (
           <p className="text-caption text-text-tertiary">
@@ -139,21 +150,23 @@ export function MultiImageUpload({
             </span>
           </div>
         ))}
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={uploading}
-          className="aspect-video rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 text-text-tertiary hover:border-brand-blue hover:text-brand-blue transition-colors"
-        >
-          {uploading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Upload className="w-5 h-5" />
-          )}
-          <span className="text-caption">
-            {uploading ? 'Uploading...' : 'Add image(s)'}
-          </span>
-        </button>
+        {!atMax && (
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={uploading}
+            className="aspect-video rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 text-text-tertiary hover:border-brand-blue hover:text-brand-blue transition-colors"
+          >
+            {uploading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Upload className="w-5 h-5" />
+            )}
+            <span className="text-caption">
+              {uploading ? 'Uploading...' : 'Add image(s)'}
+            </span>
+          </button>
+        )}
       </div>
       <input
         ref={inputRef}

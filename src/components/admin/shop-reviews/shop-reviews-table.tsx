@@ -23,7 +23,15 @@ interface Row {
   avatar: string | null;
   status: string;
   sort_order: number;
+  section: string | null;
 }
+
+const SECTION_LABELS: Record<string, string> = {
+  handmade: 'Handmade',
+  from_ukraine: 'From Ukraine',
+  cuisine: 'Cuisine',
+  catering: 'Catering',
+};
 
 type StatusFilter = 'ALL' | 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 
@@ -92,6 +100,7 @@ export function ShopReviewsTable({ reviews, userRole }: { reviews: Row[]; userRo
               <TableHead>Name</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Rating</TableHead>
+              <TableHead>Show on</TableHead>
               <TableHead>Order</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-12" />
@@ -100,7 +109,7 @@ export function ShopReviewsTable({ reviews, userRole }: { reviews: Row[]; userRo
           <TableBody>
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="py-8 text-center text-text-secondary">
+                <TableCell colSpan={8} className="py-8 text-center text-text-secondary">
                   {reviews.length === 0 ? 'No reviews yet' : 'No reviews match your filters'}
                 </TableCell>
               </TableRow>
@@ -140,6 +149,9 @@ export function ShopReviewsTable({ reviews, userRole }: { reviews: Row[]; userRo
                       <Star className="h-4 w-4 fill-[#FFE766] text-[#FFE766]" aria-hidden />
                       <span>{r.rating}</span>
                     </div>
+                  </TableCell>
+                  <TableCell className="text-text-secondary">
+                    {r.section ? SECTION_LABELS[r.section] ?? r.section : 'All'}
                   </TableCell>
                   <TableCell>{r.sort_order}</TableCell>
                   <TableCell><StatusBadge status={r.status} /></TableCell>

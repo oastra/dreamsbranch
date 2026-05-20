@@ -159,6 +159,10 @@ export const shopReviewSchema = z.object({
   avatar: z.string().optional(),
   status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
   sortOrder: z.coerce.number().int().default(0),
+  section: z
+    .enum(['handmade', 'from_ukraine', 'cuisine', 'catering'])
+    .nullable()
+    .optional(),
 });
 export type ShopReviewInput = z.infer<typeof shopReviewSchema>;
 
@@ -194,6 +198,13 @@ export const contactSchema = z.object({
 export type ContactInput = z.input<typeof contactSchema>;
 export type ContactOutput = z.infer<typeof contactSchema>;
 
+export const quickLeadSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(120),
+  phone: z.string().min(3, 'Phone is required').max(40),
+  tag: z.enum(['GENERAL', 'CATERING', 'VOLUNTEER']).default('GENERAL'),
+});
+export type QuickLeadInput = z.input<typeof quickLeadSchema>;
+
 export const manualDonationSchema = z.object({
   campaignId: z.string().min(1, 'Campaign is required'),
   donorName: z.string().min(1, 'Donor name is required'),
@@ -205,15 +216,11 @@ export const manualDonationSchema = z.object({
 export type ManualDonationInput = z.infer<typeof manualDonationSchema>;
 
 export const homeSettingsSchema = z.object({
-  heroTitleUa: z.string(),
-  heroTitleEn: z.string(),
-  heroSubtitleUa: z.string(),
-  heroSubtitleEn: z.string(),
-  heroVideoUrl: z.string().url().optional().or(z.literal('')),
-  statTotalRaised: z.coerce.number().default(0),
-  statPeopleHelped: z.coerce.number().int().default(0),
-  ctaTextUa: z.string(),
-  ctaTextEn: z.string(),
+  heroImages: z.array(z.string().url()),
+  yearsValue: z.string(),
+  membersValue: z.string(),
+  raisedValue: z.string(),
+  transparencyValue: z.string(),
 });
 export type HomeSettingsInput = z.infer<typeof homeSettingsSchema>;
 
@@ -230,6 +237,55 @@ export const campaignsSettingsSchema = z.object({
 });
 export type CampaignsSettingsInput = z.infer<typeof campaignsSettingsSchema>;
 
+export const cateringPageSettingsSchema = z.object({
+  faqItems: z.array(faqItemSchema),
+});
+export type CateringPageSettingsInput = z.infer<typeof cateringPageSettingsSchema>;
+
+export const CATERING_EVENT_LIMITS = {
+  title: 30,
+  description: 320,
+  location: 80,
+} as const;
+
+export const cateringEventSchema = z.object({
+  titleUa: z
+    .string()
+    .min(1, 'Title (UA) is required')
+    .max(CATERING_EVENT_LIMITS.title, `Title must be ${CATERING_EVENT_LIMITS.title} characters or fewer`),
+  titleEn: z
+    .string()
+    .min(1, 'Title (EN) is required')
+    .max(CATERING_EVENT_LIMITS.title, `Title must be ${CATERING_EVENT_LIMITS.title} characters or fewer`),
+  descriptionUa: z
+    .string()
+    .min(1, 'Description (UA) is required')
+    .max(
+      CATERING_EVENT_LIMITS.description,
+      `Description must be ${CATERING_EVENT_LIMITS.description} characters or fewer`,
+    ),
+  descriptionEn: z
+    .string()
+    .min(1, 'Description (EN) is required')
+    .max(
+      CATERING_EVENT_LIMITS.description,
+      `Description must be ${CATERING_EVENT_LIMITS.description} characters or fewer`,
+    ),
+  locationUa: z
+    .string()
+    .min(1, 'Location (UA) is required')
+    .max(CATERING_EVENT_LIMITS.location, `Location must be ${CATERING_EVENT_LIMITS.location} characters or fewer`),
+  locationEn: z
+    .string()
+    .min(1, 'Location (EN) is required')
+    .max(CATERING_EVENT_LIMITS.location, `Location must be ${CATERING_EVENT_LIMITS.location} characters or fewer`),
+  images: z
+    .array(z.string().url())
+    .length(5, 'Exactly 5 images are required'),
+  sortOrder: z.coerce.number().int().default(0),
+});
+export type CateringEventInput = z.infer<typeof cateringEventSchema>;
+
 export const aboutSettingsSchema = z.object({
   heroImages: z
     .array(z.string().url())
@@ -237,10 +293,6 @@ export const aboutSettingsSchema = z.object({
   teamImages: z
     .array(z.string().url())
     .min(4, 'At least 4 team images are required'),
-  yearsValue: z.string(),
-  membersValue: z.string(),
-  raisedValue: z.string(),
-  transparencyValue: z.string(),
   faqItems: z.array(faqItemSchema),
 });
 export type AboutSettingsInput = z.infer<typeof aboutSettingsSchema>;

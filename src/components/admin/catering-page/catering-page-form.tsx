@@ -7,29 +7,23 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
-import { updateAboutSettings } from '@/lib/actions/about';
-import type { AboutPageSettings, FaqItem } from '@/types/database';
+import { updateCateringPageSettings } from '@/lib/actions/catering-page';
+import type { CateringPageSettings, FaqItem } from '@/types/database';
 
 type Props = {
-  settings: AboutPageSettings | null;
+  settings: CateringPageSettings | null;
 };
 
-export function AboutForm({ settings }: Props) {
+export function CateringPageForm({ settings }: Props) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
 
-  const [heroImages, setHeroImages] = useState<string[]>(settings?.hero_images ?? []);
-  const [teamImages, setTeamImages] = useState<string[]>(settings?.team_images ?? []);
   const [faqItems, setFaqItems] = useState<FaqItem[]>(
     (settings?.faq_items ?? []) as unknown as FaqItem[],
   );
 
-  // Any change to a tracked field flips `dirty`. The ref skips the
-  // initial-mount effect run so an untouched form doesn't claim it's
-  // dirty. The Save handler resets it once the row is persisted.
   const [dirty, setDirty] = useState(false);
   const skipFirstRun = useRef(true);
   useEffect(() => {
@@ -38,7 +32,7 @@ export function AboutForm({ settings }: Props) {
       return;
     }
     setDirty(true);
-  }, [heroImages, teamImages, faqItems]);
+  }, [faqItems]);
   const handleCancel = useCancelWithConfirm('/admin', dirty);
 
   function addFaq() {
@@ -54,14 +48,10 @@ export function AboutForm({ settings }: Props) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    const result = await updateAboutSettings({
-      heroImages,
-      teamImages,
-      faqItems,
-    });
+    const result = await updateCateringPageSettings({ faqItems });
     setSaving(false);
     if (result.success) {
-      toast.success('About page updated');
+      toast.success('Catering page updated');
       setDirty(false);
       router.refresh();
     } else {
@@ -70,44 +60,13 @@ export function AboutForm({ settings }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-5xl">
-      {/* Hero carousel */}
-      <div className="bg-white rounded-xl border border-border p-6">
-        <h2 className="text-body font-semibold mb-1">Hero carousel</h2>
-        <p className="text-caption text-text-tertiary mb-4">
-          Top of About page, right column. Landscape images work best.
-        </p>
-        <MultiImageUpload
-          value={heroImages}
-          onChange={setHeroImages}
-          folder="about-hero"
-          label="Hero images (landscape, ~4:3, min 1200 × 900)"
-          minImages={4}
-        />
-      </div>
-
-      {/* Team carousel */}
-      <div className="bg-white rounded-xl border border-border p-6">
-        <h2 className="text-body font-semibold mb-1">Team carousel (full-width)</h2>
-        <p className="text-caption text-text-tertiary mb-4">
-          Full-width strip below the About-the-Team section. Wide aspect ratio.
-        </p>
-        <MultiImageUpload
-          value={teamImages}
-          onChange={setTeamImages}
-          folder="about-team"
-          label="Team images (landscape, ≈2.37:1, min 1920 × 810)"
-          minImages={4}
-        />
-      </div>
-
-      {/* Common Questions */}
-      <div className="bg-white rounded-xl border border-border p-6">
-        <div className="flex items-center justify-between mb-4">
+    <form onSubmit={handleSubmit} className="max-w-5xl space-y-6">
+      <div className="rounded-xl border border-border bg-white p-6">
+        <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-body font-semibold">Common Questions</h2>
+            <h2 className="text-body font-semibold">Frequently asked questions</h2>
             <p className="text-caption text-text-tertiary">
-              Question & answer pairs in Ukrainian and English.
+              Bilingual Q&amp;A shown in the FAQ block on /shop/catering.
             </p>
           </div>
           <Button
@@ -117,13 +76,13 @@ export function AboutForm({ settings }: Props) {
             onClick={addFaq}
             className="rounded-full"
           >
-            <Plus className="w-4 h-4 mr-1" />
+            <Plus className="mr-1 h-4 w-4" />
             Add question
           </Button>
         </div>
 
         {faqItems.length === 0 && (
-          <p className="text-body-sm text-text-tertiary py-4 text-center">
+          <p className="py-4 text-center text-body-sm text-text-tertiary">
             No questions yet. Click &quot;Add question&quot; to create one.
           </p>
         )}
@@ -132,9 +91,9 @@ export function AboutForm({ settings }: Props) {
           {faqItems.map((item, i) => (
             <div
               key={i}
-              className="rounded-lg border border-border p-4 bg-surface-secondary/40"
+              className="rounded-lg border border-border bg-surface-secondary/40 p-4"
             >
-              <div className="flex items-center justify-between mb-3">
+              <div className="mb-3 flex items-center justify-between">
                 <span className="text-body-sm font-medium">Question {i + 1}</span>
                 <button
                   type="button"
@@ -142,7 +101,7 @@ export function AboutForm({ settings }: Props) {
                   className="text-red-600 hover:text-red-700"
                   aria-label="Remove question"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="h-4 w-4" />
                 </button>
               </div>
               <BilingualTabs
