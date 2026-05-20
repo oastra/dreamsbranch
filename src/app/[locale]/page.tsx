@@ -13,6 +13,11 @@ import { HomePhotoReports } from "@/components/home/HomePhotoReports";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import { isEventPast } from "@/lib/events";
+
+// Home preview row hides past events, so the page needs to re-fetch
+// periodically — otherwise the static build keeps showing a finished
+// event until something else triggers revalidation.
+export const revalidate = 300;
 import type {
   Campaign,
   Event,

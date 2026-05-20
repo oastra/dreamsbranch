@@ -5,6 +5,10 @@ import { notFound, redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { isEventPast } from "@/lib/events";
 import { resolveLocaleSlug } from "@/lib/slug";
+
+// Related-events carousel filters out past ACTIVE events — re-fetch
+// every 5 minutes so the carousel stays accurate.
+export const revalidate = 300;
 import { EventCard } from "@/components/events/EventCard";
 import { EventBadges } from "@/components/events/EventBadges";
 import { EventInfoBlocks } from "@/components/events/EventInfoBlocks";

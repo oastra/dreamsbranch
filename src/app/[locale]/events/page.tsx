@@ -3,6 +3,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { db } from "@/lib/db";
 import { isEventPast } from "@/lib/events";
+
+// Past-vs-upcoming classification is time-sensitive. Re-fetch every
+// 5 minutes so an event that ends between deploys still flips to
+// archived without anyone touching admin.
+export const revalidate = 300;
 import { EventsList, type EventListItem } from "@/components/events/EventsList";
 import { SupportSection } from "@/components/shared/SupportSection";
 import { ContactSection } from "@/components/contact/ContactSection";
