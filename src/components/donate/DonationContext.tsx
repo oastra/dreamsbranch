@@ -17,6 +17,8 @@ type DonationState = {
   setFrequency: (f: Frequency) => void;
   displayName: string;
   setDisplayName: (s: string) => void;
+  cardholderName: string;
+  setCardholderName: (s: string) => void;
   isAnonymous: boolean;
   setIsAnonymous: (b: boolean) => void;
   email: string;
@@ -40,6 +42,7 @@ export function DonationProvider({
   const [amount, setAmount] = useState(initialAmount);
   const [frequency, setFrequency] = useState<Frequency>(initialFrequency);
   const [displayName, setDisplayName] = useState("");
+  const [cardholderName, setCardholderName] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [email, setEmail] = useState("");
 
@@ -51,13 +54,23 @@ export function DonationProvider({
       setFrequency,
       displayName,
       setDisplayName,
+      cardholderName,
+      setCardholderName,
       isAnonymous,
       setIsAnonymous,
       email,
       setEmail,
       campaignSlug,
     }),
-    [amount, frequency, displayName, isAnonymous, email, campaignSlug],
+    [
+      amount,
+      frequency,
+      displayName,
+      cardholderName,
+      isAnonymous,
+      email,
+      campaignSlug,
+    ],
   );
 
   return <DonationCtx.Provider value={value}>{children}</DonationCtx.Provider>;

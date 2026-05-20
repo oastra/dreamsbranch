@@ -64,6 +64,7 @@ export default async function DonatePage({
                   fastPayGoogleAria: t("donate.fast_pay_google_aria"),
                   displayNameLabel: t("donate.display_name_label"),
                   displayNamePlaceholder: t("donate.display_name_placeholder"),
+                  displayNameHint: t("donate.display_name_hint"),
                   emailLabel: t("donate.email_label"),
                   emailPlaceholder: t("donate.email_placeholder"),
                 }}

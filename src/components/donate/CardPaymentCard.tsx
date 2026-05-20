@@ -49,7 +49,6 @@ export function CardPaymentCard({ labels, onCancel, onSuccess }: Props) {
   const stripe = useStripe();
   const elements = useElements();
   const donation = useDonation();
-  const [name, setName] = useState("");
   const [brand, setBrand] = useState<"visa" | "mastercard" | "unknown">(
     "unknown",
   );
@@ -89,19 +88,30 @@ export function CardPaymentCard({ labels, onCancel, onSuccess }: Props) {
           ? "/api/stripe/subscription"
           : "/api/stripe/payment-intent";
 
+      // Send both names: the public display name (what we render on the
+       // campaign donor list) and the cardholder name (legal name on the
+       // card). Server falls back to cardholder name for donor_name when
+       // the display field is left empty.
+      const cardholderName = donation.cardholderName.trim();
+      const publicName = donation.isAnonymous
+        ? ""
+        : donation.displayName.trim();
+
       const payload =
         donation.frequency === "monthly"
           ? {
               campaignSlug: donation.campaignSlug,
               amount: donation.amount,
               email: donation.email,
-              displayName: donation.isAnonymous ? "" : donation.displayName,
+              displayName: publicName,
+              cardholderName,
               isAnonymous: donation.isAnonymous,
             }
           : {
               campaignSlug: donation.campaignSlug,
               amount: donation.amount,
-              displayName: donation.isAnonymous ? "" : donation.displayName,
+              displayName: publicName,
+              cardholderName,
               isAnonymous: donation.isAnonymous,
             };
 
@@ -110,21 +120,30 @@ export function CardPaymentCard({ labels, onCancel, onSuccess }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = (await res.json()) as
-        | { clientSecret: string }
-        | { error: string };
-      if (!res.ok || !("clientSecret" in data)) {
+      // Tolerate empty/non-JSON bodies on errors so the user sees a useful
+      // message instead of "Unexpected end of JSON input".
+      const raw = await res.text();
+      let data: { clientSecret?: string; error?: string } = {};
+      if (raw) {
+        try {
+          data = JSON.parse(raw) as typeof data;
+        } catch {
+          data = { error: raw.slice(0, 200) };
+        }
+      }
+      if (!res.ok || !data.clientSecret) {
         throw new Error(
-          "error" in data ? data.error : "Could not start payment",
+          data.error || `Could not start payment (HTTP ${res.status})`,
         );
       }
 
       // 2. Confirm card payment client-side. Card data never touches our server.
-      const confirm = await stripe.confirmCardPayment(data.clientSecret, {
+      const confirm = await stripe.confirmCardPayment(data.clientSecret!, {
         payment_method: {
           card: cardNumber,
           billing_details: {
-            name: name || donation.displayName || undefined,
+            name:
+              donation.cardholderName || donation.displayName || undefined,
             email: donation.email || undefined,
           },
         },
@@ -145,7 +164,7 @@ export function CardPaymentCard({ labels, onCancel, onSuccess }: Props) {
   }
 
   function handleCancel() {
-    setName("");
+    donation.setCardholderName("");
     setErrorMsg(null);
     elements?.getElement(CardNumberElement)?.clear();
     elements?.getElement(CardExpiryElement)?.clear();
@@ -157,14 +176,14 @@ export function CardPaymentCard({ labels, onCancel, onSuccess }: Props) {
   }
 
   return (
-    <div className="rounded-[30px] bg-secondary-10 p-5 pb-8 sm:p-6 sm:pb-8 lg:p-8">
+    <div className="rounded-[30px] bg-secondary-10 p-5 pb-6 sm:p-6 lg:p-6">
       <h2 className="text-center text-xl font-medium text-text-strong">
         {labels.sectionTitle}
       </h2>
 
       <form
         onSubmit={handleSubmit}
-        className="mt-5 rounded-3xl bg-white p-5 sm:mt-6 sm:p-6 lg:p-8"
+        className="mt-5 rounded-3xl bg-white p-5 sm:mt-6 sm:p-6 lg:p-6"
       >
         <p className="text-lg font-normal text-text-strong">
           {labels.formTitle}
@@ -180,8 +199,8 @@ export function CardPaymentCard({ labels, onCancel, onSuccess }: Props) {
               <input
                 type="text"
                 autoComplete="cc-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={donation.cardholderName}
+                onChange={(e) => donation.setCardholderName(e.target.value)}
                 placeholder={labels.namePlaceholder}
                 aria-label={labels.nameLabel}
                 className="h-12 w-full rounded-full border border-text-strong/15 bg-white px-4 text-body text-text-strong placeholder:text-text-secondary focus:border-secondary focus:outline-none"

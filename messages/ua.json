@@ -271,6 +271,7 @@
     "form_heading": "Підтримати збір!",
     "display_name_label": "Ім'я для публічного відображення",
     "display_name_placeholder": "Olivia Rhye",
+    "display_name_hint": "Це ім'я буде показано в списку донорів. Якщо залишити порожнім, використаємо ім'я з картки.",
     "email_label": "Електронна пошта",
     "email_placeholder": "you@example.com",
     "anonymous_checkbox": "Донатити анонімно",

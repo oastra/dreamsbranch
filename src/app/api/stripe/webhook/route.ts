@@ -95,9 +95,10 @@ export async function POST(req: NextRequest) {
         .maybeSingle();
       if (existing) break;
 
-      await sb.from("donations").insert({
+      const subInsertRow: Record<string, unknown> = {
         campaign_id: campaignId,
         donor_name: isAnonymous ? "" : meta.donor_name ?? "",
+        cardholder_name: meta.cardholder_name || null,
         donor_email: meta.donor_email ?? null,
         amount: Number.isFinite(amountAud)
           ? amountAud
@@ -107,7 +108,11 @@ export async function POST(req: NextRequest) {
         status: "completed",
         is_anonymous: isAnonymous,
         external_payment_id: invoice.id,
-      });
+      };
+      await sb
+        .from("donations")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .insert(subInsertRow as any);
       break;
     }
     case "invoice.payment_failed": {

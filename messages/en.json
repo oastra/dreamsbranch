@@ -261,6 +261,7 @@
     "form_heading": "Support this campaign!",
     "display_name_label": "Public display name",
     "display_name_placeholder": "Olivia Rhye",
+    "display_name_hint": "This name will appear in the donor list. If left blank, we'll use the name on the card.",
     "email_label": "Email",
     "email_placeholder": "you@example.com",
     "anonymous_checkbox": "Donate anonymously",

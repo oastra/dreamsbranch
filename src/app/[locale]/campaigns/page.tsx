@@ -45,8 +45,14 @@ export default async function CampaignsPage({
         db.campaignsSetting.findFirst(),
       ],
     );
-    active = fetchedActive as CampaignPreview[];
-    archived = fetchedArchived as CampaignPreview[];
+    // Hide the internal `general-fund` pseudo-campaign that the donate-page
+    // CTAs attach to — it's an FK target, not a public campaign.
+    active = (fetchedActive as CampaignPreview[]).filter(
+      (c) => c.slug !== "general-fund",
+    );
+    archived = (fetchedArchived as CampaignPreview[]).filter(
+      (c) => c.slug !== "general-fund",
+    );
     pageSettings = fetchedSettings as CampaignsPageSettings | null;
   } catch {
     // DB not reachable — use mock/default data

@@ -84,7 +84,7 @@ export function CampaignDonorsList({
         {visibleDonors.map((donor, i) => {
           const avatarBg = AVATAR_BGS[i % AVATAR_BGS.length];
           const initial = donor.is_anonymous
-            ? "?"
+            ? "🇺🇦"
             : (donor.donor_name?.trim()?.[0]?.toUpperCase() ?? "A");
           const name = donor.is_anonymous ? anonymousLabel : donor.donor_name;
 

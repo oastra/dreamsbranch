@@ -203,20 +203,6 @@ const MOCK_ARCHIVED_CAMPAIGN: Campaign = {
   gallery_images: [],
 };
 
-function buildMockDonors(): DonorPreview[] {
-  // Mock the last 10 transactions: first 5 render inline, the next 5 are
-  // surfaced via the "Подивитись більше" side-panel.
-  const now = Date.now();
-  const minute = 60_000;
-  return Array.from({ length: 10 }, (_, i) => ({
-    id: `d${i + 1}`,
-    donor_name: "Anna Mert",
-    amount: 200,
-    is_anonymous: false,
-    created_at: new Date(now - (10 + i * 5) * minute).toISOString(),
-  }));
-}
-
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 type TiptapNode = {
@@ -349,7 +335,7 @@ export default async function CampaignDetailPage({
         take: 12,
       });
       relatedCampaigns = (fetchedRelated as unknown as Campaign[]).filter(
-        (c) => c.slug !== slug,
+        (c) => c.slug !== slug && c.slug !== "general-fund",
       );
     } catch {
       // Donors / related are best-effort.
@@ -385,7 +371,6 @@ export default async function CampaignDetailPage({
   }
   if (!campaign) notFound();
 
-  if (donors.length === 0) donors = buildMockDonors();
   if (relatedCampaigns.length === 0) {
     // Build fallback active-only list from the shared listing catalog so the
     // carousel always has multiple cards even before the DB is populated.
@@ -596,6 +581,9 @@ export default async function CampaignDetailPage({
                       customLabel={t("donation.custom").toUpperCase()}
                       ctaLabel={t("campaigns.support_btn")}
                       closeLabel={t("donate.modal_close")}
+                      thankYouLabel={t("donate.success_thank_you")}
+                      thankYouImage="/images/thank_you.webp"
+                      thankYouImageAlt={t("donate.success_image_alt")}
                       campaignSlug={campaign.slug}
                       formLabels={{
                         formHeading: t("donate.form_heading"),
@@ -616,6 +604,7 @@ export default async function CampaignDetailPage({
                         displayNamePlaceholder: t(
                           "donate.display_name_placeholder",
                         ),
+                        displayNameHint: t("donate.display_name_hint"),
                         emailLabel: t("donate.email_label"),
                         emailPlaceholder: t("donate.email_placeholder"),
                         anonymousLabel: t("donate.anonymous_checkbox"),

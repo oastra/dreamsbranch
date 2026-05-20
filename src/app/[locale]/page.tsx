@@ -114,11 +114,17 @@ export default async function HomePage({
   const transparencyValue =
     settings?.transparency_value || tAbout("results.transparency_value");
 
-  // Newest 3 active campaigns for the home preview row.
-  const activeCampaigns = (await db.campaign.findMany({
-    where: { status: "ACTIVE" },
-    take: 3,
-  })) as unknown as Campaign[];
+  // Newest 3 active campaigns for the home preview row. Exclude the
+  // `general-fund` row — that's the foundation-wide donation target the
+  // donate page attaches to, not a real campaign.
+  const activeCampaigns = (
+    (await db.campaign.findMany({
+      where: { status: "ACTIVE" },
+      take: 4,
+    })) as unknown as Campaign[]
+  )
+    .filter((c) => c.slug !== "general-fund")
+    .slice(0, 3);
   const titleKey: "title_ua" | "title_en" =
     locale === "ua" ? "title_ua" : "title_en";
 

@@ -21,6 +21,7 @@ export type DonationFormLabels = {
   fastPayGoogleAria: string;
   displayNameLabel: string;
   displayNamePlaceholder: string;
+  displayNameHint?: string;
   emailLabel: string;
   emailPlaceholder: string;
   anonymousLabel?: string;
@@ -47,6 +48,7 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
     setFrequency,
     displayName,
     setDisplayName,
+    cardholderName,
     isAnonymous,
     setIsAnonymous,
     email,
@@ -94,9 +96,9 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
   }
 
   return (
-    <div className="rounded-[30px] bg-secondary-10 p-5 pb-6 sm:p-6 lg:p-7">
+    <div className="rounded-[30px] bg-secondary-10 p-5 pb-8 sm:p-6 sm:pb-8 lg:p-8">
       {/* ── Heading ─────────────────────────────────────────── */}
-      <div className="mb-4 flex items-center justify-center gap-2">
+      <div className="mb-5 flex items-center justify-center gap-2 sm:mb-6">
         <span aria-hidden="true" className="text-[24px] leading-none">
           🤝
         </span>
@@ -142,7 +144,7 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
       )}
 
       {/* ── Amount input ────────────────────────────────────── */}
-      <div className="mt-5 flex items-end justify-between gap-3 border-b border-white pb-3 sm:mt-6">
+      <div className="mt-6 flex items-end justify-between gap-3 border-b border-white pb-3 sm:mt-8">
         <input
           type="text"
           inputMode="decimal"
@@ -169,7 +171,7 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
             )}
             className="whitespace-nowrap rounded-full bg-white px-3 py-2 text-body font-normal text-text-strong shadow-sm transition-colors hover:bg-grey-40 sm:px-4"
           >
-            +${value} {labels.amountCurrency}
+            +${value}
           </button>
         ))}
       </div>
@@ -187,7 +189,7 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
       )}
 
       {/* ── "Швидка оплата" divider ────────────────────────── */}
-      <div className="my-5 flex items-center gap-4 sm:my-6">
+      <div className="my-6 flex items-center gap-4 sm:my-8">
         <hr className="flex-1 border-white" />
         <span className="text-body font-semibold text-text-strong">
           {labels.fastPayTitle}
@@ -223,24 +225,51 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
         </button>
       </div>
 
-      {/* ── Public display name ─────────────────────────────── */}
-      <label className="mt-5 block sm:mt-6">
-        <span className="mb-1.5 block text-body font-normal text-text-strong">
-          {labels.displayNameLabel}
-        </span>
-        <input
-          type="text"
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-          placeholder={labels.displayNamePlaceholder}
-          aria-label={labels.displayNameLabel}
-          disabled={isAnonymous}
-          className="h-12 w-full rounded-full border border-text-strong/15 bg-white px-4 text-body text-text-strong placeholder:text-text-secondary focus:border-secondary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
-        />
-      </label>
+      {/* ── Public display name + anonymous checkbox ──────────
+           When variant=campaign and the donor leaves this blank, the
+           placeholder live-mirrors the cardholder name (greyed) so they
+           can see what we'll show by default and override if they want. */}
+      <div className="mt-6 sm:mt-8">
+        <label className="block">
+          <span className="mb-1.5 block text-body font-normal text-text-strong">
+            {labels.displayNameLabel}
+          </span>
+          <input
+            type="text"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            placeholder={
+              variant === "campaign" && cardholderName.trim()
+                ? cardholderName
+                : labels.displayNamePlaceholder
+            }
+            aria-label={labels.displayNameLabel}
+            disabled={isAnonymous}
+            className="h-12 w-full rounded-full border border-text-strong/15 bg-white px-4 text-body text-text-strong placeholder:text-text-secondary focus:border-secondary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          />
+        </label>
+        {labels.displayNameHint && (
+          <p className="mt-1.5 px-1 text-body-sm text-text-secondary">
+            {labels.displayNameHint}
+          </p>
+        )}
+      </div>
+
+      {/* ── Anonymous checkbox (campaign variant only) ──────── */}
+      {variant === "campaign" && labels.anonymousLabel && (
+        <label className="mt-3 flex cursor-pointer items-center gap-2 text-body text-text-primary">
+          <input
+            type="checkbox"
+            checked={isAnonymous}
+            onChange={(e) => setIsAnonymous(e.target.checked)}
+            className="h-4 w-4 rounded border-text-strong/30 text-secondary focus:ring-secondary"
+          />
+          {labels.anonymousLabel}
+        </label>
+      )}
 
       {/* ── Email (only needed for monthly subscriptions) ──── */}
-      {frequency === "monthly" && (
+      {variant === "page" && frequency === "monthly" && (
         <label className="mt-3 block">
           <span className="mb-1.5 block text-body font-normal text-text-strong">
             {labels.emailLabel}
@@ -255,19 +284,6 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
             required
             className="h-12 w-full rounded-full border border-text-strong/15 bg-white px-4 text-body text-text-strong placeholder:text-text-secondary focus:border-secondary focus:outline-none"
           />
-        </label>
-      )}
-
-      {/* ── Anonymous checkbox (campaign variant only) ──────── */}
-      {variant === "campaign" && labels.anonymousLabel && (
-        <label className="mt-3 flex cursor-pointer items-center gap-2 text-body text-text-primary">
-          <input
-            type="checkbox"
-            checked={isAnonymous}
-            onChange={(e) => setIsAnonymous(e.target.checked)}
-            className="h-4 w-4 rounded border-text-strong/30 text-secondary focus:ring-secondary"
-          />
-          {labels.anonymousLabel}
         </label>
       )}
     </div>

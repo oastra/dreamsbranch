@@ -16,6 +16,7 @@ const bodySchema = z.object({
   amount: z.number().positive(),
   email: z.string().email(),
   displayName: z.string().max(120).optional().default(""),
+  cardholderName: z.string().max(120).optional().default(""),
   isAnonymous: z.boolean().optional().default(false),
 });
 
@@ -34,7 +35,15 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
-  const { campaignSlug, amount, email, displayName, isAnonymous } = parsed.data;
+  const {
+    campaignSlug,
+    amount,
+    email,
+    displayName,
+    cardholderName,
+    isAnonymous,
+  } = parsed.data;
+  const donorName = isAnonymous ? "" : displayName.trim() || cardholderName.trim();
 
   const amountCents = Math.round(amount * 100);
   if (amountCents < MIN_AMOUNT_CENTS || amountCents > MAX_AMOUNT_CENTS) {
@@ -71,6 +80,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  try {
   // Reuse Stripe Customer by email so a repeat donor doesn't accumulate dupes.
   const existingCustomers = await stripe.customers.list({ email, limit: 1 });
   const customer =
@@ -104,7 +114,8 @@ export async function POST(req: NextRequest) {
     metadata: {
       campaign_id: campaign.id,
       campaign_slug: campaign.slug,
-      donor_name: isAnonymous ? "" : displayName,
+      donor_name: donorName,
+      cardholder_name: cardholderName,
       donor_email: email,
       is_anonymous: String(isAnonymous),
       amount_aud: String(amount),
@@ -140,4 +151,10 @@ export async function POST(req: NextRequest) {
     clientSecret: intent.client_secret,
     subscriptionId: subscription.id,
   });
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Stripe request failed";
+    console.error("subscription failed:", err);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
