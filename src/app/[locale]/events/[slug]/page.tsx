@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { isEventPast } from "@/lib/events";
 import { resolveLocaleSlug } from "@/lib/slug";
 import { EventCard } from "@/components/events/EventCard";
 import { EventBadges } from "@/components/events/EventBadges";
@@ -172,9 +173,9 @@ export default async function EventDetailPage({
       where: { status: "ACTIVE" },
       take: 12,
     });
-    related = (fetchedRelated as unknown as Event[]).filter(
-      (e) => e.slug !== slug,
-    );
+    related = (fetchedRelated as unknown as Event[])
+      .filter((e) => e.slug !== slug)
+      .filter((e) => !isEventPast(e));
   } catch {
     // Related is best-effort.
   }

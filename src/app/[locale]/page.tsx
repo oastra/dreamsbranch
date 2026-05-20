@@ -12,6 +12,7 @@ import { NewsCard } from "@/components/news/NewsCard";
 import { HomePhotoReports } from "@/components/home/HomePhotoReports";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
+import { isEventPast } from "@/lib/events";
 import type {
   Campaign,
   Event,
@@ -132,11 +133,17 @@ export default async function HomePage({
   const titleKey: "title_ua" | "title_en" =
     locale === "ua" ? "title_ua" : "title_en";
 
-  // Newest 3 active events for the home preview row.
-  const activeEvents = (await db.event.findMany({
-    where: { status: "ACTIVE" },
-    take: 3,
-  })) as unknown as Event[];
+  // Newest 3 active events for the home preview row. Pull a wider set
+  // so we can drop events whose end has already passed (they show as
+  // archived on /events) and still have enough left to fill the row.
+  const activeEvents = (
+    (await db.event.findMany({
+      where: { status: "ACTIVE" },
+      take: 24,
+    })) as unknown as Event[]
+  )
+    .filter((e) => !isEventPast(e))
+    .slice(0, 3);
   const eventTagLabels: Record<string, string> = {
     active: tEvents("tag_active"),
     archived: tEvents("tag_archived"),

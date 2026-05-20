@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { db } from "@/lib/db";
+import { isEventPast } from "@/lib/events";
 import { EventsList, type EventListItem } from "@/components/events/EventsList";
 import { SupportSection } from "@/components/shared/SupportSection";
 import { ContactSection } from "@/components/contact/ContactSection";
@@ -71,8 +72,22 @@ export default async function EventsPage({
       db.event.findMany({ where: { status: "ACTIVE" } }),
       db.event.findMany({ where: { status: "ARCHIVED" } }),
     ]);
-    active = fetchedActive as unknown as EventPreview[];
-    archived = fetchedArchived as unknown as EventPreview[];
+    // Treat ACTIVE events whose end-of-window is in the past as
+    // archived. Admin can keep status=ACTIVE; visitors see the right
+    // bucket without needing a cron sweep.
+    const fetchedActiveTyped = fetchedActive as unknown as EventPreview[];
+    const fetchedArchivedTyped = fetchedArchived as unknown as EventPreview[];
+    const [stillActive, justEnded] = fetchedActiveTyped.reduce<
+      [EventPreview[], EventPreview[]]
+    >(
+      (acc, ev) => {
+        (isEventPast(ev) ? acc[1] : acc[0]).push(ev);
+        return acc;
+      },
+      [[], []],
+    );
+    active = stillActive;
+    archived = [...justEnded, ...fetchedArchivedTyped];
   } catch {
     // DB unreachable — render empty state instead of mock fallbacks so
     // editors immediately see when their content isn't loading.
