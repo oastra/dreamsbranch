@@ -17,10 +17,13 @@ function toSnake(input: Record<string, unknown>) {
     cover_image: input.coverImage ?? null,
     hero_image: input.heroImage ?? null,
     gallery_images: input.galleryImages ?? [],
-    event_date: input.date instanceof Date ? input.date.toISOString().split('T')[0] : input.date,
-    start_time: input.startTime ?? null,
-    end_time: input.endTime ?? null,
-    location: input.location ?? null,
+    event_date:
+      input.date instanceof Date
+        ? input.date.toISOString().split('T')[0]
+        : (input.date ?? null),
+    start_time: input.startTime || null,
+    end_time: input.endTime || null,
+    location: input.location || null,
     location_map_url: input.locationMapUrl || null,
     tags: input.tags ?? [],
     status: (input.status as string).toLowerCase(),
@@ -32,7 +35,7 @@ function toSnake(input: Record<string, unknown>) {
 export async function createEvent(formData: unknown) {
   const admin = await requireAdmin();
   const parsed = eventSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
   const row = {
     ...toSnake(parsed.data as Record<string, unknown>),
     created_by_admin_id: admin.id,
@@ -47,7 +50,7 @@ export async function createEvent(formData: unknown) {
 export async function updateEvent(id: string, formData: unknown) {
   const admin = await requireAdmin();
   const parsed = eventSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
   const row = {
     ...toSnake(parsed.data as Record<string, unknown>),
     updated_by_admin_id: admin.id,

@@ -57,6 +57,10 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
   const [dirty, setDirty] = useState(false);
   const handleCancel = useCancelWithConfirm('/admin/events', dirty);
 
+  // Drafts can be saved with anything; publish-time fields are only
+  // enforced when status leaves DRAFT (also re-checked server-side).
+  const publishRequired = form.status !== 'DRAFT';
+
   function setLine(kind: 'income' | 'expenses', index: number, key: 'label' | 'amount', value: string) {
     setForm(f => {
       const list = [...f.financialReport[kind]];
@@ -101,7 +105,7 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
       form.financialReport.expenses.some((l) => l.label.trim() || l.amount);
     const payload = {
       ...form,
-      date: new Date(form.date),
+      date: form.date ? new Date(form.date) : undefined,
       financialReport: reportFilled ? form.financialReport : undefined,
     };
     const result = isEdit ? await updateEvent(event.id, payload) : await createEvent(payload);
@@ -120,8 +124,8 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
         <h2 className="text-body font-semibold">General</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label>Date *</Label>
-            <Input type="date" value={form.date} onChange={e => set('date', e.target.value)} required />
+            <Label>Date{publishRequired ? ' *' : ''}</Label>
+            <Input type="date" value={form.date} onChange={e => set('date', e.target.value)} required={publishRequired} />
           </div>
           <div>
             <Label>Status</Label>

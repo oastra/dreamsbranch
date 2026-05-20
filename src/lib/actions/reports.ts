@@ -23,7 +23,7 @@ function toSnake(input: Record<string, unknown>) {
 export async function createReport(formData: unknown) {
   await requireAdmin();
   const parsed = reportSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
   const row = toSnake(parsed.data as Record<string, unknown>);
   const result = await db.report.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create report' };
@@ -35,7 +35,7 @@ export async function createReport(formData: unknown) {
 export async function updateReport(id: string, formData: unknown) {
   await requireAdmin();
   const parsed = reportSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
   const row = toSnake(parsed.data as Record<string, unknown>);
   const result = await db.report.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update report' };

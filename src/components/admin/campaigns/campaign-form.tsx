@@ -84,6 +84,10 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
   const [dirty, setDirty] = useState(false);
   const handleCancel = useCancelWithConfirm('/admin/campaigns', dirty);
 
+  // Drafts can be saved with anything; publish-time fields are only
+  // enforced when status leaves DRAFT (also re-checked server-side).
+  const publishRequired = form.status !== 'DRAFT';
+
   function set(key: string, value: unknown) {
     setForm(f => ({ ...f, [key]: value }));
     setDirty(true);
@@ -118,14 +122,14 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
         <h2 className="text-body font-semibold">General</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label>Goal Amount (AUD) *</Label>
+            <Label>Goal Amount (AUD){publishRequired ? ' *' : ''}</Label>
             <Input
               type="number"
               value={form.goalAmount}
               onChange={e => set('goalAmount', Number(e.target.value))}
-              min={1}
+              min={publishRequired ? 1 : 0}
               step="0.01"
-              required
+              required={publishRequired}
             />
           </div>
           <div>
@@ -182,9 +186,9 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
                 <Input value={form.titleUa} onChange={e => { set('titleUa', e.target.value); if (!isEdit) set('slugUa', slugify(e.target.value)); }} required />
               </div>
               <div>
-                <Label>Description (UA) *</Label>
+                <Label>Description (UA){publishRequired ? ' *' : ''}</Label>
                 <p className="mb-1 text-xs text-text-secondary">Plain text. Separate paragraphs with a blank line. A bit more or less is fine — ~755 characters (including spaces) is the ideal length.</p>
-                <Textarea rows={5} value={form.descriptionUa} onChange={e => set('descriptionUa', e.target.value)} required />
+                <Textarea rows={5} value={form.descriptionUa} onChange={e => set('descriptionUa', e.target.value)} required={publishRequired} />
                 <p className="mt-1 text-xs text-text-tertiary">
                   {form.descriptionUa.length} characters (ideal: ~755)
                 </p>
@@ -198,9 +202,9 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
                 <Input value={form.titleEn} onChange={e => { set('titleEn', e.target.value); if (!isEdit) set('slugEn', slugify(e.target.value)); }} required />
               </div>
               <div>
-                <Label>Description (EN) *</Label>
+                <Label>Description (EN){publishRequired ? ' *' : ''}</Label>
                 <p className="mb-1 text-xs text-text-secondary">Plain text. Separate paragraphs with a blank line. A bit more or less is fine — ~755 characters (including spaces) is the ideal length.</p>
-                <Textarea rows={5} value={form.descriptionEn} onChange={e => set('descriptionEn', e.target.value)} required />
+                <Textarea rows={5} value={form.descriptionEn} onChange={e => set('descriptionEn', e.target.value)} required={publishRequired} />
                 <p className="mt-1 text-xs text-text-tertiary">
                   {form.descriptionEn.length} characters (ideal: ~755)
                 </p>
@@ -257,20 +261,20 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
                 ua={
                   <>
                     <div>
-                      <Label>Question (UA) *</Label>
+                      <Label>Question (UA){publishRequired ? ' *' : ''}</Label>
                       <Input
                         value={item.q_ua}
                         onChange={(e) => updateFaq(i, 'q_ua', e.target.value)}
-                        required
+                        required={publishRequired}
                       />
                     </div>
                     <div>
-                      <Label>Answer (UA) *</Label>
+                      <Label>Answer (UA){publishRequired ? ' *' : ''}</Label>
                       <Textarea
                         rows={3}
                         value={item.a_ua}
                         onChange={(e) => updateFaq(i, 'a_ua', e.target.value)}
-                        required
+                        required={publishRequired}
                       />
                     </div>
                   </>
@@ -278,20 +282,20 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
                 en={
                   <>
                     <div>
-                      <Label>Question (EN) *</Label>
+                      <Label>Question (EN){publishRequired ? ' *' : ''}</Label>
                       <Input
                         value={item.q_en}
                         onChange={(e) => updateFaq(i, 'q_en', e.target.value)}
-                        required
+                        required={publishRequired}
                       />
                     </div>
                     <div>
-                      <Label>Answer (EN) *</Label>
+                      <Label>Answer (EN){publishRequired ? ' *' : ''}</Label>
                       <Textarea
                         rows={3}
                         value={item.a_en}
                         onChange={(e) => updateFaq(i, 'a_en', e.target.value)}
-                        required
+                        required={publishRequired}
                       />
                     </div>
                   </>

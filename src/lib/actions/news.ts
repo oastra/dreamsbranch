@@ -62,7 +62,7 @@ function toSnake(input: Record<string, unknown>) {
 export async function createArticle(formData: unknown) {
   const admin = await requireAdmin();
   const parsed = articleSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
   const row = {
     ...toSnake(parsed.data as Record<string, unknown>),
     created_by_admin_id: admin.id,
@@ -81,7 +81,7 @@ export async function createArticle(formData: unknown) {
 export async function updateArticle(id: string, formData: unknown) {
   const admin = await requireAdmin();
   const parsed = articleSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
+  if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
   const row = {
     ...toSnake(parsed.data as Record<string, unknown>),
     updated_by_admin_id: admin.id,

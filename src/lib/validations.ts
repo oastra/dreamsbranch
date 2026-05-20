@@ -1,5 +1,12 @@
 import { z } from 'zod';
 
+// Two-tier validation: DRAFT rows are permissive (only title required)
+// so editors can save work-in-progress; everything the public needs is
+// enforced when status leaves DRAFT.
+
+const SLUG_RE = /^[a-z0-9-]*$/;
+const SLUG_MSG = 'Slug must be lowercase with hyphens';
+
 export const faqItemSchema = z.object({
   q_ua: z.string().min(1, 'Question (UA) is required'),
   a_ua: z.string().min(1, 'Answer (UA) is required'),
@@ -7,66 +14,119 @@ export const faqItemSchema = z.object({
   a_en: z.string().min(1, 'Answer (EN) is required'),
 });
 
-export const campaignSchema = z.object({
-  titleUa: z.string().min(1, 'Title (UA) is required'),
-  titleEn: z.string().min(1, 'Title (EN) is required'),
-  slugUa: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
-  slugEn: z.string().min(1).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
-  descriptionUa: z.string().min(1, 'Description (UA) is required'),
-  descriptionEn: z.string().min(1, 'Description (EN) is required'),
-  coverImage: z.string().optional(),
-  galleryImages: z.array(z.string()).optional(),
-  goalAmount: z.coerce.number().positive('Goal must be positive'),
-  status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
-  order: z.coerce.number().int().default(0),
-  faqItems: z.array(faqItemSchema).default([]),
+const draftFaqItemSchema = z.object({
+  q_ua: z.string().default(''),
+  a_ua: z.string().default(''),
+  q_en: z.string().default(''),
+  a_en: z.string().default(''),
 });
+
+export const campaignSchema = z
+  .object({
+    titleUa: z.string().min(1, 'Title (UA) is required'),
+    titleEn: z.string().min(1, 'Title (EN) is required'),
+    slugUa: z.string().regex(SLUG_RE, SLUG_MSG).default(''),
+    slugEn: z.string().regex(SLUG_RE, SLUG_MSG).default(''),
+    descriptionUa: z.string().default(''),
+    descriptionEn: z.string().default(''),
+    coverImage: z.string().default(''),
+    galleryImages: z.array(z.string()).optional(),
+    goalAmount: z.coerce.number().nonnegative().default(0),
+    status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
+    order: z.coerce.number().int().default(0),
+    faqItems: z.array(draftFaqItemSchema).default([]),
+  })
+  .superRefine((data, ctx) => {
+    if (data.status === 'DRAFT') return;
+    if (!data.descriptionUa.trim())
+      ctx.addIssue({ code: 'custom', path: ['descriptionUa'], message: 'Description (UA) required to publish' });
+    if (!data.descriptionEn.trim())
+      ctx.addIssue({ code: 'custom', path: ['descriptionEn'], message: 'Description (EN) required to publish' });
+    if (!data.coverImage)
+      ctx.addIssue({ code: 'custom', path: ['coverImage'], message: 'Cover image required to publish' });
+    if (data.goalAmount <= 0)
+      ctx.addIssue({ code: 'custom', path: ['goalAmount'], message: 'Goal must be greater than 0 to publish' });
+    if (!data.slugUa)
+      ctx.addIssue({ code: 'custom', path: ['slugUa'], message: 'Slug (UA) required to publish — add a title first' });
+    if (!data.slugEn)
+      ctx.addIssue({ code: 'custom', path: ['slugEn'], message: 'Slug (EN) required to publish — add a title first' });
+    data.faqItems.forEach((it, i) => {
+      if (!it.q_ua.trim()) ctx.addIssue({ code: 'custom', path: ['faqItems', i, 'q_ua'], message: `FAQ #${i + 1}: question (UA) required to publish` });
+      if (!it.a_ua.trim()) ctx.addIssue({ code: 'custom', path: ['faqItems', i, 'a_ua'], message: `FAQ #${i + 1}: answer (UA) required to publish` });
+      if (!it.q_en.trim()) ctx.addIssue({ code: 'custom', path: ['faqItems', i, 'q_en'], message: `FAQ #${i + 1}: question (EN) required to publish` });
+      if (!it.a_en.trim()) ctx.addIssue({ code: 'custom', path: ['faqItems', i, 'a_en'], message: `FAQ #${i + 1}: answer (EN) required to publish` });
+    });
+  });
 export type CampaignInput = z.infer<typeof campaignSchema>;
 
-export const eventSchema = z.object({
-  titleUa: z.string().min(1),
-  titleEn: z.string().min(1),
-  slugUa: z.string().min(1).regex(/^[a-z0-9-]+$/),
-  slugEn: z.string().min(1).regex(/^[a-z0-9-]+$/),
-  descriptionUa: z.any().optional(),
-  descriptionEn: z.any().optional(),
-  coverImage: z.string().min(1, 'Cover image is required'),
-  heroImage: z.string().min(1, 'Hero image is required'),
-  galleryImages: z.array(z.string()).optional(),
-  date: z.coerce.date(),
-  startTime: z.string().optional(),
-  endTime: z.string().optional(),
-  location: z.string().optional(),
-  locationMapUrl: z.string().url().optional().or(z.literal('')),
-  tags: z.array(z.string()).optional(),
-  status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
-  volunteerCta: z.boolean().default(false),
-  financialReport: z.any().optional(),
-});
+export const eventSchema = z
+  .object({
+    titleUa: z.string().min(1, 'Title (UA) is required'),
+    titleEn: z.string().min(1, 'Title (EN) is required'),
+    slugUa: z.string().regex(SLUG_RE, SLUG_MSG).default(''),
+    slugEn: z.string().regex(SLUG_RE, SLUG_MSG).default(''),
+    descriptionUa: z.any().optional(),
+    descriptionEn: z.any().optional(),
+    coverImage: z.string().default(''),
+    heroImage: z.string().default(''),
+    galleryImages: z.array(z.string()).optional(),
+    date: z.coerce.date().optional(),
+    startTime: z.string().optional(),
+    endTime: z.string().optional(),
+    location: z.string().optional(),
+    locationMapUrl: z.string().url().optional().or(z.literal('')),
+    tags: z.array(z.string()).optional(),
+    status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
+    volunteerCta: z.boolean().default(false),
+    financialReport: z.any().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.status === 'DRAFT') return;
+    if (!data.coverImage)
+      ctx.addIssue({ code: 'custom', path: ['coverImage'], message: 'Cover image required to publish' });
+    if (!data.heroImage)
+      ctx.addIssue({ code: 'custom', path: ['heroImage'], message: 'Hero image required to publish' });
+    if (!data.date)
+      ctx.addIssue({ code: 'custom', path: ['date'], message: 'Date required to publish' });
+    if (!data.slugUa)
+      ctx.addIssue({ code: 'custom', path: ['slugUa'], message: 'Slug (UA) required to publish — add a title first' });
+    if (!data.slugEn)
+      ctx.addIssue({ code: 'custom', path: ['slugEn'], message: 'Slug (EN) required to publish — add a title first' });
+  });
 export type EventInput = z.infer<typeof eventSchema>;
 
-export const articleSchema = z.object({
-  titleUa: z.string().min(1),
-  titleEn: z.string().min(1),
-  slugUa: z.string().min(1).regex(/^[a-z0-9-]+$/),
-  slugEn: z.string().min(1).regex(/^[a-z0-9-]+$/),
-  bodyUa: z.any().optional(),
-  bodyEn: z.any().optional(),
-  leadTextUa: z.string().optional(),
-  leadTextEn: z.string().optional(),
-  postHeroTextUa: z.string().optional(),
-  postHeroTextEn: z.string().optional(),
-  outroTextUa: z.string().optional(),
-  outroTextEn: z.string().optional(),
-  coverImage: z.string().optional(),
-  bodyImage: z.string().min(1, 'In-text image is required'),
-  galleryImages: z.array(z.string()).optional(),
-  category: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  isFeatured: z.boolean().default(false),
-  status: z.enum(['DRAFT', 'PUBLISHED']).default('DRAFT'),
-  publishedAt: z.string().optional(),
-});
+export const articleSchema = z
+  .object({
+    titleUa: z.string().min(1, 'Title (UA) is required'),
+    titleEn: z.string().min(1, 'Title (EN) is required'),
+    slugUa: z.string().regex(SLUG_RE, SLUG_MSG).default(''),
+    slugEn: z.string().regex(SLUG_RE, SLUG_MSG).default(''),
+    bodyUa: z.any().optional(),
+    bodyEn: z.any().optional(),
+    leadTextUa: z.string().optional(),
+    leadTextEn: z.string().optional(),
+    postHeroTextUa: z.string().optional(),
+    postHeroTextEn: z.string().optional(),
+    outroTextUa: z.string().optional(),
+    outroTextEn: z.string().optional(),
+    coverImage: z.string().optional(),
+    bodyImage: z.string().default(''),
+    galleryImages: z.array(z.string()).optional(),
+    category: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    isFeatured: z.boolean().default(false),
+    status: z.enum(['DRAFT', 'PUBLISHED']).default('DRAFT'),
+    publishedAt: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.status === 'DRAFT') return;
+    if (!data.bodyImage)
+      ctx.addIssue({ code: 'custom', path: ['bodyImage'], message: 'In-text image required to publish' });
+    if (!data.slugUa)
+      ctx.addIssue({ code: 'custom', path: ['slugUa'], message: 'Slug (UA) required to publish — add a title first' });
+    if (!data.slugEn)
+      ctx.addIssue({ code: 'custom', path: ['slugEn'], message: 'Slug (EN) required to publish — add a title first' });
+  });
 export type ArticleInput = z.infer<typeof articleSchema>;
 
 export const shopPhotoReportImageSchema = z.object({
@@ -102,18 +162,26 @@ export const shopReviewSchema = z.object({
 });
 export type ShopReviewInput = z.infer<typeof shopReviewSchema>;
 
-export const reportSchema = z.object({
-  year: z.coerce.number().int().min(2020).max(2030),
-  titleUa: z.string().min(1),
-  titleEn: z.string().min(1),
-  descriptionUa: z.string().optional(),
-  descriptionEn: z.string().optional(),
-  coverImage: z.string().optional(),
-  galleryImages: z.array(z.string()).optional(),
-  pdfUrlUa: z.string().url().optional().or(z.literal('')),
-  pdfUrlEn: z.string().url().optional().or(z.literal('')),
-  status: z.enum(['DRAFT', 'PUBLISHED']).default('DRAFT'),
-});
+export const reportSchema = z
+  .object({
+    year: z.coerce.number().int().min(2020).max(2030),
+    titleUa: z.string().min(1, 'Title (UA) is required'),
+    titleEn: z.string().min(1, 'Title (EN) is required'),
+    descriptionUa: z.string().optional(),
+    descriptionEn: z.string().optional(),
+    coverImage: z.string().optional().default(''),
+    galleryImages: z.array(z.string()).optional(),
+    pdfUrlUa: z.string().url().optional().or(z.literal('')),
+    pdfUrlEn: z.string().url().optional().or(z.literal('')),
+    status: z.enum(['DRAFT', 'PUBLISHED']).default('DRAFT'),
+  })
+  .superRefine((data, ctx) => {
+    if (data.status === 'DRAFT') return;
+    if (!data.coverImage)
+      ctx.addIssue({ code: 'custom', path: ['coverImage'], message: 'Cover image required to publish' });
+    if (!data.pdfUrlUa && !data.pdfUrlEn)
+      ctx.addIssue({ code: 'custom', path: ['pdfUrlUa'], message: 'At least one PDF (UA or EN) required to publish' });
+  });
 export type ReportInput = z.infer<typeof reportSchema>;
 
 export const contactSchema = z.object({
