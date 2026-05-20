@@ -237,7 +237,7 @@ export default async function EventDetailPage({
               as a fallback. We deliberately do NOT fall back to
               `cover_image` — that's the small floated image used below,
               and showing it here would duplicate the same picture twice. */}
-          <div className="relative mb-6 aspect-[1280/620] overflow-hidden rounded-2xl bg-secondary-10 lg:mb-8">
+          <div className="relative mb-6 aspect-1280/620 overflow-hidden rounded-2xl bg-secondary-10 lg:mb-8">
             {(() => {
               const legacy = event as Event & {
                 hero_image?: string | null;
@@ -354,7 +354,7 @@ export default async function EventDetailPage({
           ctaLabel={t("shared.volunteer_cta.cta")}
           ctaHref={`/${locale}/contact`}
           imageAlt={t("shared.volunteer_cta.image_alt")}
-          className=" lg:!h-auto"
+          className=" lg:h-auto!"
         />
       )}
 

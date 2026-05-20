@@ -221,7 +221,7 @@ export default async function NewsPage({
             {/* Eyebrow + title + description.
                 Left-aligned on mobile/tablet (squiggle hangs off the h1 line).
                 Centered with a constrained measure on desktop. */}
-            <div className="max-w-[68%] sm:max-w-[64%] md:max-w-[60%] lg:mx-auto lg:max-w-[760px] lg:text-center">
+            <div className="max-w-[68%] sm:max-w-[64%] md:max-w-[60%] lg:mx-auto lg:max-w-190 lg:text-center">
               <p className="text-subheading mb-2 font-medium text-text-strong">
                 Dreams branch of UWAA
               </p>
@@ -240,14 +240,14 @@ export default async function NewsPage({
                 {/* Mobile/tablet squiggle: bottom-right of h1 text */}
                 <DecorArrowIcon
                   aria-hidden="true"
-                  className="pointer-events-none absolute top-full left-full h-[140px] w-[140px] -translate-x-[30%] -translate-y-[35%] sm:h-[180px] sm:w-[180px] md:h-[210px] md:w-[210px] lg:hidden"
+                  className="pointer-events-none absolute top-full left-full h-35 w-35 -translate-x-[30%] -translate-y-[35%] sm:h-45 sm:w-45 md:h-52.5 md:w-52.5 lg:hidden"
                 />
 
                 {/* Desktop squiggle: top sits at h1's bottom; offset right pushes
                     past the 760px centred column to the page's right edge. */}
                 <DecorArrowIcon
                   aria-hidden="true"
-                  className="pointer-events-none absolute top-full hidden h-[210px] w-[210px] -translate-y-[30%] lg:right-[-92px] lg:block xl:right-[-228px]"
+                  className="pointer-events-none absolute top-full hidden h-52.5 w-52.5 -translate-y-[30%] lg:-right-23 lg:block xl:-right-57"
                 />
               </div>
 
@@ -258,7 +258,7 @@ export default async function NewsPage({
           </div>
 
           {/* Search + sort row */}
-          <div className="relative z-[1] mt-8 flex items-center gap-3 sm:gap-4 lg:mt-16">
+          <div className="relative z-1 mt-8 flex items-center gap-3 sm:gap-4 lg:mt-16">
             <div className="relative flex-1">
               <SearchIcon
                 size={20}
@@ -267,7 +267,7 @@ export default async function NewsPage({
               <input
                 type="text"
                 placeholder={t("news.search")}
-                className="h-[52px] w-full rounded-full border border-border bg-white pr-5 pl-12 text-body text-text-strong outline-none transition-colors focus:border-secondary lg:h-[54px]"
+                className="h-13 w-full rounded-full border border-border bg-white pr-5 pl-12 text-body text-text-strong outline-none transition-colors focus:border-secondary lg:h-13.5"
               />
             </div>
 
@@ -275,7 +275,7 @@ export default async function NewsPage({
             <button
               type="button"
               aria-label={t("news.sort_date")}
-              className="inline-flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-secondary text-white transition-opacity hover:opacity-90 lg:hidden"
+              className="inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-full bg-secondary text-white transition-opacity hover:opacity-90 lg:hidden"
             >
               <CalendarArrowUp size={22} strokeWidth={1.75} />
             </button>
@@ -283,7 +283,7 @@ export default async function NewsPage({
             {/* Desktop: full-text pill button */}
             <button
               type="button"
-              className="hidden h-[54px] shrink-0 items-center justify-center gap-2 rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90 lg:inline-flex"
+              className="hidden h-13.5 shrink-0 items-center justify-center gap-2 rounded-full bg-secondary px-8 text-body font-medium text-white transition-opacity hover:opacity-90 lg:inline-flex"
             >
               <CalendarArrowUp size={20} strokeWidth={1.75} />
               {t("news.sort_date")}

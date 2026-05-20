@@ -58,7 +58,7 @@ export function Header() {
                 width={280}
                 height={40}
                 priority
-                className="h-8 w-auto max-w-[180px] sm:max-w-[220px] lg:h-10 lg:max-w-none lg:w-70"
+                className="h-8 w-auto max-w-45 sm:max-w-55 lg:h-10 lg:max-w-none lg:w-70"
               />
             </Link>
 
@@ -148,7 +148,7 @@ export function Header() {
       {/* Mobile support CTA — fixed-width blue banner centered under the header */}
       {!mobileOpen && (
         <div className="lg:hidden flex justify-center">
-          <Link href="/donate" className="block w-[329px] max-w-full">
+          <Link href="/donate" className="block w-82.25 max-w-full">
             <button
               type="button"
               className="w-full h-10 bg-secondary text-white text-body-md font-bold rounded-b-[2.5rem] transition-colors hover:bg-brand-blue-dark"

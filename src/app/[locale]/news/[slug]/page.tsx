@@ -398,7 +398,7 @@ function renderRichText(doc: unknown): React.ReactNode[] {
           return (
             <div
               key={i}
-              className="relative my-8 aspect-[16/8] w-full overflow-hidden rounded-2xl bg-secondary-10 lg:my-10"
+              className="relative my-8 aspect-16/8 w-full overflow-hidden rounded-2xl bg-secondary-10 lg:my-10"
             >
               {node.attrs?.src ? (
                 <Image
@@ -662,7 +662,7 @@ export default async function NewsArticlePage({
                 breakpoint with zero cropping. Height auto-scales with
                 viewport (~120 mobile / 320 tablet / 430 desktop). */}
           {coverImage && (
-            <div className="relative mb-8 aspect-[3/1] w-full overflow-hidden rounded-2xl bg-secondary-10 lg:mb-10">
+            <div className="relative mb-8 aspect-3/1 w-full overflow-hidden rounded-2xl bg-secondary-10 lg:mb-10">
               <Image
                 src={coverImage}
                 alt={title}
@@ -693,7 +693,7 @@ export default async function NewsArticlePage({
               }
             >
               {bodyImage && (
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary-10 md:order-1">
+                <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:order-1">
                   <Image
                     src={bodyImage}
                     alt=""

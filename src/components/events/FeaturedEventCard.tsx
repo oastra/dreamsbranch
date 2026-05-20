@@ -111,7 +111,7 @@ export function FeaturedEventCard({
 
   const dateLocation = (
     <div className="flex flex-col gap-4 sm:flex-row">
-      <div className="flex flex-col gap-[10px]">
+      <div className="flex flex-col gap-2.5">
         <p className="text-body text-text-primary">{dateTimeLabel}</p>
         <p className="mt-1 text-secondary text-text-primary">
           {formatDate(eventDate, locale)}
@@ -176,7 +176,7 @@ export function FeaturedEventCard({
     <div className="overflow-hidden rounded-3xl bg-secondary-10">
       {/* Desktop: image left, content right */}
       <div className="hidden lg:grid lg:grid-cols-2">
-        <div className="relative min-h-[500px]">{imageBlock}</div>
+        <div className="relative min-h-125">{imageBlock}</div>
 
         <div className="flex flex-col gap-5 p-8 lg:p-10">
           <h3 className="text-h2 text-text-strong">{title}</h3>
