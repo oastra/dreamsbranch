@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin, canManageFinances } from '@/lib/auth/helpers';
 import { manualDonationSchema } from '@/lib/validations';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 
 export async function createManualDonation(formData: unknown) {
   const admin = await requireAdmin();
@@ -39,6 +40,6 @@ export async function createManualDonation(formData: unknown) {
   // The DB trigger will recalculate campaigns.current_amount automatically.
   revalidatePath('/admin/donations');
   revalidatePath('/admin/campaigns');
-  revalidatePath('/[locale]/campaigns', 'page');
+  revalidateLocalizedPath('/campaigns');
   return { success: true };
 }

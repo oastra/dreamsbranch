@@ -4,6 +4,7 @@ import { db, DbWriteError } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { articleSchema } from '@/lib/validations';
 import { deleteFilesAction } from '@/lib/actions/upload';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 
 // Map raw Postgres errors to a message a content manager will understand.
 function dbErrorMessage(err: unknown): string {
@@ -72,6 +73,7 @@ export async function createArticle(formData: unknown) {
     const result = await db.newsArticle.create({ data: row });
     if (!result) return { success: false, error: 'Failed to create article' };
     revalidatePath('/admin/news');
+    revalidateLocalizedPath('/news');
     return { success: true, id: (result as Record<string, unknown>).id };
   } catch (err) {
     return { success: false, error: dbErrorMessage(err) };
@@ -90,6 +92,7 @@ export async function updateArticle(id: string, formData: unknown) {
     const result = await db.newsArticle.update({ where: { id }, data: row });
     if (!result) return { success: false, error: 'Failed to update article' };
     revalidatePath('/admin/news');
+    revalidateLocalizedPath('/news');
     return { success: true };
   } catch (err) {
     return { success: false, error: dbErrorMessage(err) };
@@ -114,5 +117,6 @@ export async function deleteArticle(id: string) {
     ]);
   }
   revalidatePath('/admin/news');
+  revalidateLocalizedPath('/news');
   return { success: true };
 }

@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { campaignSchema } from '@/lib/validations';
 import { deleteFilesAction } from '@/lib/actions/upload';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 
 type BilingualFaq = { q_ua: string; a_ua: string; q_en: string; a_en: string };
 
@@ -39,6 +40,7 @@ export async function createCampaign(formData: unknown) {
   const result = await db.campaign.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create campaign' };
   revalidatePath('/admin/campaigns');
+  revalidateLocalizedPath('/campaigns');
   return { success: true, id: (result as Record<string, unknown>).id };
 }
 
@@ -53,6 +55,7 @@ export async function updateCampaign(id: string, formData: unknown) {
   const result = await db.campaign.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update campaign' };
   revalidatePath('/admin/campaigns');
+  revalidateLocalizedPath('/campaigns');
   return { success: true };
 }
 
@@ -76,5 +79,6 @@ export async function deleteCampaign(id: string) {
     ]);
   }
   revalidatePath('/admin/campaigns');
+  revalidateLocalizedPath('/campaigns');
   return { success: true };
 }

@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/helpers';
 import { homeSettingsSchema } from '@/lib/validations';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 
 export async function updateHomeSettings(formData: unknown) {
   await requireAdmin();
@@ -21,7 +22,7 @@ export async function updateHomeSettings(formData: unknown) {
   const result = await db.homeSetting.update({ data: row });
   if (!result) return { success: false, error: 'Failed to update home settings' };
   revalidatePath('/admin/home-settings');
-  revalidatePath('/[locale]', 'page');
-  revalidatePath('/[locale]/about', 'page');
+  revalidateLocalizedPath('');
+  revalidateLocalizedPath('/about');
   return { success: true };
 }

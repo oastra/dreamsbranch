@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/helpers';
 import { aboutSettingsSchema } from '@/lib/validations';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 
 export async function updateAboutSettings(formData: unknown) {
   await requireAdmin();
@@ -19,6 +20,6 @@ export async function updateAboutSettings(formData: unknown) {
   const result = await db.aboutSetting.update({ data: row });
   if (!result) return { success: false, error: 'Failed to update about settings' };
   revalidatePath('/admin/about-settings');
-  revalidatePath('/[locale]/about', 'page');
+  revalidateLocalizedPath('/about');
   return { success: true };
 }

@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { reportSchema } from '@/lib/validations';
 import { deleteFilesAction } from '@/lib/actions/upload';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 
 function toSnake(input: Record<string, unknown>) {
   return {
@@ -28,7 +29,7 @@ export async function createReport(formData: unknown) {
   const result = await db.report.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create report' };
   revalidatePath('/admin/reports');
-  revalidatePath('/[locale]/reports', 'page');
+  revalidateLocalizedPath('/reports');
   return { success: true, id: (result as Record<string, unknown>).id };
 }
 
@@ -40,7 +41,7 @@ export async function updateReport(id: string, formData: unknown) {
   const result = await db.report.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update report' };
   revalidatePath('/admin/reports');
-  revalidatePath('/[locale]/reports', 'page');
+  revalidateLocalizedPath('/reports');
   return { success: true };
 }
 
@@ -64,6 +65,6 @@ export async function deleteReport(id: string) {
     ]);
   }
   revalidatePath('/admin/reports');
-  revalidatePath('/[locale]/reports', 'page');
+  revalidateLocalizedPath('/reports');
   return { success: true };
 }

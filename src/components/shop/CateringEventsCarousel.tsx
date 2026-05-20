@@ -140,7 +140,7 @@ function TextCard({
         centered && "text-center sm:text-left",
       )}
     >
-      <h3 className="text-h2 font-medium text-text-strong line-clamp-2">{event.title}</h3>
+      <h3 className="text-h2 font-medium text-text-strong">{event.title}</h3>
       <p className="text-body text-text-primary">{event.description}</p>
       <p
         className={cn(

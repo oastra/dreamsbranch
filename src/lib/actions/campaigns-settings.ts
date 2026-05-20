@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/helpers';
 import { campaignsSettingsSchema } from '@/lib/validations';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 
 export async function updateCampaignsSettings(formData: unknown) {
   await requireAdmin();
@@ -18,6 +19,6 @@ export async function updateCampaignsSettings(formData: unknown) {
   const result = await db.campaignsSetting.update({ data: row });
   if (!result) return { success: false, error: 'Failed to update campaigns settings' };
   revalidatePath('/admin/campaigns-settings');
-  revalidatePath('/[locale]/campaigns', 'page');
+  revalidateLocalizedPath('/campaigns');
   return { success: true };
 }

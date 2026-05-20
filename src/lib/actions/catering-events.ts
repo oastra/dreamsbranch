@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { cateringEventSchema } from '@/lib/validations';
 import { deleteFilesAction } from '@/lib/actions/upload';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 import type { CateringEvent } from '@/types/database';
 
 function toSnake(input: Record<string, unknown>) {
@@ -31,7 +32,7 @@ export async function createCateringEvent(formData: unknown) {
   const result = await db.cateringEvent.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create event' };
   revalidatePath('/admin/catering-page');
-  revalidatePath('/[locale]/shop/catering', 'page');
+  revalidateLocalizedPath('/shop/catering');
   return { success: true, id: (result as CateringEvent).id };
 }
 
@@ -46,7 +47,7 @@ export async function updateCateringEvent(id: string, formData: unknown) {
   const result = await db.cateringEvent.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update event' };
   revalidatePath('/admin/catering-page');
-  revalidatePath('/[locale]/shop/catering', 'page');
+  revalidateLocalizedPath('/shop/catering');
   return { success: true };
 }
 
@@ -56,6 +57,6 @@ export async function deleteCateringEvent(id: string) {
   await db.cateringEvent.delete({ where: { id } });
   if (row?.images?.length) void deleteFilesAction(row.images);
   revalidatePath('/admin/catering-page');
-  revalidatePath('/[locale]/shop/catering', 'page');
+  revalidateLocalizedPath('/shop/catering');
   return { success: true };
 }

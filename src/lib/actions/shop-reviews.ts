@@ -4,6 +4,16 @@ import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { shopReviewSchema } from '@/lib/validations';
 import { deleteFilesAction } from '@/lib/actions/upload';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
+
+const SHOP_CATEGORY_SLUGS = ['handmade', 'from-ukraine', 'cuisine', 'catering'] as const;
+
+function revalidateShopPages() {
+  revalidateLocalizedPath('/shop');
+  for (const slug of SHOP_CATEGORY_SLUGS) {
+    revalidateLocalizedPath(`/shop/${slug}`);
+  }
+}
 
 function toSnake(input: Record<string, unknown>) {
   return {
@@ -29,7 +39,7 @@ export async function createShopReview(formData: unknown) {
   const result = await db.shopReview.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create review' };
   revalidatePath('/admin/shop-reviews');
-  revalidatePath('/[locale]/shop/[category]', 'page');
+  revalidateShopPages();
   return { success: true, id: (result as Record<string, unknown>).id };
 }
 
@@ -41,7 +51,7 @@ export async function updateShopReview(id: string, formData: unknown) {
   const result = await db.shopReview.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update review' };
   revalidatePath('/admin/shop-reviews');
-  revalidatePath('/[locale]/shop/[category]', 'page');
+  revalidateShopPages();
   return { success: true };
 }
 
@@ -53,6 +63,6 @@ export async function deleteShopReview(id: string) {
   await db.shopReview.delete({ where: { id } });
   if (row) void deleteFilesAction([row.avatar]);
   revalidatePath('/admin/shop-reviews');
-  revalidatePath('/[locale]/shop/[category]', 'page');
+  revalidateShopPages();
   return { success: true };
 }

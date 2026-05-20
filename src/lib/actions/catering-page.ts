@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/helpers';
 import { cateringPageSettingsSchema } from '@/lib/validations';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 
 export async function updateCateringPageSettings(formData: unknown) {
   await requireAdmin();
@@ -14,6 +15,6 @@ export async function updateCateringPageSettings(formData: unknown) {
   const result = await db.cateringSetting.update({ data: row });
   if (!result) return { success: false, error: 'Failed to update catering page' };
   revalidatePath('/admin/catering-page');
-  revalidatePath('/[locale]/shop/catering', 'page');
+  revalidateLocalizedPath('/shop/catering');
   return { success: true };
 }

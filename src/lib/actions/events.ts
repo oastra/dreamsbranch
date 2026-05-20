@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth/helpers';
 import { eventSchema } from '@/lib/validations';
 import { deleteFilesAction } from '@/lib/actions/upload';
+import { revalidateLocalizedPath } from '@/lib/revalidate';
 
 function toSnake(input: Record<string, unknown>) {
   return {
@@ -44,6 +45,7 @@ export async function createEvent(formData: unknown) {
   const result = await db.event.create({ data: row });
   if (!result) return { success: false, error: 'Failed to create event' };
   revalidatePath('/admin/events');
+  revalidateLocalizedPath('/events');
   return { success: true, id: (result as Record<string, unknown>).id };
 }
 
@@ -58,6 +60,7 @@ export async function updateEvent(id: string, formData: unknown) {
   const result = await db.event.update({ where: { id }, data: row });
   if (!result) return { success: false, error: 'Failed to update event' };
   revalidatePath('/admin/events');
+  revalidateLocalizedPath('/events');
   return { success: true };
 }
 
@@ -81,6 +84,7 @@ export async function deleteEvent(id: string) {
     ]);
   }
   revalidatePath('/admin/events');
+  revalidateLocalizedPath('/events');
   return { success: true };
 }
 
@@ -92,5 +96,6 @@ export async function setEventStatus(id: string, status: 'DRAFT' | 'ACTIVE' | 'A
   });
   if (!result) return { success: false, error: 'Failed to update status' };
   revalidatePath('/admin/events');
+  revalidateLocalizedPath('/events');
   return { success: true };
 }
