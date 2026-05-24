@@ -108,13 +108,22 @@ export function EventForm({ event }: { event?: Record<string, any> }) {
       date: form.date ? new Date(form.date) : undefined,
       financialReport: reportFilled ? form.financialReport : undefined,
     };
-    const result = isEdit ? await updateEvent(event.id, payload) : await createEvent(payload);
-    setSaving(false);
-    if (result.success) {
-      toast.success(isEdit ? 'Event updated' : 'Event created');
-      router.push('/admin/events');
-    } else {
-      toast.error(result.error ?? 'Something went wrong');
+    try {
+      const result = isEdit ? await updateEvent(event.id, payload) : await createEvent(payload);
+      if (result.success) {
+        toast.success(isEdit ? 'Event updated' : 'Event created');
+        router.push('/admin/events');
+      } else {
+        toast.error(result.error ?? 'Something went wrong');
+      }
+    } catch (err) {
+      // Defensive — the server action shouldn't throw any more, but if
+      // it ever does, make sure the user gets a toast instead of a
+      // spinner stuck forever.
+      const msg = err instanceof Error ? err.message : 'Something went wrong';
+      toast.error(msg);
+    } finally {
+      setSaving(false);
     }
   }
 

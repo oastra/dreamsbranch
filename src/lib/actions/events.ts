@@ -33,35 +33,60 @@ function toSnake(input: Record<string, unknown>) {
   };
 }
 
+// Map any DB exception (RLS, missing column, FK violation, …) to a
+// human-readable message the form can surface. We never let server
+// actions throw — that left the admin form's spinner stuck forever
+// because the awaited promise rejected without resolving the saving
+// state.
+function dbErrorMessage(err: unknown): string {
+  if (err && typeof err === 'object') {
+    const e = err as { message?: string; code?: string };
+    if (e.code === '23505') return 'A record with this slug already exists';
+    if (e.code === '23503') return 'Referenced record does not exist';
+    if (e.code === '23502') return 'Required field is missing';
+    if (e.code === '42501') return 'Permission denied (RLS)';
+    if (e.message) return e.message;
+  }
+  return 'Database write failed';
+}
+
 export async function createEvent(formData: unknown) {
-  const admin = await requireAdmin();
-  const parsed = eventSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
-  const row = {
-    ...toSnake(parsed.data as Record<string, unknown>),
-    created_by_admin_id: admin.id,
-    updated_by_admin_id: admin.id,
-  };
-  const result = await db.event.create({ data: row });
-  if (!result) return { success: false, error: 'Failed to create event' };
-  revalidatePath('/admin/events');
-  revalidateLocalizedPath('/events');
-  return { success: true, id: (result as Record<string, unknown>).id };
+  try {
+    const admin = await requireAdmin();
+    const parsed = eventSchema.safeParse(formData);
+    if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
+    const row = {
+      ...toSnake(parsed.data as Record<string, unknown>),
+      created_by_admin_id: admin.id,
+      updated_by_admin_id: admin.id,
+    };
+    const result = await db.event.create({ data: row });
+    if (!result) return { success: false, error: 'Failed to create event' };
+    revalidatePath('/admin/events');
+    revalidateLocalizedPath('/events');
+    return { success: true, id: (result as Record<string, unknown>).id };
+  } catch (err) {
+    return { success: false, error: dbErrorMessage(err) };
+  }
 }
 
 export async function updateEvent(id: string, formData: unknown) {
-  const admin = await requireAdmin();
-  const parsed = eventSchema.safeParse(formData);
-  if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
-  const row = {
-    ...toSnake(parsed.data as Record<string, unknown>),
-    updated_by_admin_id: admin.id,
-  };
-  const result = await db.event.update({ where: { id }, data: row });
-  if (!result) return { success: false, error: 'Failed to update event' };
-  revalidatePath('/admin/events');
-  revalidateLocalizedPath('/events');
-  return { success: true };
+  try {
+    const admin = await requireAdmin();
+    const parsed = eventSchema.safeParse(formData);
+    if (!parsed.success) return { success: false, error: parsed.error.issues.map((i) => i.message).join('; ') };
+    const row = {
+      ...toSnake(parsed.data as Record<string, unknown>),
+      updated_by_admin_id: admin.id,
+    };
+    const result = await db.event.update({ where: { id }, data: row });
+    if (!result) return { success: false, error: 'Failed to update event' };
+    revalidatePath('/admin/events');
+    revalidateLocalizedPath('/events');
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: dbErrorMessage(err) };
+  }
 }
 
 export async function deleteEvent(id: string) {
