@@ -77,9 +77,15 @@ export function HomeForm({ settings }: Props) {
       {/* Results */}
       <div className="bg-white rounded-xl border border-border p-6">
         <h2 className="text-body font-semibold mb-1">Results</h2>
-        <p className="text-caption text-text-tertiary mb-4">
+        <p className="text-caption text-text-tertiary mb-1">
           The four numbers shown in the Results section on both the Home and About pages.
           Labels stay in i18n.
+        </p>
+        <p className="text-caption text-text-tertiary mb-4">
+          The big number is animated as a count-up. You can include a currency
+          sign, a &quot;%&quot; suffix, or words around the number — only the
+          digits get counted. Any thousands separator works (space,
+          comma, period), and the same style is preserved during the animation.
         </p>
         <div className="grid grid-cols-2 gap-4">
           <div>

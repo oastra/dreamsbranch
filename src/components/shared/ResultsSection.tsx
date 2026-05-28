@@ -25,37 +25,124 @@ interface Props {
 const COUNT_DURATION_MS = 1400;
 const STAGGER_MS = 120;
 
+// Characters an admin might use as a thousands separator. Includes:
+//   space, NBSP (U+00A0), narrow NBSP (U+202F), period, comma, apostrophe.
+const SEPARATOR_CHARS = [" ", " ", " ", ".", ",", "'"];
+const SEPARATOR_RE = new RegExp(
+  `[${SEPARATOR_CHARS.map((c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`).join("")}]`,
+);
+const NUMBER_RE = new RegExp(
+  `^([^\\d]*?)(\\d[\\d${SEPARATOR_CHARS.map((c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`).join("")}]*\\d|\\d)(.*)$`,
+);
+
 /**
- * Pulls the numeric target out of a display string and remembers any
- * decorative bits around it. Examples:
- *   "4"        → { prefix: "",  target: 4,     suffix: "" }
- *   "1 200"    → { prefix: "",  target: 1200,  suffix: "" }
- *   "$12 000"  → { prefix: "$", target: 12000, suffix: "" }
- *   "100%"     → { prefix: "",  target: 100,   suffix: "%" }
- *   "—"        → null (no number to animate; render as-is)
+ * Pulls the integer target out of an admin-entered display string.
+ * Tolerant of how it's typed — space / NBSP / period / comma / apostrophe
+ * are all accepted as thousand separators; the first one used in the
+ * source is preserved when re-rendering intermediate values, so the
+ * displayed format doesn't change mid-animation.
+ *   "4"        → { prefix:"",  target:4,     suffix:"",  separator:" " }
+ *   "1 200"    → { prefix:"",  target:1200,  suffix:"",  separator:" " }
+ *   "1,200"    → { prefix:"",  target:1200,  suffix:"",  separator:"," }
+ *   "1.200"    → { prefix:"",  target:1200,  suffix:"",  separator:"." }
+ *   "12000"    → { prefix:"",  target:12000, suffix:"",  separator:" " }
+ *   "$12 000"  → { prefix:"$", target:12000, suffix:"",  separator:" " }
+ *   "100%"     → { prefix:"",  target:100,   suffix:"%", separator:" " }
+ *   "—"        → null (no number to animate; renders as-is)
  */
-function parseValue(
-  raw: string,
-): { prefix: string; target: number; suffix: string } | null {
-  const match = raw.match(/^(\D*?)([\d\s  ]+)(.*)$/);
+function parseValue(raw: string): {
+  prefix: string;
+  target: number;
+  suffix: string;
+  separator: string;
+} | null {
+  const match = raw.match(NUMBER_RE);
   if (!match) return null;
-  const [, prefix, digits, suffix] = match;
-  const cleaned = digits.replace(/[\s  ]/g, "");
-  const target = Number.parseInt(cleaned, 10);
+  const [, prefix, numPart, suffix] = match;
+  const target = Number.parseInt(numPart.replace(/\D/g, ""), 10);
   if (Number.isNaN(target)) return null;
-  return { prefix, target, suffix };
+  const separator = numPart.match(SEPARATOR_RE)?.[0] ?? " ";
+  return { prefix, target, suffix, separator };
 }
 
-/** "uk-UA" formats 1200 as "1 200" using a narrow NBSP. Normalise to
- *  a regular space so the rendered number matches the source string. */
-function formatNumber(n: number): string {
+/** Format an integer with the given thousands separator. NBSP and
+ *  narrow NBSP are normalised to a regular space — they render the
+ *  same in HTML but a plain space is friendlier in surrounding copy. */
+function formatNumber(n: number, separator: string): string {
+  const sep = separator === " " || separator === " " ? " " : separator;
   return Math.round(n)
-    .toLocaleString("uk-UA")
-    .replace(/[  ]/g, " ");
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 }
 
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
+}
+
+/** "Pop in" effect — the value sits scaled down + invisible, then
+ *  springs to full size when `started` flips true (with the same stagger
+ *  delay the cards use). Used for stats that should land as a single
+ *  beat rather than animate a count.
+ *
+ *  Uses the Web Animations API instead of a CSS transition so the
+ *  initial "scaled down" state doesn't need a paint frame committed
+ *  before the animation runs — which would otherwise let the value
+ *  pop straight to the final state on visible-at-mount sections. */
+function PopValue({
+  value,
+  started,
+  delayMs,
+}: {
+  value: string;
+  started: boolean;
+  delayMs: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || !started) return;
+
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    ) {
+      node.style.transform = "scale(1)";
+      node.style.opacity = "1";
+      return;
+    }
+
+    // Three-stop keyframe for a visible "spring" — tiny → overshoot
+    // larger than final → settle at the target. With a single from/to
+    // the eye reads it as a smooth fade-up; the overshoot is what
+    // sells it as a "pop".
+    const anim = node.animate(
+      [
+        { transform: "scale(0.3)", opacity: 0, offset: 0 },
+        { transform: "scale(1.3)", opacity: 1, offset: 0.55 },
+        { transform: "scale(1)", opacity: 1, offset: 1 },
+      ],
+      {
+        duration: 800,
+        delay: delayMs,
+        easing: "ease-out",
+        fill: "forwards",
+      },
+    );
+    return () => anim.cancel();
+  }, [started, delayMs]);
+
+  // Hidden by default on SSR / before the animation runs — the WAAPI
+  // animation supplies the final "scale(1) opacity:1" with fill:forwards.
+  return (
+    <span
+      ref={ref}
+      className="inline-block origin-bottom"
+      style={{ transform: "scale(0.3)", opacity: 0 }}
+    >
+      {value}
+    </span>
+  );
 }
 
 function CountUp({
@@ -96,7 +183,9 @@ function CountUp({
 
   if (!parsed) return <>{value}</>;
   const shown =
-    target >= 1000 ? formatNumber(current) : Math.round(current).toString();
+    target >= 1000
+      ? formatNumber(current, parsed.separator)
+      : Math.round(current).toString();
   return (
     <>
       {parsed.prefix}
@@ -156,27 +245,41 @@ export function ResultsSection({
         </SectionHeading>
 
         <div className="grid grid-cols-1 items-end gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map(({ value, unit, label, heightClass }, i) => (
-            <div
-              key={label}
-              className={`flex flex-col justify-between rounded-2xl bg-secondary-10 p-6 text-text-strong transition-all duration-500 ease-out motion-reduce:transition-none ${heightClass ?? ""} ${started ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`.trim()}
-              style={{ transitionDelay: started ? `${i * STAGGER_MS}ms` : "0ms" }}
-            >
-              <p className="whitespace-pre-line text-body text-text-strong">{label}</p>
-              <p className="flex items-baseline justify-end gap-2 text-[2.5rem] font-medium leading-none sm:justify-start lg:text-[3rem]">
-                <CountUp
-                  value={value}
-                  started={started}
-                  delayMs={i * STAGGER_MS}
-                />
-                {unit && (
-                  <span className="text-body font-normal text-text-primary">
-                    {unit}
-                  </span>
-                )}
-              </p>
-            </div>
-          ))}
+          {stats.map(({ value, unit, label, heightClass }, i) => {
+            // First N-1 cards "pop" — short scale-up with overshoot.
+            // The LAST card uses the count-up so the final stat reads
+            // as the climax of the gesture.
+            const isLast = i === stats.length - 1;
+            return (
+              <div
+                key={label}
+                className={`flex flex-col justify-between rounded-2xl bg-secondary-10 p-6 text-text-strong transition-all duration-500 ease-out motion-reduce:transition-none ${heightClass ?? ""} ${started ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`.trim()}
+                style={{ transitionDelay: started ? `${i * STAGGER_MS}ms` : "0ms" }}
+              >
+                <p className="whitespace-pre-line text-body text-text-strong">{label}</p>
+                <p className="flex items-baseline justify-end gap-2 text-[2.5rem] font-medium leading-none sm:justify-start lg:text-[3rem]">
+                  {isLast ? (
+                    <CountUp
+                      value={value}
+                      started={started}
+                      delayMs={i * STAGGER_MS}
+                    />
+                  ) : (
+                    <PopValue
+                      value={value}
+                      started={started}
+                      delayMs={i * STAGGER_MS}
+                    />
+                  )}
+                  {unit && (
+                    <span className="text-body font-normal text-text-primary">
+                      {unit}
+                    </span>
+                  )}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
