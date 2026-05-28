@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { db } from "@/lib/db";
 import { PageHeroWithCarousel } from "@/components/shared/PageHeroWithCarousel";
-import { InfoBanner } from "@/components/shared/InfoBanner";
+import { MarqueeBanner } from "@/components/shared/MarqueeBanner";
 import { CategoryCard } from "@/components/shop/CategoryCard";
 import { ProductSection } from "@/components/shop/ProductSection";
 import { CateringSection } from "@/components/shop/CateringSection";
@@ -166,11 +166,7 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
         </div>
       </PageHeroWithCarousel>
 
-      <section className="px-5 sm:px-0">
-        <div className="sm:container-page sm:max-w-none sm:px-0">
-          <InfoBanner tone="primary">{t("shop.profit_notice")}</InfoBanner>
-        </div>
-      </section>
+      <MarqueeBanner text={t("shop.profit_notice")} />
 
       <section id="offerings" className="section">
         <div className="container-page">
@@ -265,6 +261,17 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
 
       
 
+      <PhotoReportSection
+        id="photo-reports"
+        title={t("shop.photo_reports.title")}
+        subtitle={t("shop.photo_reports.subtitle")}
+        allReportsLabel={t("shop.photo_reports.all_reports")}
+        allReportsHref={`/${locale}/reports`}
+        reports={photoReportCards}
+        prevLabel={t("shop.photo_reports.prev")}
+        nextLabel={t("shop.photo_reports.next")}
+      />
+
       <CateringSection
         id="catering"
         title={t("shop.catering.title")}
@@ -277,21 +284,11 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
           t("shop.catering.item_custom"),
         ]}
         ctaLabel={t("shop.catering.cta")}
-        ctaHref={`/${locale}/contact?topic=catering`}
+        ctaHref={`/${locale}/shop/catering`}
         imageSrc="/images/shop/catering.webp"
         imageAlt={t("shop.catering.image_alt")}
       />
 
-      <PhotoReportSection
-        id="photo-reports"
-        title={t("shop.photo_reports.title")}
-        subtitle={t("shop.photo_reports.subtitle")}
-        allReportsLabel={t("shop.photo_reports.all_reports")}
-        allReportsHref={`/${locale}/reports`}
-        reports={photoReportCards}
-        prevLabel={t("shop.photo_reports.prev")}
-        nextLabel={t("shop.photo_reports.next")}
-      />
       <SupportSection locale={locale} />
 
       <ContactSection

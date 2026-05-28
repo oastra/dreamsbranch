@@ -14,6 +14,7 @@ import { MobileNav } from "@/components/navigation/mobile-nav";
 import { Button } from "@/components/ui/button";
 
 type NavChildKey =
+  | "shop.overview"
   | "shop.handmade"
   | "shop.from_ukraine"
   | "shop.cuisine"
@@ -28,6 +29,7 @@ type NavItemDef = {
 };
 
 const SHOP_CHILDREN: readonly NavChild[] = [
+  { key: "shop.overview", href: "/shop", labelKey: "shop.offerings.overview" },
   { key: "shop.handmade", href: "/shop/handmade", labelKey: "shop.offerings.handmade" },
   { key: "shop.from_ukraine", href: "/shop/from-ukraine", labelKey: "shop.offerings.from_ukraine" },
   { key: "shop.cuisine", href: "/shop/cuisine", labelKey: "shop.offerings.ukrainian_cuisine" },
