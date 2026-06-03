@@ -435,9 +435,10 @@
   },
   "news": {
     "title": "Community news",
-    "description": "Here you will find the latest news from the fund and its projects, interesting collaborations and invitations to activities.",
+    "description": "Here you will find the latest news from the fund, its projects, collaborations and invitations to activities.",
     "search": "Search",
     "sort_date": "Sort by date",
+    "no_results": "No news found for your search.",
     "read_more": "Read more",
     "learn_more": "Learn more",
     "share": "Share via:",

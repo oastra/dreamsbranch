@@ -4,10 +4,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { db } from "@/lib/db";
 import { NewsGrid, type NewsGridItem } from "@/components/news/NewsGrid";
+import { NewsSearchInput } from "@/components/news/NewsSearchInput";
 import { FeaturedNewsCard } from "@/components/news/FeaturedNewsCard";
 import { SupportSection } from "@/components/shared/SupportSection";
 import { ContactSection } from "@/components/contact/ContactSection";
-import SearchIcon from "@/components/icons/SearchIcon";
 import DecorArrowIcon from "@/components/icons/DecorArrowIcon";
 import type { NewsArticle } from "@/types/database";
 
@@ -175,10 +175,14 @@ function getCategoryLabel(
 
 export default async function NewsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ q?: string }>;
 }) {
   const { locale } = await params;
+  const { q } = await searchParams;
+  const query = (q ?? "").trim().toLowerCase();
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
 
@@ -208,6 +212,14 @@ export default async function NewsPage({
     return extractPlainText(a[bodyKey]);
   };
 
+  // Filter by the search query (title + body text) when one is present.
+  if (query) {
+    articles = articles.filter((a) => {
+      const haystack = `${a[titleKey]} ${extractPlainText(a[bodyKey])} ${cardPreview(a)}`.toLowerCase();
+      return haystack.includes(query);
+    });
+  }
+
   // Featured = first featured article, or first article
   const featured = articles.find((a) => a.is_featured) ?? articles[0];
   const rest = articles.filter((a) => a.id !== featured?.id);
@@ -218,30 +230,33 @@ export default async function NewsPage({
       <section className="py-10 lg:pt-16 lg:pb-16">
         <div className="container-page">
           <div className="relative">
+            {/* Mobile/tablet squiggle: anchored to the page's right edge (not
+                the h1 text) so it sits in the free space beside the heading
+                column and never overlaps the title text. The SVG's visible
+                drawing lives in the right half of its box, so a small negative
+                right pulls it flush to the container edge. */}
+            <DecorArrowIcon
+              aria-hidden="true"
+              className="pointer-events-none absolute top-10 right-0 h-48 w-48 sm:top-12 sm:right-2 sm:h-52 sm:w-52 md:-top-4 md:right-0 md:h-56 md:w-56 lg:hidden"
+            />
+
             {/* Eyebrow + title + description.
-                Left-aligned on mobile/tablet (squiggle hangs off the h1 line).
+                Left-aligned on mobile/tablet (squiggle sits at the page edge).
                 Centered with a constrained measure on desktop. */}
-            <div className="max-w-[68%] sm:max-w-[64%] md:max-w-[60%] lg:mx-auto lg:max-w-190 lg:text-center">
+            <div className="max-w-[72%] sm:max-w-[78%] md:max-w-full lg:mx-auto lg:max-w-190 lg:text-center">
               <p className="text-subheading mb-2 font-medium text-text-strong">
                 Dreams branch of UWAA
               </p>
 
-              {/* h1 wrapper is the anchor for the squiggle on every breakpoint.
-                  On mobile/tablet it's inline-block so it shrinks to the title's
-                  text width; on desktop it's a full-width block in the centred
-                  column. Both squiggles use `top-full` to sit at the h1's
-                  bottom edge — the desktop variant uses a negative `right` to
-                  hang past the centred column to the page's right edge. */}
+              {/* h1 wrapper is the anchor for the desktop squiggle. On desktop
+                  it's a full-width block in the centred column; the squiggle
+                  uses `top-full` to sit at the h1's bottom edge and a negative
+                  `right` to hang past the centred column to the page's right
+                  edge. */}
               <div className="relative mb-4 inline-block md:mb-6 lg:mb-8 lg:block">
                 <h1 className="text-display text-secondary">
                   {t("news.title")}
                 </h1>
-
-                {/* Mobile/tablet squiggle: bottom-right of h1 text */}
-                <DecorArrowIcon
-                  aria-hidden="true"
-                  className="pointer-events-none absolute top-full left-full h-35 w-35 -translate-x-[30%] -translate-y-[35%] sm:h-45 sm:w-45 md:h-52.5 md:w-52.5 lg:hidden"
-                />
 
                 {/* Desktop squiggle: top sits at h1's bottom; offset right pushes
                     past the 760px centred column to the page's right edge. */}
@@ -259,17 +274,7 @@ export default async function NewsPage({
 
           {/* Search + sort row */}
           <div className="relative z-1 mt-8 flex items-center gap-3 sm:gap-4 lg:mt-16">
-            <div className="relative flex-1">
-              <SearchIcon
-                size={20}
-                className="pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 text-text-secondary"
-              />
-              <input
-                type="text"
-                placeholder={t("news.search")}
-                className="h-13 w-full rounded-full border border-border bg-white pr-5 pl-12 text-body text-text-strong outline-none transition-colors focus:border-secondary lg:h-13.5"
-              />
-            </div>
+            <NewsSearchInput placeholder={t("news.search")} />
 
             {/* Tablet/mobile: circular icon-only button */}
             <button
@@ -331,6 +336,17 @@ export default async function NewsPage({
                 }))}
               />
             </Suspense>
+          </div>
+        </section>
+      )}
+
+      {/* ── No search results ────────────────────────────────────── */}
+      {query && articles.length === 0 && (
+        <section className="section pt-0">
+          <div className="container-page">
+            <p className="text-h3 text-text-secondary lg:text-center">
+              {t("news.no_results")}
+            </p>
           </div>
         </section>
       )}
