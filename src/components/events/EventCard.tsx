@@ -31,30 +31,37 @@ export function EventCard({
   return (
     <Link
       href={`/${locale}/events/${slug}`}
-      className="group flex h-full flex-col rounded-2xl bg-white p-4 transition-shadow hover:shadow-card-hover"
+      className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white transition-shadow hover:shadow-card-hover"
     >
-      <h3 className="text-h3 font-semibold text-text-strong">{title}</h3>
-      {subtitle && (
-        <p className="mt-1 line-clamp-2 text-body text-text-secondary">
-          {subtitle}
-        </p>
-      )}
+      {/* Text + badges — inset (Figma px-5 pt-5, 16px gaps) */}
+      <div className="px-5 pt-5">
+        <h3 className="text-h3 font-medium text-text-strong line-clamp-1">
+          {title}
+        </h3>
+        {subtitle && (
+          <p className="mt-4 line-clamp-2 text-body text-text-primary">
+            {subtitle}
+          </p>
+        )}
 
-      <EventBadges
-        isArchived={isArchived}
-        tags={tags}
-        labels={{
-          active: tagLabels.active,
-          archived: tagLabels.archived,
-          looking_for_partners: tagLabels.looking_for_partners,
-          looking_for_volunteers: tagLabels.looking_for_volunteers,
-        }}
-        className="mt-4 min-h-18.5 content-start"
-      />
+        <EventBadges
+          isArchived={isArchived}
+          tags={tags}
+          labels={{
+            active: tagLabels.active,
+            archived: tagLabels.archived,
+            looking_for_partners: tagLabels.looking_for_partners,
+            looking_for_volunteers: tagLabels.looking_for_volunteers,
+          }}
+          className="mt-4 min-h-18.5 content-start"
+        />
+      </div>
 
-      {/* Image with arrow overlay — mt-auto pins the image to the bottom for consistent alignment */}
+      {/* Image — full-bleed at the bottom (the card's rounded corners clip
+          it), with the arrow overlay pinned to its top-right. mt-auto keeps
+          the image bottom-aligned so cards in a row stay the same height. */}
       <div className="relative mt-auto pt-5">
-        <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl bg-secondary-10">
+        <div className="relative aspect-4/3 w-full overflow-hidden bg-secondary-10">
           {coverImage ? (
             <Image
               src={coverImage}

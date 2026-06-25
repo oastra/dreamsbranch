@@ -154,6 +154,20 @@ export function Header() {
 
             {/* Mobile actions */}
             <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden shrink-0">
+              {/* Support button — surfaces inline when the drawer is open
+                  (the standalone banner below the header is hidden then).
+                  Tablet+ only; on phones the drawer's own layout carries it. */}
+              {mobileOpen && (
+                <Link href="/donate" className="hidden sm:block">
+                  <Button
+                    variant="default"
+                    size="lg"
+                    className="rounded-full h-12 px-6"
+                  >
+                    {t("support")}
+                  </Button>
+                </Link>
+              )}
               {/* Language chip — only when menu closed (drawer has its own) */}
               {!mobileOpen && (
                 <button

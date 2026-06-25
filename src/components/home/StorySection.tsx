@@ -38,7 +38,7 @@ export function StorySection({
             </div>
 
             <div className="order-2 flex flex-col items-center gap-5 text-center text-white lg:order-1 lg:items-start lg:text-left">
-              <h2 className="text-h2 font-semibold leading-tight lg:text-[40px]">
+              <h2 className="text-[36px] font-medium leading-[110%] lg:text-[40px]">
                 {title}
               </h2>
               <p className="max-w-xl whitespace-pre-line text-body text-white/85">

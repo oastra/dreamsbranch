@@ -51,7 +51,7 @@ export function CampaignCard({
 
       {/* Body */}
       <div className="flex flex-1 flex-col gap-3 p-5">
-        <h3 className="text-body font-semibold text-text-strong line-clamp-2">
+        <h3 className="text-[18px] font-medium leading-[120%] text-text-strong line-clamp-2 lg:text-[24px]">
           {title}
         </h3>
 
@@ -66,7 +66,7 @@ export function CampaignCard({
             with raised + goal amounts overlaid */}
         <div className="relative flex h-9 w-full items-center overflow-hidden rounded-full bg-grey-40">
           <div
-            className="absolute inset-y-0 left-0 rounded-full bg-primary transition-all duration-300"
+            className="absolute inset-y-0 left-0 rounded-full bg-primary-60 transition-all duration-300"
             style={{ width: `${progressWidth}%` }}
           />
           <span className="relative z-10 pl-4 text-body-sm font-semibold text-text-strong">

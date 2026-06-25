@@ -171,7 +171,7 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
       <section id="offerings" className="section">
         <div className="container-page">
           <div className="mx-auto mb-10 max-w-2xl text-center lg:mb-12">
-            <h2 className="text-h2 mb-4 text-text-strong">
+            <h2 className="text-title-tablet mb-4 text-text-strong">
               {t("shop.offerings.title")}
             </h2>
             <p className="text-body whitespace-pre-line text-text-primary">

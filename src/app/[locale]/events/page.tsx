@@ -152,27 +152,32 @@ export default async function EventsPage({
             {/* Title — centered on mobile/tablet, left in left column on desktop */}
             <PageHeroHeading
               title={t("events.title")}
-              className="text-center lg:col-start-1 lg:row-start-1 lg:text-left"
+              className="order-1 text-center lg:col-start-1 lg:row-start-1 lg:text-left"
             />
 
-            {/* Two paragraphs share one grid cell so the gap between
-                them stays 16px regardless of the outer grid's rhythm. */}
-            <div className="flex flex-col gap-4 lg:col-start-1 lg:row-start-2 lg:max-w-xl">
-              <p className="text-secondary text-text-primary">
-                {t("events.description")}
-              </p>
-              <p className="text-secondary  text-text-primary">
-                {t("events.description_2")}
-              </p>
-            </div>
-
-            {/* Hero carousel — col 2 spans rows 1–2 on desktop */}
-            <div className="relative w-full lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:h-full">
+            {/* Hero carousel — sits between the two paragraphs on
+                mobile/tablet (Figma), right column spanning rows 1–2 on
+                desktop. Per-breakpoint aspect matches Figma (mobile
+                331×300). */}
+            <div className="order-3 aspect-[331/300] w-full sm:aspect-[576/400] lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:aspect-auto lg:h-full">
               <MaskedImageCarousel
                 slides={heroSlides}
-                aspectRatio="716/500"
+                aspectRatio={null}
                 sizes="(max-width: 1024px) 100vw, 50vw"
+                className="h-full"
               />
+            </div>
+
+            {/* Two paragraphs — `contents` on mobile so they flow around
+                the image (para → image → para); a 16px-gap flex column in
+                the left grid cell on desktop. */}
+            <div className="contents lg:flex lg:flex-col lg:gap-4 lg:col-start-1 lg:row-start-2 lg:max-w-xl">
+              <p className="order-2 text-secondary text-text-primary lg:order-none">
+                {t("events.description")}
+              </p>
+              <p className="order-4 text-secondary text-text-primary lg:order-none">
+                {t("events.description_2")}
+              </p>
             </div>
           </div>
         </div>

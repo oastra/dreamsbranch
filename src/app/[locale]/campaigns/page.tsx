@@ -152,20 +152,26 @@ export default async function CampaignsPage({
       {/* ── Active campaigns ─────────────────────────────────────── */}
       <section className="section">
         <div className="container-page">
-          <h2 className="text-h2 mb-8 text-text-strong">
+          <h2 className="text-title-tablet mb-8 font-medium text-text-strong">
             {t("campaigns.active")}
           </h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Figma: horizontal scroll with a card peek on mobile + tablet,
+              3-up grid on desktop. */}
+          <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:gap-6 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {active.map((c) => (
-              <CampaignCard
+              <div
                 key={c.id}
-                slug={c.slug}
-                title={c[titleKey]}
-                coverImage={c.cover_image}
-                goalAmount={Number(c.goal_amount)}
-                currentAmount={Number(c.current_amount)}
-                {...cardProps}
-              />
+                className="w-[85%] shrink-0 snap-start sm:w-[62%] lg:w-auto"
+              >
+                <CampaignCard
+                  slug={c.slug}
+                  title={c[titleKey]}
+                  coverImage={c.cover_image}
+                  goalAmount={Number(c.goal_amount)}
+                  currentAmount={Number(c.current_amount)}
+                  {...cardProps}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -186,7 +192,7 @@ export default async function CampaignsPage({
       {/* ── Archived campaigns ───────────────────────────────────── */}
       <section className="section">
         <div className="container-page">
-          <h2 className="text-h2 mb-8 text-text-strong">
+          <h2 className="text-title-tablet mb-8 font-medium text-text-strong">
             {t("campaigns.archived")}
           </h2>
           <Suspense fallback={null}>

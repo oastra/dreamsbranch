@@ -45,6 +45,25 @@ interface EventsListProps {
   };
 }
 
+function ChevronDown({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
 export function EventsList({
   locale,
   title,
@@ -55,67 +74,91 @@ export function EventsList({
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
+  const localeTag = locale === 'ua' ? 'uk-UA' : 'en-AU';
 
   // ── State, persisted in the URL so back-navigation restores it ──────────
   const filterParam = sp.get('filter') as Filter | null;
-  const filter: Filter = FILTERS.includes(filterParam as Filter) ? (filterParam as Filter) : 'all';
+  const filter: Filter = FILTERS.includes(filterParam as Filter)
+    ? (filterParam as Filter)
+    : 'all';
 
-  const monthParam = sp.get('month');
   const visibleParam = Number(sp.get('visible'));
-  const visible = Number.isFinite(visibleParam) && visibleParam > 0 ? visibleParam : PAGE_SIZE;
+  const visible =
+    Number.isFinite(visibleParam) && visibleParam > 0 ? visibleParam : PAGE_SIZE;
 
-  const selectedMonth = useMemo(() => {
-    if (monthParam) {
-      const [y, m] = monthParam.split('-').map(Number);
-      if (y && m && m >= 1 && m <= 12) return new Date(y, m - 1, 1);
-    }
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), 1);
-  }, [monthParam]);
+  // Events for the active tab (date-agnostic) — drives both the available
+  // periods and the rendered list, so the date pickers stay consistent with
+  // whichever tab is selected.
+  const tabEvents = useMemo(
+    () =>
+      events.filter((ev) => {
+        if (filter === 'active') return !ev.isArchived;
+        if (filter === 'archive') return ev.isArchived;
+        return true;
+      }),
+    [events, filter],
+  );
 
-  const localeTag = locale === 'ua' ? 'uk-UA' : 'en-AU';
-  const monthLabelFull = selectedMonth.toLocaleDateString(localeTag, {
-    month: 'long',
-    year: 'numeric',
-  });
-  const monthLabelShort = selectedMonth.toLocaleDateString(localeTag, {
-    month: 'long',
-  });
+  // Years that actually have events in this tab — so the picker never offers
+  // an empty period. Most-recent first.
+  const availableYears = useMemo(() => {
+    const ys = new Set<number>();
+    for (const ev of tabEvents) ys.add(new Date(ev.eventDate).getFullYear());
+    return [...ys].sort((a, b) => b - a);
+  }, [tabEvents]);
 
-  const filtered = useMemo(() => {
-    const m = selectedMonth.getMonth();
-    const y = selectedMonth.getFullYear();
-    const inSelectedMonth = (ev: EventListItem) => {
+  const yearParam = Number(sp.get('year'));
+  const selectedYear = availableYears.includes(yearParam) ? yearParam : null;
+
+  // Populated months within the selected year (ascending).
+  const availableMonths = useMemo(() => {
+    if (selectedYear == null) return [];
+    const ms = new Set<number>();
+    for (const ev of tabEvents) {
       const d = new Date(ev.eventDate);
-      return d.getMonth() === m && d.getFullYear() === y;
-    };
+      if (d.getFullYear() === selectedYear) ms.add(d.getMonth());
+    }
+    return [...ms].sort((a, b) => a - b);
+  }, [tabEvents, selectedYear]);
 
-    const monthBounded = events.filter((ev) => {
-      // Archived events ignore the month picker — always shown so visitors
-      // always see them under the featured card. Active events stay month-
-      // bounded so the upcoming view doesn't bleed into the past.
-      if (filter === 'active') return !ev.isArchived && inSelectedMonth(ev);
-      if (filter === 'archive') return ev.isArchived;
-      // 'all' tab — active in selected month + every archived event.
-      return ev.isArchived || inSelectedMonth(ev);
-    });
+  const monthParamRaw = sp.get('month');
+  const monthParam = monthParamRaw == null ? null : Number(monthParamRaw);
+  const selectedMonth =
+    selectedYear != null &&
+    monthParam != null &&
+    availableMonths.includes(monthParam)
+      ? monthParam
+      : null;
 
-    // Empty-state fallback: if nothing matches the current filter+month,
-    // show older events that match the filter (newest first) so the page
-    // never goes blank.
-    if (monthBounded.length > 0) return monthBounded;
-    const fallback = events.filter((ev) => {
-      if (filter === 'active') return !ev.isArchived;
-      if (filter === 'archive') return ev.isArchived;
+  // Narrow by the chosen period, then order by relevance: upcoming events
+  // soonest-first, then past events most-recent-first. The first item becomes
+  // the featured card — so it's always the next upcoming event, or (on the
+  // Archive tab / once everything's past) the most recent one.
+  const sorted = useMemo(() => {
+    const inPeriod = tabEvents.filter((ev) => {
+      if (selectedYear == null) return true;
+      const d = new Date(ev.eventDate);
+      if (d.getFullYear() !== selectedYear) return false;
+      if (selectedMonth != null && d.getMonth() !== selectedMonth) return false;
       return true;
     });
-    return [...fallback].sort(
-      (a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime(),
-    );
-  }, [events, filter, selectedMonth]);
+    const upcoming = inPeriod
+      .filter((e) => !e.isArchived)
+      .sort(
+        (a, b) =>
+          new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime(),
+      );
+    const past = inPeriod
+      .filter((e) => e.isArchived)
+      .sort(
+        (a, b) =>
+          new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime(),
+      );
+    return [...upcoming, ...past];
+  }, [tabEvents, selectedYear, selectedMonth]);
 
-  const featured = filtered[0];
-  const rest = filtered.slice(1);
+  const featured = sorted[0];
+  const rest = sorted.slice(1);
   const shown = rest.slice(0, visible);
   const hasMore = rest.length > visible;
 
@@ -131,26 +174,22 @@ export function EventsList({
   }
 
   function changeFilter(next: Filter) {
+    // Reset the period when switching tabs so the new tab opens on its full
+    // set (e.g. Archive → every past event, newest first).
     pushUrl({
       filter: next === 'all' ? null : next,
+      year: null,
+      month: null,
       visible: null,
     });
   }
 
-  function changeMonth(delta: number) {
-    const nextDate = new Date(
-      selectedMonth.getFullYear(),
-      selectedMonth.getMonth() + delta,
-      1,
-    );
-    const now = new Date();
-    const isCurrentMonth =
-      nextDate.getFullYear() === now.getFullYear() &&
-      nextDate.getMonth() === now.getMonth();
-    const monthStr = isCurrentMonth
-      ? null
-      : `${nextDate.getFullYear()}-${String(nextDate.getMonth() + 1).padStart(2, '0')}`;
-    pushUrl({ month: monthStr, visible: null });
+  function changeYear(value: string) {
+    pushUrl({ year: value || null, month: null, visible: null });
+  }
+
+  function changeMonth(value: string) {
+    pushUrl({ month: value === '' ? null : value, visible: null });
   }
 
   function showMore() {
@@ -164,77 +203,82 @@ export function EventsList({
         : 'bg-primary-40 text-text-strong hover:bg-primary-60'
     }`;
 
-  const renderMonthPill = (extraClass = '') => (
-    <div
-      className={`flex items-center justify-between gap-2 rounded-full bg-secondary px-2 py-1.5 text-white sm:gap-3 ${extraClass}`}
-    >
-      <button
-        type="button"
-        onClick={() => changeMonth(-1)}
-        aria-label="Previous month"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-secondary transition-colors hover:bg-grey-40"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
-      </button>
-      <span className="px-2 text-body font-medium capitalize whitespace-nowrap">
-        <span className="lg:hidden">{monthLabelShort}</span>
-        <span className="hidden lg:inline">{monthLabelFull}</span>
-      </span>
-      <button
-        type="button"
-        onClick={() => changeMonth(1)}
-        aria-label="Next month"
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-secondary transition-colors hover:bg-grey-40"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </button>
-    </div>
-  );
+  const allYearsLabel = locale === 'ua' ? 'Усі роки' : 'All years';
+  const allMonthsLabel = locale === 'ua' ? 'Усі місяці' : 'All months';
+  const monthName = (m: number) => {
+    const s = new Date(2020, m, 1).toLocaleDateString(localeTag, {
+      month: 'long',
+    });
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
 
-  const tabsRow = (
-    <div className="flex flex-wrap justify-center gap-3 md:justify-start">
-      <button type="button" onClick={() => changeFilter('all')} className={tabClass(filter === 'all')}>
-        {labels.all}
-      </button>
-      <button type="button" onClick={() => changeFilter('active')} className={tabClass(filter === 'active')}>
-        {labels.active}
-      </button>
-      <button type="button" onClick={() => changeFilter('archive')} className={tabClass(filter === 'archive')}>
-        {labels.archive}
-      </button>
-    </div>
-  );
+  const selectClass =
+    'appearance-none rounded-full bg-secondary-10 py-2 pl-4 pr-9 text-body-sm font-medium text-text-strong outline-none transition-colors hover:bg-secondary-20 focus-visible:ring-2 focus-visible:ring-secondary';
 
   return (
     <>
-      {/* Title — centered on mobile/tablet, left-aligned on desktop.
-          On desktop the month pill sits on the same row to the right. */}
-      <div className="mb-4 flex flex-col items-center gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <h2 className="text-h2 text-center text-text-strong lg:text-left">
-          {title}
-        </h2>
-        <div className="hidden lg:block">{renderMonthPill()}</div>
+      <h2 className="text-title-tablet mb-4 text-center font-medium text-text-strong md:text-left">
+        {title}
+      </h2>
+
+      {/* Controls — tabs (what) on the left, period pickers (when) on the
+          right; stacks on mobile. The pickers only list periods that have
+          events and apply to whichever tab is active. */}
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-wrap justify-center gap-3 md:justify-start">
+          <button type="button" onClick={() => changeFilter('all')} className={tabClass(filter === 'all')}>
+            {labels.all}
+          </button>
+          <button type="button" onClick={() => changeFilter('active')} className={tabClass(filter === 'active')}>
+            {labels.active}
+          </button>
+          <button type="button" onClick={() => changeFilter('archive')} className={tabClass(filter === 'archive')}>
+            {labels.archive}
+          </button>
+        </div>
+
+        {availableYears.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-3 md:justify-end">
+            <div className="relative">
+              <select
+                value={selectedYear ?? ''}
+                onChange={(e) => changeYear(e.target.value)}
+                aria-label={locale === 'ua' ? 'Рік' : 'Year'}
+                className={selectClass}
+              >
+                <option value="">{allYearsLabel}</option>
+                {availableYears.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-text-strong" />
+            </div>
+
+            {selectedYear != null && availableMonths.length > 0 && (
+              <div className="relative">
+                <select
+                  value={selectedMonth ?? ''}
+                  onChange={(e) => changeMonth(e.target.value)}
+                  aria-label={locale === 'ua' ? 'Місяць' : 'Month'}
+                  className={selectClass}
+                >
+                  <option value="">{allMonthsLabel}</option>
+                  {availableMonths.map((m) => (
+                    <option key={m} value={m}>
+                      {monthName(m)}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-text-strong" />
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Mobile-only: month pill centered between title and tabs */}
-      <div className="mb-4 flex justify-center md:hidden">
-        {renderMonthPill('min-w-[200px] justify-center')}
-      </div>
-
-      {/* Tabs row.
-          Mobile: tabs centered (alone — pill is above).
-          Tablet: tabs left + month pill right on the same row.
-          Desktop: tabs alone (pill is in title row above). */}
-      <div className="mb-6 flex flex-col items-center gap-4 md:flex-row md:items-center md:justify-between lg:justify-start">
-        {tabsRow}
-        <div className="hidden md:block lg:hidden">{renderMonthPill()}</div>
-      </div>
-
-      {/* Featured event (first event of the filtered list) */}
+      {/* Featured event — next upcoming, or most-recent on the Archive tab */}
       {featured && (
         <div className="mb-6 lg:mb-10">
           <FeaturedEventCard

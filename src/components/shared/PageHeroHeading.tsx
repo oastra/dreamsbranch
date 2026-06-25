@@ -33,11 +33,13 @@ export function PageHeroHeading({
   return (
     <div className={className}>
       <p
-        className={`text-subheading mb-2 font-semibold ${eyebrowColor} ${eyebrowClassName}`}
+        className={`mb-2 text-[20px] font-medium leading-[120%] sm:text-[24px] ${eyebrowColor} ${eyebrowClassName}`}
       >
         {eyebrow}
       </p>
-      <h1 className={`text-display ${titleColor} ${titleClassName}`}>
+      <h1
+        className={`text-[48px] font-medium leading-[110%] sm:text-[64px] lg:text-[90px] ${titleColor} ${titleClassName}`}
+      >
         {title}
       </h1>
     </div>

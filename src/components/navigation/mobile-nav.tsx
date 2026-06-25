@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, ChevronDown } from "lucide-react";
+import { Mail, ChevronDown, Globe } from "lucide-react";
 import FacebookIcon from "@/components/icons/FacebookIcon";
 import { Link } from "@/i18n/routing";
-import { NavItem } from "./nav-item";
 import { cn } from "@/lib/utils";
 import type { Locale } from "next-intl";
 
@@ -41,7 +40,7 @@ export function MobileNav({
 
   return (
     <div className="lg:hidden border-t border-border bg-surface-primary">
-      <nav className="container-page py-2">
+      <nav className="container-page pt-2 pb-6 sm:pb-8">
         {items.map((item) => {
           const hasChildren = !!item.children?.length;
           const isOpen = openKey === item.key;
@@ -49,14 +48,19 @@ export function MobileNav({
 
           if (!hasChildren) {
             return (
-              <NavItem
+              <Link
                 key={item.key}
                 href={item.href}
-                label={item.label}
-                isActive={active}
                 onClick={onClose}
-                className="block w-full px-4 py-4 border-b border-border"
-              />
+                className={cn(
+                  "flex min-h-[45px] w-full items-center border-b border-border py-2 text-subheading transition-colors",
+                  active
+                    ? "text-secondary"
+                    : "text-text-strong hover:text-secondary",
+                )}
+              >
+                {item.label}
+              </Link>
             );
           }
 
@@ -67,16 +71,16 @@ export function MobileNav({
                 onClick={() => setOpenKey(isOpen ? null : item.key)}
                 aria-expanded={isOpen}
                 className={cn(
-                  "flex w-full items-center justify-between px-4 py-4 border-b border-border rounded-full text-secondary font-regular transition-colors text-left",
+                  "flex min-h-[45px] w-full items-center justify-between border-b border-border py-2 text-subheading transition-colors text-left",
                   active
-                    ? "bg-primary text-text-primary-80"
-                    : "text-text-primary hover:text-secondary",
+                    ? "text-secondary"
+                    : "text-text-strong hover:text-secondary",
                 )}
               >
                 <span>{item.label}</span>
                 <ChevronDown
                   className={cn(
-                    "w-4 h-4 shrink-0 transition-transform",
+                    "w-5 h-5 shrink-0 transition-transform",
                     isOpen && "rotate-180",
                   )}
                 />
@@ -90,10 +94,10 @@ export function MobileNav({
                       href={child.href}
                       onClick={onClose}
                       className={cn(
-                        "block w-full pl-8 pr-4 py-3 border-b border-border text-body transition-colors",
+                        "flex min-h-[38px] w-full items-center border-b border-border py-2 pl-4 text-secondary transition-colors",
                         childActive
                           ? "text-secondary"
-                          : "text-text-secondary hover:text-secondary",
+                          : "text-text-primary hover:text-secondary",
                       )}
                     >
                       {child.label}
@@ -104,7 +108,7 @@ export function MobileNav({
           );
         })}
 
-        <div className="pt-5 pb-4 flex items-center gap-3">
+        <div className="mt-6 flex items-center gap-3 sm:gap-5">
           <button
             type="button"
             onClick={() => {
@@ -112,15 +116,16 @@ export function MobileNav({
               onClose();
             }}
             aria-label={`Switch language to ${targetLocale}`}
-            className="h-10 min-w-10 px-3 rounded-full bg-secondary-10 text-text-strong text-body-sm font-bold uppercase transition-colors hover:bg-secondary hover:text-white"
+            className="flex h-14 shrink-0 items-center gap-2 rounded-full bg-secondary-10 px-5 text-secondary font-medium uppercase text-text-strong transition-colors hover:bg-secondary hover:text-white"
           >
+            <Globe className="h-5 w-5 shrink-0" />
             {currentLocale}
           </button>
           <a
             href="mailto:dreamsbranch@gmail.com"
-            className="flex-1 flex items-center gap-2 text-body text-text-strong hover:text-secondary transition-colors min-w-0"
+            className="flex h-14 min-w-0 flex-1 items-center justify-center gap-2 rounded-full bg-primary-20 px-4 text-secondary text-text-strong transition-colors hover:bg-primary-40"
           >
-            <Mail className="w-5 h-5 shrink-0" />
+            <Mail className="h-5 w-5 shrink-0" />
             <span className="truncate">dreamsbranch@gmail.com</span>
           </a>
           <a
@@ -128,9 +133,9 @@ export function MobileNav({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"
-            className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 hover:bg-secondary-140 transition-colors"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary-140"
           >
-            <FacebookIcon className="w-5 h-5 text-white " />
+            <FacebookIcon className="h-5 w-5 text-white" />
           </a>
         </div>
       </nav>

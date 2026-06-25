@@ -87,7 +87,7 @@ export async function ShopReviewsSection({ locale, section }: Props) {
     <section className="section bg-secondary-10">
       <div className="container-page">
         <div className="mx-auto mb-10 max-w-3xl text-center lg:mb-12">
-          <h2 className="text-h2 font-semibold text-text-strong">
+          <h2 className="text-title-tablet text-text-strong">
             {t("shop.reviews.title")}
           </h2>
           <p className="mt-4 whitespace-pre-line text-body text-text-secondary lg:mt-5">

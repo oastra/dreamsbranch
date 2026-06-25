@@ -8,7 +8,6 @@ import {
 } from "@/components/shared/MaskedImageCarousel";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { ReportsBanner } from "@/components/shared/ReportsBanner";
-import { PageHeroHeading } from "@/components/shared/PageHeroHeading";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { ResultsSection } from "@/components/shared/ResultsSection";
 import { Button } from "@/components/ui/button";
@@ -81,24 +80,41 @@ export default async function Page({
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section>
         <div className="container-page">
-          <div className="grid grid-cols-1 items-stretch gap-10 py-12 lg:grid-cols-2 lg:py-16">
-            {/* Left */}
-            <div className="flex flex-col gap-6">
-              <PageHeroHeading
-                title={t("hero.title")}
-                titleClassName="mb-title-gap"
+          <div className="grid grid-cols-1 gap-6 py-12 lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:items-stretch lg:gap-x-6 lg:gap-y-0 lg:py-16">
+            {/* Eyebrow + title — Figma sizes: eyebrow 20/24, title
+                48/64/90 (same scale as the home hero). */}
+            <div className="order-1 lg:col-start-1 lg:row-start-1">
+              <p className="text-[20px] font-medium leading-[120%] text-text-strong sm:text-[24px]">
+                Dreams branch of UWAA
+              </p>
+              <h1 className="text-[48px] font-medium leading-[110%] text-secondary sm:text-[64px] lg:text-[90px]">
+                {t("hero.title")}
+              </h1>
+            </div>
+
+            {/* Hero carousel — between the two paragraphs on mobile/tablet
+                (Figma), right column spanning rows 1–2 on desktop.
+                Per-breakpoint aspect matches Figma (mobile 331×300). */}
+            <div className="order-3 aspect-[331/300] w-full sm:aspect-[576/400] lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:aspect-auto lg:h-full">
+              <MaskedImageCarousel
+                slides={heroSlides}
+                aspectRatio={null}
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="h-full"
               />
-              {/* Two paragraphs with 16px between them (regardless of the
-                  parent's larger title→buttons rhythm). */}
-              <div className="flex flex-col gap-4">
-                <p className="text-secondary text-text-primary">
-                  {t("hero.description_1")}
-                </p>
-                <p className="text-secondary text-text-primary">
-                  {t("hero.description_2")}
-                </p>
-              </div>
-              <div className="mt-auto pt-2">
+            </div>
+
+            {/* Paragraphs + CTA — `contents` on mobile so they flow around
+                the image (para → image → para → button); a flex column
+                pinned to the bottom of the left cell on desktop. */}
+            <div className="contents lg:flex lg:flex-col lg:gap-6 lg:col-start-1 lg:row-start-2 lg:self-end">
+              <p className="order-2 text-secondary text-text-primary lg:order-none">
+                {t("hero.description_1")}
+              </p>
+              <p className="order-4 text-secondary text-text-primary lg:order-none">
+                {t("hero.description_2")}
+              </p>
+              <div className="order-5 lg:order-none">
                 <Button
                   render={<Link href={`/${locale}/donate`} />}
                   size="xl"
@@ -108,15 +124,6 @@ export default async function Page({
                   {t("hero.cta")}
                 </Button>
               </div>
-            </div>
-
-            {/* Right: hero carousel — fills column fully */}
-            <div className="relative min-h-100 w-full lg:min-h-0">
-              <MaskedImageCarousel
-                slides={heroSlides}
-                aspectRatio={null}
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
             </div>
           </div>
         </div>
@@ -197,7 +204,7 @@ export default async function Page({
             {/* Chapter 1 — dark card */}
             <div className="grid grid-cols-1 gap-6 rounded-2xl bg-grey-100 p-6 lg:grid-cols-[3fr_2fr] lg:p-8">
               <div className="flex flex-col justify-center gap-6 p-2 lg:p-4">
-                <h3 className="text-h2 text-white">{t("story.ch1_title")}</h3>
+                <h3 className="text-[24px] leading-[120%] text-white lg:text-[32px]">{t("story.ch1_title")}</h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div className="flex flex-col gap-3">
                     <p className="text-body-sm text-white/80">
@@ -249,7 +256,7 @@ export default async function Page({
                 </div>
               </div>
               <div className="contents lg:order-2 lg:flex lg:flex-col lg:gap-4">
-                <h3 className="order-1 text-h2 text-text-strong">
+                <h3 className="order-1 text-[24px] leading-[120%] text-text-strong lg:text-[32px]">
                   {t("story.ch2_title")}
                 </h3>
                 <p className="order-2 text-body text-text-primary">
@@ -269,7 +276,7 @@ export default async function Page({
             {/* Chapter 3 — desktop: text left | image right. Mobile: heading, image, text_a, text_b(bold date), highlight */}
             <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-6">
               <div className="contents lg:order-1 lg:flex lg:flex-col lg:gap-4">
-                <h3 className="order-1 flex flex-col text-h2 text-text-strong">
+                <h3 className="order-1 flex flex-col text-[24px] leading-[120%] text-text-strong lg:text-[32px]">
                   <span>{t("story.ch3_title_a")}</span>
                   <span className="self-end">{t("story.ch3_title_b")}</span>
                 </h3>
@@ -311,7 +318,7 @@ export default async function Page({
                 />
               </div>
               <div className="contents lg:order-2 lg:flex lg:flex-col lg:gap-4">
-                <h3 className="order-1 text-h2 text-text-strong">
+                <h3 className="order-1 text-[24px] leading-[120%] text-text-strong lg:text-[32px]">
                   {t("story.ch4_title")}
                 </h3>
                 <p className="order-3 text-body text-text-primary">
@@ -329,7 +336,7 @@ export default async function Page({
             {/* Chapter 5 — desktop: text left | image right. Mobile: heading, image, 2 paragraphs, small paragraph, highlight */}
             <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-6">
               <div className="contents lg:order-1 lg:flex lg:flex-col lg:gap-4">
-                <h3 className="order-1 text-h2 text-text-strong">
+                <h3 className="order-1 text-[24px] leading-[120%] text-text-strong lg:text-[32px]">
                   {t("story.ch5_title")}
                 </h3>
                 <p className="order-3 text-body text-text-primary">

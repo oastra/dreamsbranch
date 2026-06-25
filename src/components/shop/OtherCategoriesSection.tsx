@@ -70,7 +70,7 @@ export function OtherCategoriesSection({
     <section className="section">
       <div className="container-page">
         <div className="mb-8 text-center lg:mb-10 lg:grid lg:grid-cols-2 lg:items-start lg:gap-8 lg:text-left">
-          <h2 className="text-h2 font-semibold text-text-strong">{title}</h2>
+          <h2 className="text-title-tablet text-text-strong">{title}</h2>
           <p className="mt-3 whitespace-pre-line text-body text-text-secondary lg:mt-0">
             {description}
           </p>

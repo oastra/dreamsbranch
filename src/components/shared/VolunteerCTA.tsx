@@ -51,7 +51,7 @@ export function VolunteerCTA({
             {/* Right column on lg; uses `contents` on smaller widths so title
                 and description-block remain in the outer flex column. */}
             <div className="contents lg:flex lg:flex-1 lg:flex-col lg:gap-5">
-              <h2 className="order-1 text-center text-h2 font-semibold text-text-strong lg:order-none lg:text-left">
+              <h2 className="order-1 text-center text-title-tablet text-text-strong lg:order-none lg:text-left">
                 {title}
               </h2>
               <div className="order-3 flex flex-col items-center gap-5 lg:order-none lg:items-start lg:gap-5">

@@ -203,45 +203,48 @@ export default async function HomePage({
           image's bottom.
           Mobile/tablet: single column — title → image → lead/CTAs. */}
       <section className="py-8 lg:py-20">
-        <div className="container-page grid gap-8 lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-10">
-          {/* Title block */}
+        <div className="container-page grid gap-6 sm:gap-8 lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-x-6 lg:gap-y-0">
+          {/* Title block — eyebrow / title / subtitle stack with no
+              inter-element margin; the Figma spacing is purely
+              line-height (matches every breakpoint). */}
           <div className="text-center lg:text-left">
-            <p className="text-subheading mb-3 font-semibold text-text-strong lg:mb-4">
+            <p className="text-[20px] font-medium leading-[120%] text-text-strong sm:text-[24px]">
               {t("hero.eyebrow")}
             </p>
-            <h1 className="text-display mb-2 text-secondary lg:mb-3">
+            <h1 className="text-[48px] font-medium leading-[110%] text-secondary sm:text-[64px] lg:text-[90px]">
               {t("hero.title")}
             </h1>
-            <p className="text-h3 md:text-[42px] font-medium text-text-strong">
+            <p className="text-h3 font-normal text-text-strong sm:text-[42px]">
               {t("hero.subtitle")}
             </p>
           </div>
 
           {/* Masked carousel — between text blocks on mobile, right
-              column spanning both rows on desktop. The image keeps its
-              natural 716/500 aspect ratio (so it has predictable
-              dimensions on every viewport); the left text column
-              stretches via `lg:row-span-2 lg:justify-between` so the
-              CTAs sit at the bottom edge of the column, lining up with
-              the image's bottom edge. */}
-          <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2">
-            <HeroCarousel slides={heroSlides} />
+              column spanning both rows on desktop. Aspect ratio is
+              per-breakpoint to match Figma (mobile 331×340, tablet
+              576×400, desktop 628×500); the left text column stretches
+              via `lg:row-span-2` so the CTAs sit flush with the image's
+              bottom edge. */}
+          <div className="aspect-[331/340] sm:aspect-[576/400] lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:aspect-[628/500]">
+            <HeroCarousel slides={heroSlides} aspectRatio={null} />
           </div>
 
           {/* Lead + description + CTAs */}
           <div className="text-center lg:self-end lg:text-left lg:col-start-1 lg:row-start-2">
-            <p className="text-h2 mb-4 font-medium text-text-primary">
+            <p className="mb-2 text-[24px] font-medium leading-[120%] text-text-primary sm:text-[32px] lg:mb-4 lg:font-normal">
               {t("hero.lead")}
             </p>
-            <p className="text-h3 mb-6 text-text-primary lg:mb-8">
+            <p className="mb-6 text-[18px] leading-[120%] text-text-primary sm:mb-8 sm:text-[24px] lg:mb-10">
               {t("hero.description")}
             </p>
-            <div className="flex flex-wrap justify-center gap-4 lg:justify-start">
+            {/* Figma: two CTAs sit side-by-side on every breakpoint —
+                equal halves on mobile/tablet, fixed 256px on desktop. */}
+            <div className="flex justify-center gap-4 lg:justify-start lg:gap-6">
               <Button
                 render={<Link href={`/${locale}/about`} />}
                 size="xl"
                 shape="pill"
-                className="w-70 max-w-full"
+                className="flex-1 min-w-0 px-3 max-w-full lg:flex-none lg:w-64 lg:px-10 lg:text-lg"
               >
                 {t("hero.cta_about")}
               </Button>
@@ -250,7 +253,7 @@ export default async function HomePage({
                 variant="outline"
                 size="xl"
                 shape="pill"
-                className="w-70 max-w-full"
+                className="flex-1 min-w-0 px-3 max-w-full lg:flex-none lg:w-64 lg:px-10 lg:text-lg"
               >
                 {t("hero.cta_shop")}
               </Button>
@@ -323,7 +326,7 @@ export default async function HomePage({
       {activeCampaigns.length > 0 && (
         <section id="campaigns" className="section">
           <div className="container-page">
-            <h2 className="text-h2 mb-8 text-center font-semibold text-text-strong lg:text-left">
+            <h2 className="text-title-tablet mb-8 text-center font-medium text-text-strong lg:text-left">
               {t("sections.active_campaigns")}
             </h2>
 
@@ -373,7 +376,7 @@ export default async function HomePage({
           <div className="container-page">
             <div className="rounded-3xl bg-secondary-10 p-5 sm:p-8 lg:p-12">
               <div className="mb-6 flex items-center justify-between gap-4 lg:mb-10">
-                <h2 className="text-h2 font-semibold text-text-strong">
+                <h2 className="text-title-tablet font-medium text-text-strong">
                   {t("sections.events")}
                 </h2>
                 <Button
@@ -443,7 +446,7 @@ export default async function HomePage({
                 the same `bg-secondary-10` surface used on /news. */}
             <div className="rounded-3xl bg-secondary-10 p-5 sm:p-8 lg:p-12">
               <div className="mb-6 flex items-center justify-between gap-4 lg:mb-10">
-                <h2 className="text-h2 font-semibold text-text-strong">
+                <h2 className="text-title-tablet font-medium text-text-strong">
                   {t("sections.news")}
                 </h2>
                 <Link
@@ -499,7 +502,7 @@ export default async function HomePage({
           <div className="container-page">
             <div className="p-5 sm:p-8 lg:p-12">
               <div className="mb-6 flex items-center justify-between gap-4 lg:mb-10">
-                <h2 className="text-h2 font-semibold text-text-strong">
+                <h2 className="text-title-tablet font-medium text-text-strong">
                   {t("sections.reports")}
                 </h2>
                 <Button

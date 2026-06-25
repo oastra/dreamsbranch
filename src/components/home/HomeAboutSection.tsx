@@ -40,7 +40,7 @@ export function HomeAboutSection({
             />
           </div>
 
-          <h2 className="order-1 text-h2 font-semibold leading-tight text-text-strong text-center lg:order-none lg:col-start-2 lg:row-start-1 lg:text-left lg:text-[40px]">
+          <h2 className="order-1 text-title-tablet font-medium leading-tight text-text-strong text-center lg:order-none lg:col-start-2 lg:row-start-1 lg:text-left">
             {title}
           </h2>
 

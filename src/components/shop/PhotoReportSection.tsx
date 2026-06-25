@@ -43,7 +43,7 @@ export function PhotoReportSection({
         {/* Heading row */}
         <h2
           id={id ? `${id}-title` : undefined}
-          className="text-h2 mb-6 text-center text-text-strong lg:hidden"
+          className="text-title-tablet mb-6 text-center text-text-strong lg:hidden"
         >
           {title}
         </h2>
@@ -52,7 +52,7 @@ export function PhotoReportSection({
         <div className="mb-8 lg:mb-10 lg:flex lg:items-end lg:justify-between lg:gap-6">
           <div className="text-center lg:text-left">
             <h2
-              className="text-h2 mb-4 hidden text-text-strong lg:block"
+              className="text-title-tablet mb-4 hidden text-text-strong lg:block"
             >
               {title}
             </h2>
