@@ -248,8 +248,13 @@ export default async function ShopProductPage({
       />
 
       <ProductHero
+        slug={product.slug}
         title={title}
         price={price}
+        priceAmount={Number(product.price_amount)}
+        currency={product.price_currency}
+        coverImage={product.cover_image}
+        cartHref={`/${locale}/shop/cart`}
         description={description}
         galleryImages={galleryImages}
         breadcrumb={{
@@ -276,6 +281,8 @@ export default async function ShopProductPage({
           quantityDecrease: t("shop.product.quantity_decrease"),
           quantityIncrease: t("shop.product.quantity_increase"),
           addToCart: t("shop.add_to_cart"),
+          addedToCart: t("shop.cart.added"),
+          viewCart: t("shop.cart.view"),
           payWithPaypal: t("shop.product.pay_with_paypal"),
           orSeparator: t("shop.product.or_separator"),
           paymentMethodsLabel: t("shop.product.payment_methods_label"),

@@ -7,8 +7,13 @@ type BreadcrumbCrumb = Crumb;
 type BuyPanelLabels = React.ComponentProps<typeof ProductBuyPanel>["labels"];
 
 type Props = {
+  slug: string;
   title: string;
   price: string;
+  priceAmount: number;
+  currency: string;
+  coverImage: string | null;
+  cartHref: string;
   description: string | null;
   galleryImages: string[];
   breadcrumb: {
@@ -25,8 +30,13 @@ type Props = {
 };
 
 export function ProductHero({
+  slug,
   title,
   price,
+  priceAmount,
+  currency,
+  coverImage,
+  cartHref,
   description,
   galleryImages,
   breadcrumb,
@@ -55,8 +65,13 @@ export function ProductHero({
           />
 
           <ProductBuyPanel
+            slug={slug}
             title={title}
             price={price}
+            priceAmount={priceAmount}
+            currency={currency}
+            image={coverImage}
+            cartHref={cartHref}
             description={description}
             labels={buyLabels}
           />

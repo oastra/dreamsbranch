@@ -126,6 +126,77 @@ export async function POST(req: NextRequest) {
       break;
     }
 
+    // ── Shop orders (hosted Checkout) ───────────────────────────────────
+    case "checkout.session.completed": {
+      const session = event.data.object as Stripe.Checkout.Session;
+      if (session.metadata?.source !== "shop") break;
+
+      // Line items aren't included on the session object — fetch them.
+      let lineItems: Array<{
+        description: string | null;
+        quantity: number | null;
+        amount_total: number;
+        currency: string;
+      }> = [];
+      try {
+        const li = await stripe.checkout.sessions.listLineItems(session.id, {
+          limit: 100,
+        });
+        lineItems = li.data.map((row) => ({
+          description: row.description,
+          quantity: row.quantity,
+          amount_total: row.amount_total,
+          currency: row.currency,
+        }));
+      } catch (err) {
+        console.error("listLineItems failed for", session.id, err);
+      }
+
+      const pi =
+        typeof session.payment_intent === "string"
+          ? session.payment_intent
+          : (session.payment_intent?.id ?? null);
+      // `shipping_details` isn't on the pinned API version's type — read it
+      // defensively and fall back to the billing address.
+      const sessionAny = session as unknown as {
+        shipping_details?: { address?: unknown } | null;
+      };
+      const shippingAddress =
+        sessionAny.shipping_details?.address ??
+        session.customer_details?.address ??
+        null;
+
+      const orderRow = {
+        stripe_session_id: session.id,
+        stripe_payment_intent: pi,
+        status: "paid",
+        amount_total: (session.amount_total ?? 0) / 100,
+        currency: (session.currency ?? "aud").toUpperCase(),
+        customer_email: session.customer_details?.email ?? null,
+        customer_name: session.customer_details?.name ?? null,
+        customer_phone: session.customer_details?.phone ?? null,
+        shipping_address: shippingAddress,
+        line_items: lineItems,
+      };
+
+      // Idempotent: checkout.session.completed can fire more than once.
+      // `shop_orders` isn't in the generated types yet (added via migration).
+      await (sb as unknown as {
+        from: (t: string) => {
+          upsert: (
+            row: unknown,
+            opts: { onConflict: string; ignoreDuplicates: boolean },
+          ) => Promise<unknown>;
+        };
+      })
+        .from("shop_orders")
+        .upsert(orderRow, {
+          onConflict: "stripe_session_id",
+          ignoreDuplicates: true,
+        });
+      break;
+    }
+
     default:
       // Ignore unrelated events so Stripe keeps marking deliveries as 2xx.
       break;

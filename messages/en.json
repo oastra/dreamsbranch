@@ -165,6 +165,23 @@
     "all_items": "All items",
     "show_more": "Show more",
     "add_to_cart": "Add to cart",
+    "cart": {
+      "title": "Cart",
+      "added": "Added",
+      "view": "View cart",
+      "empty": "Your cart is empty.",
+      "continue": "Continue shopping",
+      "remove": "Remove",
+      "total": "Total",
+      "checkout": "Proceed to checkout",
+      "processing": "Processing…",
+      "error": "Could not start checkout. Please try again."
+    },
+    "order_success": {
+      "title": "Thank you for your order!",
+      "description": "Your payment was successful. We've emailed you a confirmation and will be in touch about delivery shortly.",
+      "continue": "Back to shop"
+    },
     "filters_aria": "Filter by category",
     "no_products": "No products yet",
     "catalog": {
@@ -537,7 +554,7 @@
       "ch5_text_b": "But most importantly, that was when our volunteer family — lovingly called the \"Tsybulky\" (Onions) — began to take shape.",
       "ch5_text_c": "Why Onions? Simple: before every barbecue, we gather to chop mountains of onions. What used to be a \"teary\" solo task became a shared evening of jokes, support, and planning for the future.",
       "ch5_highlight": "Today we are not just a group of activists. We are a family that raises funds together for thermal imagers, body armour, and uniforms — bringing victory closer every day.",
-      "ch6_note": "Missing a paragraph on how the \"Tsybulky\" became Dreams of Branch"
+      "ch6_note": "In time, our «Tsybulky» family grew into something bigger — and so Dreams Branch was born, a dedicated chapter of the Ukrainian Women's Association of Australia. Our mission is simple: to be a reliable rear for Ukraine and a home for Ukrainians in Australia. In the short term, we stay focused on rapid front-line support — covering needs for tactical gear, medicine, and vehicles. In the long term, we aim to build a strong, united community, keep Ukrainian culture alive abroad, and bring victory closer — so that one day we can turn our efforts toward rebuilding a free Ukraine."
     },
     "results": {
       "title": "Results",

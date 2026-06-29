@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Truck } from "lucide-react";
+import Link from "next/link";
+import { Truck, Check } from "lucide-react";
 import { QuantityStepper } from "./QuantityStepper";
+import { useCart } from "./cart-provider";
 import { Button } from "@/components/ui/button";
 import ApplePayMark from "@/components/icons/payments/ApplePayMark";
 import GooglePayMark from "@/components/icons/payments/GooglePayMark";
@@ -15,6 +17,8 @@ type Labels = {
   quantityDecrease: string;
   quantityIncrease: string;
   addToCart: string;
+  addedToCart: string;
+  viewCart: string;
   payWithPaypal: string;
   orSeparator: string;
   paymentMethodsLabel: string;
@@ -23,17 +27,40 @@ type Labels = {
 };
 
 type Props = {
+  /** Canonical product slug — the cart/checkout re-prices by this. */
+  slug: string;
   title: string;
+  /** Formatted price string for display. */
   price: string;
+  /** Unit price in major units, for the cart total. */
+  priceAmount: number;
+  currency: string;
+  image: string | null;
   description: string | null;
+  /** Locale-aware href to the cart page. */
+  cartHref: string;
   labels: Labels;
 };
 
-export function ProductBuyPanel({ title, price, description, labels }: Props) {
+export function ProductBuyPanel({
+  slug,
+  title,
+  price,
+  priceAmount,
+  currency,
+  image,
+  description,
+  cartHref,
+  labels,
+}: Props) {
   const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
+  const { addItem } = useCart();
 
   function handleAddToCart() {
-    // TODO: wire up cart state once the cart flow is implemented.
+    addItem({ slug, title, price: priceAmount, currency, image }, quantity);
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 2500);
   }
 
   function handlePayPal() {
@@ -80,9 +107,25 @@ export function ProductBuyPanel({ title, price, description, labels }: Props) {
             shape="pill"
             className="flex-1"
           >
-            {labels.addToCart}
+            {added ? (
+              <>
+                <Check className="h-5 w-5" aria-hidden />
+                {labels.addedToCart}
+              </>
+            ) : (
+              labels.addToCart
+            )}
           </Button>
         </div>
+
+        {added && (
+          <Link
+            href={cartHref}
+            className="mt-3 inline-block text-body-sm font-medium text-secondary underline underline-offset-4"
+          >
+            {labels.viewCart}
+          </Link>
+        )}
       </div>
 
       {/* ── PayPal + payment marks ───────────────────────────── */}

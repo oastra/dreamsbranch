@@ -6,11 +6,12 @@ import { usePathname } from "next/navigation";
 import { Link, useRouter } from "@/i18n/routing";
 import { useState } from "react";
 import FacebookIcon from "@/components/icons/FacebookIcon";
-import { Menu, X, ShoppingBag } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { NavItem } from "@/components/navigation/nav-item";
 import { NavItemDropdown } from "@/components/navigation/nav-item-dropdown";
 import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { MobileNav } from "@/components/navigation/mobile-nav";
+import { CartButton } from "@/components/shop/CartButton";
 import { Button } from "@/components/ui/button";
 
 type NavChildKey =
@@ -144,12 +145,11 @@ export function Header() {
                 </Button>
               </Link>
 
-              <button
-                aria-label="Cart"
-                className="w-12 h-12 bg-secondary-10 rounded-full  flex items-center justify-center hover:border-brand-blue transition-colors"
-              >
-                <ShoppingBag className="w-6 h-6 text-grey-100  hover:text-secondary-120" />
-              </button>
+              <CartButton
+                ariaLabel="Cart"
+                className="w-12 h-12 bg-secondary-10 rounded-full flex items-center justify-center hover:bg-secondary-20 transition-colors"
+                iconClassName="w-6 h-6 text-grey-100"
+              />
             </div>
 
             {/* Mobile actions */}
@@ -180,12 +180,11 @@ export function Header() {
                 </button>
               )}
               {/* Cart — always visible (open or closed) */}
-              <button
-                aria-label="Cart"
+              <CartButton
+                ariaLabel="Cart"
                 className="w-9 h-9 sm:w-10 sm:h-10 bg-primary rounded-full flex items-center justify-center"
-              >
-                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-grey-100" />
-              </button>
+                iconClassName="w-4 h-4 sm:w-5 sm:h-5 text-grey-100"
+              />
               <button
                 onClick={() => setMobileOpen((v) => !v)}
                 className="w-9 h-9 sm:w-10 sm:h-10 bg-secondary-10 rounded-full flex items-center justify-center"

@@ -6,6 +6,7 @@ import { routing } from "@/i18n/routing";
 import localFont from "next/font/local";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { CartProvider } from "@/components/shop/cart-provider";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -42,9 +43,11 @@ export default async function LocaleLayout({
       className={`${mariupol.variable} min-h-screen flex flex-col font-sans`}
     >
       <NextIntlClientProvider messages={messages}>
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <CartProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </CartProvider>
       </NextIntlClientProvider>
     </div>
   );

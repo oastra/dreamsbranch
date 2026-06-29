@@ -17,6 +17,7 @@ import {
   Info,
   HandCoins,
   ShoppingBag,
+  Package,
   Star,
   ExternalLink,
   LogOut,
@@ -61,6 +62,7 @@ const navGroups: NavGroup[] = [
   {
     heading: "Shop",
     items: [
+      { label: "Orders", href: "/admin/orders", icon: Package },
       { label: "Photo Reports", href: "/admin/shop-photo-reports", icon: ShoppingBag },
       { label: "Reviews", href: "/admin/shop-reviews", icon: Star },
     ],
