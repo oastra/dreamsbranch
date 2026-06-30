@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MaskedImage } from "@/components/shared/MaskedImage";
 
 export type CarouselSlide = { src: string; alt: string };
@@ -25,11 +25,37 @@ export function MaskedImageCarousel({
 }: Props) {
   const [index, setIndex] = useState(0);
 
+  // Only download slides as they're needed (current + the one queued next),
+  // instead of fetching every hero image up front. Loading all slides at
+  // once saturates the connection and delays the LCP/Speed Index. Indices
+  // only ever get added, so already-loaded slides stay mounted for the
+  // cross-fade.
+  const [loaded, setLoaded] = useState<Set<number>>(
+    () => new Set(slides.length > 1 ? [0, 1] : [0]),
+  );
+
+  const goTo = useCallback(
+    (next: number) => {
+      setIndex(next);
+      setLoaded((prev) => {
+        const ahead = (next + 1) % slides.length;
+        if (prev.has(next) && prev.has(ahead)) return prev;
+        return new Set(prev).add(next).add(ahead);
+      });
+    },
+    [slides.length],
+  );
+
+  const indexRef = useRef(index);
+  useEffect(() => {
+    indexRef.current = index;
+  }, [index]);
+
   useEffect(() => {
     if (slides.length <= 1) return;
-    const id = setInterval(() => setIndex((i) => (i + 1) % slides.length), intervalMs);
+    const id = setInterval(() => goTo((indexRef.current + 1) % slides.length), intervalMs);
     return () => clearInterval(id);
-  }, [slides.length, intervalMs]);
+  }, [slides.length, intervalMs, goTo]);
 
   if (slides.length === 0) return null;
 
@@ -47,7 +73,7 @@ export function MaskedImageCarousel({
             }`}
             aria-hidden={i !== index}
           >
-            {masked ? (
+            {!loaded.has(i) ? null : masked ? (
               <MaskedImage src={s.src} alt={s.alt} className="h-full w-full" priority={i === 0} sizes={sizes} />
             ) : (
               <div className="relative h-full w-full overflow-hidden rounded-[20px]">
@@ -63,7 +89,7 @@ export function MaskedImageCarousel({
               <button
                 key={i}
                 type="button"
-                onClick={() => setIndex(i)}
+                onClick={() => goTo(i)}
                 aria-label={`Go to slide ${i + 1}`}
                 style={i === index ? { backgroundColor: "#FFD700" } : undefined}
                 className={`rounded-full transition-all ${
@@ -81,7 +107,7 @@ export function MaskedImageCarousel({
             <button
               key={i}
               type="button"
-              onClick={() => setIndex(i)}
+              onClick={() => goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
               className={`h-2 w-2 rounded-full transition-all ${
                 i === index ? "bg-secondary" : "bg-grey-10"
