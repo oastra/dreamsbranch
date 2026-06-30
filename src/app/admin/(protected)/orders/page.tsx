@@ -10,6 +10,7 @@ type OrderLineItem = {
 
 type OrderRow = {
   id: string;
+  provider: string;
   status: string;
   amount_total: number;
   currency: string;
@@ -62,6 +63,7 @@ export default async function OrdersPage() {
                 <th className="px-4 py-3 font-medium">Customer</th>
                 <th className="px-4 py-3 font-medium">Items</th>
                 <th className="px-4 py-3 font-medium">Total</th>
+                <th className="px-4 py-3 font-medium">Method</th>
                 <th className="px-4 py-3 font-medium">Status</th>
               </tr>
             </thead>
@@ -109,6 +111,9 @@ export default async function OrdersPage() {
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 font-medium text-text-strong">
                       {formatCurrency(Number(o.amount_total))}
+                    </td>
+                    <td className="px-4 py-3 capitalize text-text-secondary">
+                      {o.provider}
                     </td>
                     <td className="px-4 py-3">
                       <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-caption font-medium capitalize text-green-700">

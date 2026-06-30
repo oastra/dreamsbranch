@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ApplePayWordmark from "@/components/icons/payments/ApplePayWordmark";
 import GooglePayWordmark from "@/components/icons/payments/GooglePayWordmark";
 import PayPalWordmark from "@/components/icons/payments/PayPalWordmark";
 import { useDonation } from "@/components/donate/DonationContext";
+import { PayPalDonateButtons } from "@/components/donate/PayPalDonateButtons";
 
 export type DonationFormLabels = {
   formHeading: string;
@@ -54,6 +55,12 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
     email,
     setEmail,
   } = useDonation();
+
+  const [paypalError, setPaypalError] = useState<string | null>(null);
+  // PayPal pay-now lives in the page form (the campaign modal has no
+  // thank-you view to land on) and only when configured.
+  const paypalEnabled =
+    variant === "page" && !!process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 
   // /donate prefill from `?amount=` (campaign cards now open a modal, but a
   // shared link with the param still works).
@@ -199,14 +206,20 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
 
       {/* ── Fast pay buttons ────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
-        <button
-          type="button"
-          onClick={() => handleFastPay("paypal")}
-          aria-label={labels.fastPayPaypalAria}
-          className="inline-flex h-[54px] items-center justify-center rounded-full border border-text-strong/20 bg-white text-text-strong transition-colors hover:border-text-strong"
-        >
-          <PayPalWordmark width={70} height={19} />
-        </button>
+        {paypalEnabled ? (
+          <div className="min-h-[54px] [&>div]:w-full">
+            <PayPalDonateButtons onError={setPaypalError} />
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => handleFastPay("paypal")}
+            aria-label={labels.fastPayPaypalAria}
+            className="inline-flex h-[54px] items-center justify-center rounded-full border border-text-strong/20 bg-white text-text-strong transition-colors hover:border-text-strong"
+          >
+            <PayPalWordmark width={70} height={19} />
+          </button>
+        )}
         <button
           type="button"
           onClick={() => handleFastPay("apple")}
@@ -224,6 +237,10 @@ export function DonationFormCard({ labels, variant = "page" }: Props) {
           <GooglePayWordmark width={50} height={32} />
         </button>
       </div>
+
+      {paypalError && (
+        <p className="mt-3 text-body-sm text-red-600">{paypalError}</p>
+      )}
 
       {/* ── Public display name + anonymous checkbox ──────────
            When variant=campaign and the donor leaves this blank, the

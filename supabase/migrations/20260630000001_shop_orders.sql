@@ -1,13 +1,15 @@
 -- ============================================================
--- Shop orders — one row per completed Stripe Checkout session.
--- Written by the Stripe webhook (service role). Stripe stays the
--- system of record; this mirror powers the admin orders view.
+-- Shop orders — one row per completed checkout (Stripe or PayPal).
+-- Written by the payment webhooks / capture routes (service role).
+-- The provider stays the system of record; this mirror powers the
+-- admin orders view.
 -- ============================================================
 
 create table if not exists shop_orders (
   id                    uuid primary key default gen_random_uuid(),
-  stripe_session_id     text unique not null,
-  stripe_payment_intent text,
+  provider              text not null default 'stripe', -- 'stripe' | 'paypal'
+  external_id           text unique not null,           -- Stripe session id / PayPal order id
+  external_payment_id   text,                           -- Stripe PI / PayPal capture id
   status                text not null default 'paid',
   amount_total          numeric(12,2) not null default 0,
   currency              text not null default 'AUD',

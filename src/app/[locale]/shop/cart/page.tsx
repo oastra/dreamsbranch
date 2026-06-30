@@ -28,6 +28,7 @@ export default async function CartPage({
             total: t("shop.cart.total"),
             checkout: t("shop.cart.checkout"),
             processing: t("shop.cart.processing"),
+            orSeparator: t("shop.product.or_separator"),
             quantityLabel: t("shop.product.quantity_label"),
             quantityDecrease: t("shop.product.quantity_decrease"),
             quantityIncrease: t("shop.product.quantity_increase"),

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "./cart-provider";
 import { QuantityStepper } from "./QuantityStepper";
+import { PayPalCartButtons } from "./PayPalCartButtons";
 import { Button } from "@/components/ui/button";
 
 type Labels = {
@@ -14,6 +15,7 @@ type Labels = {
   total: string;
   checkout: string;
   processing: string;
+  orSeparator: string;
   quantityLabel: string;
   quantityDecrease: string;
   quantityIncrease: string;
@@ -30,6 +32,7 @@ export function CartView({ locale, shopHref, labels }: Props) {
   const { items, totalAmount, setQuantity, removeItem, hydrated } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const paypalEnabled = !!process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 
   const currency = items[0]?.currency ?? "AUD";
   const fmt = (n: number) =>
@@ -149,6 +152,26 @@ export function CartView({ locale, shopHref, labels }: Props) {
         >
           {loading ? labels.processing : labels.checkout}
         </Button>
+
+        {/* PayPal — only shown when NEXT_PUBLIC_PAYPAL_CLIENT_ID is set. */}
+        {paypalEnabled && (
+          <div className="mt-5">
+            <div className="mb-4 flex items-center gap-3 text-body-sm text-text-secondary">
+              <span className="h-px flex-1 bg-border" />
+              {labels.orSeparator}
+              <span className="h-px flex-1 bg-border" />
+            </div>
+            <PayPalCartButtons
+              locale={locale}
+              items={items.map((i) => ({ slug: i.slug, quantity: i.quantity }))}
+              disabled={loading}
+              onSuccess={() => {
+                window.location.href = `${shopHref}/success`;
+              }}
+              onError={(msg) => setError(msg)}
+            />
+          </div>
+        )}
       </aside>
     </div>
   );

@@ -167,8 +167,9 @@ export async function POST(req: NextRequest) {
         null;
 
       const orderRow = {
-        stripe_session_id: session.id,
-        stripe_payment_intent: pi,
+        provider: "stripe",
+        external_id: session.id,
+        external_payment_id: pi,
         status: "paid",
         amount_total: (session.amount_total ?? 0) / 100,
         currency: (session.currency ?? "aud").toUpperCase(),
@@ -191,7 +192,7 @@ export async function POST(req: NextRequest) {
       })
         .from("shop_orders")
         .upsert(orderRow, {
-          onConflict: "stripe_session_id",
+          onConflict: "external_id",
           ignoreDuplicates: true,
         });
       break;
