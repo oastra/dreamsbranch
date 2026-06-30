@@ -95,7 +95,7 @@ export default async function Page({
             {/* Hero carousel — between the two paragraphs on mobile/tablet
                 (Figma), right column spanning rows 1–2 on desktop.
                 Per-breakpoint aspect matches Figma (mobile 331×300). */}
-            <div className="order-3 aspect-[331/300] w-full sm:aspect-[576/400] lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:aspect-auto lg:h-full">
+            <div className="order-3 aspect-[331/300] w-full sm:aspect-[576/400] lg:order-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:aspect-auto lg:h-full">
               <MaskedImageCarousel
                 slides={heroSlides}
                 aspectRatio={null}
@@ -108,13 +108,13 @@ export default async function Page({
                 the image (para → image → para → button); a flex column
                 pinned to the bottom of the left cell on desktop. */}
             <div className="contents lg:flex lg:flex-col lg:gap-6 lg:col-start-1 lg:row-start-2 lg:self-end">
-              <p className="order-2 text-secondary text-text-primary lg:order-none">
+              <p className="order-2 text-secondary text-text-primary lg:order-0">
                 {t("hero.description_1")}
               </p>
-              <p className="order-4 text-secondary text-text-primary lg:order-none">
+              <p className="order-4 text-secondary text-text-primary lg:order-0">
                 {t("hero.description_2")}
               </p>
-              <div className="order-5 lg:order-none">
+              <div className="order-5 lg:order-0">
                 <Button
                   render={<Link href={`/${locale}/donate`} />}
                   size="xl"

@@ -31,7 +31,7 @@ export function HomeAboutSection({
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[5fr_6fr] lg:gap-12">
           {/* Image — uses the shared MaskedImage so the yellow + light-blue
               Figma corner triangles render automatically. */}
-          <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-5 lg:self-stretch">
+          <div className="order-3 lg:order-0 lg:col-start-1 lg:row-start-1 lg:row-span-5 lg:self-stretch">
             <MaskedImage
               src={imageSrc}
               alt={imageAlt}
@@ -40,25 +40,25 @@ export function HomeAboutSection({
             />
           </div>
 
-          <h2 className="order-1 text-title-tablet font-medium leading-tight text-text-strong text-center lg:order-none lg:col-start-2 lg:row-start-1 lg:text-left">
+          <h2 className="order-1 text-title-tablet font-medium leading-tight text-text-strong text-center lg:order-0 lg:col-start-2 lg:row-start-1 lg:text-left">
             {title}
           </h2>
 
-          <p className="order-2 max-w-xl text-body text-text-primary text-center lg:order-none lg:col-start-2 lg:row-start-2 lg:text-left">
+          <p className="order-2 max-w-xl text-body text-text-primary text-center lg:order-0 lg:col-start-2 lg:row-start-2 lg:text-left">
             {lead}
           </p>
 
           {/* Body p1 — sits between lead and image on mobile (order-2 ensures it's right after the lead).
               On desktop both paragraphs sit in the right column under the lead. */}
-          <p className="order-2 text-body text-text-primary lg:order-none lg:col-start-2 lg:row-start-3">
+          <p className="order-2 text-body text-text-primary lg:order-0 lg:col-start-2 lg:row-start-3">
             {bodyP1}
           </p>
 
-          <p className="order-4 text-body text-text-primary lg:order-none lg:col-start-2 lg:row-start-4">
+          <p className="order-4 text-body text-text-primary lg:order-0 lg:col-start-2 lg:row-start-4">
             {bodyP2}
           </p>
 
-          <div className="order-5 flex justify-center lg:order-none lg:col-start-2 lg:row-start-5 lg:justify-start">
+          <div className="order-5 flex justify-center lg:order-0 lg:col-start-2 lg:row-start-5 lg:justify-start">
             <Button
               render={<Link href={ctaHref} />}
               size="xl"

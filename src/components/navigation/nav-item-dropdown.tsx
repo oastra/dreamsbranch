@@ -13,14 +13,14 @@ export interface NavDropdownChild {
 
 interface NavItemDropdownProps {
   label: string;
-  children: NavDropdownChild[];
+  items: NavDropdownChild[];
   isActive?: boolean;
   isChildActive?: (href: string) => boolean;
 }
 
 export function NavItemDropdown({
   label,
-  children,
+  items,
   isActive,
   isChildActive,
 }: NavItemDropdownProps) {
@@ -100,7 +100,7 @@ export function NavItemDropdown({
           role="menu"
           className="absolute left-1/2 top-full -translate-x-1/2 min-w-44 rounded-2xl bg-white border border-border shadow-lg py-2 z-50"
         >
-          {children.map((child) => {
+          {items.map((child) => {
             const active = isChildActive?.(child.href) ?? false;
             return (
               <Link

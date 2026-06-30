@@ -1,6 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
 interface Props {
   title: string;
@@ -14,15 +12,13 @@ interface Props {
 export function StorySection({
   title,
   description,
-  ctaLabel,
-  ctaHref,
   emblemSrc = "/images/UWAA_Logo_75years_Cowra.svg",
   emblemAlt = "UWAA — 75 years",
 }: Props) {
   return (
     <section className="section">
       <div className="container-page">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2D9EE0] via-[#197FCE] to-[#0057B8] px-6 py-10 sm:px-10 sm:py-12 lg:px-16 lg:py-16">
+        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-[#2D9EE0] via-[#197FCE] to-[#0057B8] px-6 py-10 sm:px-10 sm:py-12 lg:px-16 lg:py-16">
           <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-12">
             {/* Mobile/tablet: emblem first, sits centered above the text. */}
             <div className="order-1 flex justify-center lg:order-2 lg:justify-end">

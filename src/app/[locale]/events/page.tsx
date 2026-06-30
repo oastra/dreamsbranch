@@ -159,7 +159,7 @@ export default async function EventsPage({
                 mobile/tablet (Figma), right column spanning rows 1–2 on
                 desktop. Per-breakpoint aspect matches Figma (mobile
                 331×300). */}
-            <div className="order-3 aspect-[331/300] w-full sm:aspect-[576/400] lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:aspect-auto lg:h-full">
+            <div className="order-3 aspect-[331/300] w-full sm:aspect-[576/400] lg:order-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:aspect-auto lg:h-full">
               <MaskedImageCarousel
                 slides={heroSlides}
                 aspectRatio={null}
@@ -172,10 +172,10 @@ export default async function EventsPage({
                 the image (para → image → para); a 16px-gap flex column in
                 the left grid cell on desktop. */}
             <div className="contents lg:flex lg:flex-col lg:gap-4 lg:col-start-1 lg:row-start-2 lg:max-w-xl">
-              <p className="order-2 text-secondary text-text-primary lg:order-none">
+              <p className="order-2 text-secondary text-text-primary lg:order-0">
                 {t("events.description")}
               </p>
-              <p className="order-4 text-secondary text-text-primary lg:order-none">
+              <p className="order-4 text-secondary text-text-primary lg:order-0">
                 {t("events.description_2")}
               </p>
             </div>

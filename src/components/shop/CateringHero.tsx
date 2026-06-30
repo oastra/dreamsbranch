@@ -33,12 +33,12 @@ export function CateringHero({
 
         {/* Carousel — right column on desktop, between text and CTA on
             mobile/tablet (matches the home-hero reflow pattern). */}
-        <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2 order-2 lg:order-none">
+        <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2 order-2 lg:order-0">
           <MaskedImageCarousel slides={slides} />
         </div>
 
         {/* Subtitle + description + CTA */}
-        <div className="text-center lg:self-start lg:text-left lg:col-start-1 lg:row-start-2 order-1 lg:order-none">
+        <div className="text-center lg:self-start lg:text-left lg:col-start-1 lg:row-start-2 order-1 lg:order-0">
           <p className="text-h2 mb-4 font-medium text-text-strong">
             {subtitle}
           </p>

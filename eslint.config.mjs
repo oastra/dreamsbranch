@@ -4,7 +4,15 @@ import nextTypescript from "eslint-config-next/typescript";
 const config = [
   ...nextCoreWebVitals,
   ...nextTypescript,
-  { ignores: [".next/", "node_modules/", "supabase/", "src/types/database.ts"] },
+  {
+    ignores: [
+      ".next/",
+      "node_modules/",
+      ".claude/",
+      "supabase/",
+      "src/types/database.ts",
+    ],
+  },
 ];
 
 export default config;

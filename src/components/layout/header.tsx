@@ -103,7 +103,7 @@ export function Header() {
                   <NavItemDropdown
                     key={item.key}
                     label={item.label}
-                    children={item.children}
+                    items={item.children}
                     isActive={isActive(item.href)}
                     isChildActive={isActive}
                   />

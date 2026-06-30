@@ -37,6 +37,7 @@ export function AboutForm({ settings }: Props) {
       skipFirstRun.current = false;
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDirty(true);
   }, [heroImages, teamImages, faqItems]);
   const handleCancel = useCancelWithConfirm('/admin', dirty);

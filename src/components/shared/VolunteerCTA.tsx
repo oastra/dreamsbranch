@@ -36,7 +36,7 @@ export function VolunteerCTA({
           */}
           <div className="flex flex-col gap-5 lg:h-full lg:flex-row lg:items-center lg:gap-10">
             {/* Image */}
-            <div className="order-2 lg:order-none lg:shrink-0">
+            <div className="order-2 lg:order-0 lg:shrink-0">
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary-10 lg:aspect-auto lg:h-[182px] lg:w-[386px]">
                 <Image
                   src={imageSrc}
@@ -51,10 +51,10 @@ export function VolunteerCTA({
             {/* Right column on lg; uses `contents` on smaller widths so title
                 and description-block remain in the outer flex column. */}
             <div className="contents lg:flex lg:flex-1 lg:flex-col lg:gap-5">
-              <h2 className="order-1 text-center text-title-tablet text-text-strong lg:order-none lg:text-left">
+              <h2 className="order-1 text-center text-title-tablet text-text-strong lg:order-0 lg:text-left">
                 {title}
               </h2>
-              <div className="order-3 flex flex-col items-center gap-5 lg:order-none lg:items-start lg:gap-5">
+              <div className="order-3 flex flex-col items-center gap-5 lg:order-0 lg:items-start lg:gap-5">
                 <p className="text-center text-body text-text-primary lg:text-left">
                   {description}
                 </p>

@@ -31,6 +31,7 @@ export function CateringPageForm({ settings }: Props) {
       skipFirstRun.current = false;
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDirty(true);
   }, [faqItems]);
   const handleCancel = useCancelWithConfirm('/admin', dirty);

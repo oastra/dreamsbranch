@@ -33,6 +33,7 @@ export function HomeForm({ settings }: Props) {
       skipFirstRun.current = false;
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDirty(true);
   }, [heroImages, yearsValue, membersValue, raisedValue, transparencyValue]);
   const handleCancel = useCancelWithConfirm('/admin', dirty);

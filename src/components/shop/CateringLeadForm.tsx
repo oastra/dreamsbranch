@@ -60,7 +60,7 @@ export function CateringLeadForm({
         <div className="rounded-3xl bg-[#CBFACF] p-6 sm:p-8 lg:p-10">
           <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[280px_1fr] lg:gap-10">
             {/* Image — top on mobile/tablet, left on desktop */}
-            <div className="relative order-2 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-grey-40 sm:order-none lg:aspect-square">
+            <div className="relative order-2 aspect-[4/3] w-full overflow-hidden rounded-2xl bg-grey-40 sm:order-0 lg:aspect-square">
               <Image
                 src={imageSrc}
                 alt={imageAlt}
@@ -71,7 +71,7 @@ export function CateringLeadForm({
             </div>
 
             {/* Heading + description + form */}
-            <div className="order-1 sm:order-none">
+            <div className="order-1 sm:order-0">
               <h2 className="text-center text-title-tablet font-medium text-text-strong lg:text-left">
                 {title}
               </h2>
