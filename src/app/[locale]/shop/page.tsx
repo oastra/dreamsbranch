@@ -80,6 +80,11 @@ function buildSectionData(
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
+// Products are edited in admin and seeded directly — re-fetch periodically
+// so DB changes appear without a redeploy (admin edits also revalidate
+// on-demand). Without this the page is fully static / frozen at build.
+export const revalidate = 300;
+
 export default async function ShopPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);

@@ -53,6 +53,9 @@ function resolveSection(categorySlug: string): SectionConfig | null {
   return SECTION_BY_SLUG[categorySlug] ?? null;
 }
 
+// ISR so seeded / admin-edited products show up without a redeploy.
+export const revalidate = 300;
+
 // ─── Metadata ────────────────────────────────────────────────────────────────
 
 export async function generateMetadata({

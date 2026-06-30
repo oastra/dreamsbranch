@@ -163,6 +163,9 @@ function buildGalleryImages(product: ProductDetail): string[] {
   return out;
 }
 
+// ISR so price / stock / new products reflect DB changes without a redeploy.
+export const revalidate = 300;
+
 // ─── Metadata ───────────────────────────────────────────────────────────────
 
 export async function generateMetadata({
