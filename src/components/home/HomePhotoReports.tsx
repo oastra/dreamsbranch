@@ -49,7 +49,9 @@ export function HomePhotoReports({
             alt=""
             fill
             className="object-cover"
-            sizes="100vw"
+            // Only shown below the `sm` breakpoint; tell larger screens
+            // (where it is display:none) to fetch the smallest variant.
+            sizes="(min-width: 640px) 1px, 100vw"
           />
         </div>
         {images.length > 1 && (

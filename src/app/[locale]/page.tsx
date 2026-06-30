@@ -241,7 +241,7 @@ export default async function HomePage({
                 equal halves on mobile/tablet, fixed 256px on desktop. */}
             <div className="flex justify-center gap-4 lg:justify-start lg:gap-6">
               <Button
-                render={<Link href={`/${locale}/about`} />}
+                render={<Link href={`/${locale}/about`} aria-label={t("hero.cta_about_aria")} />}
                 size="xl"
                 shape="pill"
                 className="flex-1 min-w-0 px-3 max-w-full lg:flex-none lg:w-64 lg:px-10 lg:text-lg"
@@ -318,6 +318,7 @@ export default async function HomePage({
         bodyP1={t("about_preview.body_p1")}
         bodyP2={t("about_preview.body_p2")}
         ctaLabel={t("about_preview.cta")}
+        ctaAriaLabel={t("about_preview.cta_aria")}
         ctaHref={`/${locale}/about`}
         imageAlt={t("about_preview.image_alt")}
       />

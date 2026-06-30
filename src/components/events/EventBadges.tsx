@@ -23,7 +23,7 @@ export function EventBadges({ isArchived, tags, labels, className = "" }: Props)
 
   return (
     <div className={`flex flex-wrap gap-2 ${className}`.trim()}>
-      <span className="inline-flex items-center rounded-full bg-[#3DC472] px-4 py-1.5 text-body-sm font-medium text-white">
+      <span className="inline-flex items-center rounded-full bg-success px-4 py-1.5 text-body-sm font-medium text-white">
         {labels.active}
       </span>
       {tags.includes("looking_for_partners") && (

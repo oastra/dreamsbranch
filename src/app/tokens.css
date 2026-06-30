@@ -11,7 +11,7 @@
   --color-secondary-140: #003066;
   --color-secondary-120: #095ef5;
   --color-secondary: #0057b8;
-  --color-secondary-40: #3379c6;
+  --color-secondary-40: #2e6db8;
   --color-secondary-20: #ccddf1;
   --color-secondary-10: #e5eef8;
 
@@ -39,6 +39,10 @@
   /* ---------- Borders ---------- */
   --color-border: #e9e9ea;
   --color-border-hover: #d3d3d4;
+
+  /* ---------- Semantic status ---------- */
+  /* Accessible green: ≥4.5:1 contrast with white text (WCAG AA). */
+  --color-success: #15824a;
 
   /* ---------- Accent / Additional ---------- */
   --color-accent-1: #fcf3c3;

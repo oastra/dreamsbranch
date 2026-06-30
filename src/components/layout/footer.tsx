@@ -168,6 +168,7 @@ export function Footer() {
               href="/admin/login"
               className="text-white hover:text-white/50 transition-colors text-[11px]"
               title="Admin"
+              aria-label="Admin login"
             >
               <UserCircleIcon size={36} />
             </NextLink>

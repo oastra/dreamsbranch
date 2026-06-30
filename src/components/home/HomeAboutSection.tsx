@@ -9,6 +9,7 @@ interface Props {
   bodyP2: string;
   ctaLabel: string;
   ctaHref: string;
+  ctaAriaLabel?: string;
   imageSrc?: string;
   imageAlt: string;
 }
@@ -20,6 +21,7 @@ export function HomeAboutSection({
   bodyP2,
   ctaLabel,
   ctaHref,
+  ctaAriaLabel,
   imageSrc = "/images/about/about-us.webp",
   imageAlt,
 }: Props) {
@@ -60,7 +62,7 @@ export function HomeAboutSection({
 
           <div className="order-5 flex justify-center lg:order-0 lg:col-start-2 lg:row-start-5 lg:justify-start">
             <Button
-              render={<Link href={ctaHref} />}
+              render={<Link href={ctaHref} aria-label={ctaAriaLabel} />}
               size="xl"
               shape="pill"
               className="w-70 max-w-full"

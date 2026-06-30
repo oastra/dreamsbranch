@@ -92,7 +92,7 @@ export function FeaturedEventCard({
         </span>
       ) : (
         <>
-          <span className={`${badge} bg-[#3DC472] text-white`}>
+          <span className={`${badge} bg-success text-white`}>
             {tagLabels.active}
           </span>
           {tags.includes("looking_for_partners") && (

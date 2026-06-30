@@ -20,10 +20,17 @@ function detectFromHeader(acceptLanguage: string | null): Locale {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const hasLocalePrefix = LOCALES.some(
+  const matchedLocale = LOCALES.find(
     (loc) => pathname === `/${loc}` || pathname.startsWith(`/${loc}/`),
   );
-  if (hasLocalePrefix) return NextResponse.next();
+  if (matchedLocale) {
+    // Forward the active locale so the root layout can set <html lang>.
+    // The root layout sits above the [locale] segment and otherwise has
+    // no way to know which locale is rendering.
+    const headers = new Headers(request.headers);
+    headers.set("x-app-locale", matchedLocale);
+    return NextResponse.next({ request: { headers } });
+  }
 
   const cookieLocale = request.cookies.get(COOKIE_NAME)?.value as
     | Locale

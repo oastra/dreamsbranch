@@ -24,6 +24,7 @@
       "lead": "We dream of peace, we act for life",
       "description": "Supporting Ukraine through charity events and fundraisers",
       "cta_about": "Learn more",
+      "cta_about_aria": "Learn more about Dreams Branch",
       "cta_shop": "Shop",
       "cta_campaigns": "See campaigns",
       "cta_donate": "Donate"
@@ -45,6 +46,7 @@
       "body_p1": "Before 24 February 2022, our feeds were full of children's smiles, meetups with friends, and everyday concerns. Then came shock, panic, and an inability to grasp reality. But it was out of that paralysis that an unstoppable urge to act was born.",
       "body_p2": "Within a few weeks the realisation set in: walking with placards was not enough. Inspired by Ukrainians in Melbourne, we decided to organise our own charity Sausage Sizzle at Bunnings. Our call for help was answered by the Ukrainian Women's Association of Australia (NSW), in the person of Mariyka Havryliv and Odarka — giving us official backing and the chance to act at scale.",
       "cta": "Learn more",
+      "cta_aria": "Learn more about our story",
       "image_alt": "Ukrainian community in Sydney — rally in support of Ukraine"
     },
     "results": {

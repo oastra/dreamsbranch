@@ -10,7 +10,7 @@ export function ContactSection({ title, description }: ContactSectionProps) {
   const heading = (
     <div className="text-center">
       <h2 className="text-title-tablet mb-4 text-text-strong">{title}</h2>
-      <p className="text-secondary text-text-secondary">{description}</p>
+      <p className="text-secondary text-text-primary">{description}</p>
     </div>
   );
 
