@@ -255,6 +255,7 @@ export default async function ShopProductPage({
         currency={product.price_currency}
         coverImage={product.cover_image}
         cartHref={`/${locale}/shop/cart`}
+        stock={(product as { stock?: number | null }).stock ?? null}
         description={description}
         galleryImages={galleryImages}
         breadcrumb={{
@@ -286,6 +287,8 @@ export default async function ShopProductPage({
           payWithPaypal: t("shop.product.pay_with_paypal"),
           orSeparator: t("shop.product.or_separator"),
           paymentMethodsLabel: t("shop.product.payment_methods_label"),
+          processing: t("shop.cart.processing"),
+          checkoutError: t("shop.cart.error"),
           deliveryTitle: t("shop.product.delivery_title"),
           deliveryDescription: t("shop.product.delivery_description"),
         }}

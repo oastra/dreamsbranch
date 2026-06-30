@@ -47,9 +47,9 @@ export function ProductGallery({
       </div>
 
       {/* ── Thumbnails ────────────────────────────────────────────
-          Mobile: horizontal scroll with overflow visible.
-          Tablet: 4-up grid. Desktop: 5-up grid. */}
-      <div className="-mx-5 flex snap-x gap-3 overflow-x-auto px-5 pb-1 sm:mx-0 sm:grid sm:grid-cols-4 sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          A single horizontal-scroll row: up to 5 fit per row, the rest
+          scroll horizontally — it never wraps to a second row. */}
+      <div className="-mx-5 flex snap-x gap-3 overflow-x-auto px-5 pb-1 sm:mx-0 sm:px-0 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {Array.from({ length: thumbCount }).map((_, i) => {
           const src = hasImages ? images[i] : null;
           const isActive = hasImages && i === active;
@@ -66,7 +66,7 @@ export function ProductGallery({
               aria-label={ariaLabel}
               aria-pressed={isActive}
               disabled={!hasImages}
-              className={`shrink-0 snap-start rounded-2xl border-2 p-1 transition-colors sm:w-full ${
+              className={`shrink-0 snap-start rounded-2xl border-2 p-1 transition-colors sm:w-[calc((100%-3rem)/5)] ${
                 isActive
                   ? "border-[#0057B8]"
                   : "border-transparent hover:border-grey-40"

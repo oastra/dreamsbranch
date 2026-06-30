@@ -14,6 +14,7 @@ type Props = {
   currency: string;
   coverImage: string | null;
   cartHref: string;
+  stock?: number | null;
   description: string | null;
   galleryImages: string[];
   breadcrumb: {
@@ -37,6 +38,7 @@ export function ProductHero({
   currency,
   coverImage,
   cartHref,
+  stock,
   description,
   galleryImages,
   breadcrumb,
@@ -72,6 +74,7 @@ export function ProductHero({
             currency={currency}
             image={coverImage}
             cartHref={cartHref}
+            stock={stock}
             description={description}
             labels={buyLabels}
           />

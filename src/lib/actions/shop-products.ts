@@ -45,6 +45,7 @@ function toSnake(input: Record<string, unknown>) {
     gallery_images: (input.galleryImages as string[]) ?? [],
     status: (input.status as string).toLowerCase(),
     sort_order: input.order ?? 0,
+    stock: (input.stock as number | null | undefined) ?? null,
   };
 }
 

@@ -178,6 +178,11 @@ export const shopProductSchema = z.object({
   galleryImages: z.array(z.string()).optional(),
   status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
   order: z.coerce.number().int().default(0),
+  // null/blank = untracked (unlimited); a number = tracked stock.
+  stock: z.preprocess(
+    (v) => (v === '' || v === null || v === undefined ? null : v),
+    z.coerce.number().int().min(0).nullable(),
+  ),
 });
 export type ShopProductInput = z.infer<typeof shopProductSchema>;
 

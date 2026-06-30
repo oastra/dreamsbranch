@@ -21,6 +21,15 @@ const bodySchema = z.object({
 
 const money = (n: number) => n.toFixed(2);
 
+type ProductRow = {
+  slug: string;
+  title_ua: string;
+  title_en: string;
+  price_amount: number;
+  price_currency: string;
+  stock: number | null;
+};
+
 export async function POST(req: NextRequest) {
   let body: unknown;
   try {
@@ -46,11 +55,20 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Re-price from the DB — never trust the client's prices.
+  // Re-price from the DB — never trust the client's prices. `stock` isn't in
+  // the generated types yet (added via migration) — cast the query.
   const sb = createAdminClient();
-  const { data: products, error } = await sb
-    .from("shop_products")
-    .select("slug, title_ua, title_en, price_amount, price_currency")
+  const { data: products, error } = await (
+    sb.from("shop_products") as unknown as {
+      select: (c: string) => {
+        in: (
+          col: string,
+          vals: string[],
+        ) => Promise<{ data: ProductRow[] | null; error: { message?: string } | null }>;
+      };
+    }
+  )
+    .select("slug, title_ua, title_en, price_amount, price_currency, stock")
     .in("slug", [...qtyBySlug.keys()]);
 
   if (error) {
@@ -58,6 +76,19 @@ export async function POST(req: NextRequest) {
   }
   if (!products || products.length === 0) {
     return NextResponse.json({ error: "Cart is empty or invalid" }, { status: 400 });
+  }
+
+  // Stock check — reject before the buyer approves if anything is short.
+  for (const p of products) {
+    const want = qtyBySlug.get(p.slug) ?? 0;
+    const have = (p as { stock?: number | null }).stock;
+    if (have != null && want > have) {
+      const name = (locale === "ua" ? p.title_ua : p.title_en) || p.slug;
+      return NextResponse.json(
+        { error: have === 0 ? `"${name}" is out of stock` : `Only ${have} of "${name}" left` },
+        { status: 409 },
+      );
+    }
   }
 
   const currency = (products[0].price_currency || "AUD").toUpperCase();
@@ -95,6 +126,11 @@ export async function POST(req: NextRequest) {
               },
             },
             items: ppItems,
+            // Carries the line items through to capture for stock decrement.
+            custom_id: [...qtyBySlug.entries()]
+              .map(([s, q]) => `${s}:${q}`)
+              .join(",")
+              .slice(0, 127),
           },
         ],
         // Buyer fills shipping on PayPal's side.

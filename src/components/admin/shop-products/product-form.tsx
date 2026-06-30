@@ -36,6 +36,12 @@ const STATUSES = ['DRAFT', 'ACTIVE', 'ARCHIVED'] as const;
 // paragraphs reads best.
 const DESCRIPTION_IDEAL_CHARS = 400;
 
+// The catalog card keeps the title to a single line. The narrowest title
+// slot is the mobile card: 280px − 32px padding − (12px gap + 40px bag
+// button) ≈ 196px ÷ ~8px per 16px-semibold char ≈ 24 chars. Hard-capped so
+// titles never overflow / get cut off with an ellipsis.
+const TITLE_MAX_CHARS = 24;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ProductForm({ product }: { product?: Record<string, any> }) {
   const router = useRouter();
@@ -54,6 +60,7 @@ export function ProductForm({ product }: { product?: Record<string, any> }) {
     galleryImages: (product?.gallery_images ?? []) as string[],
     status: product?.status ?? 'DRAFT',
     order: product?.sort_order ?? 0,
+    stock: product?.stock ?? '',
   });
 
   const [dirty, setDirty] = useState(false);
@@ -89,8 +96,13 @@ export function ProductForm({ product }: { product?: Record<string, any> }) {
               <Input
                 id="titleUa"
                 value={form.titleUa}
+                maxLength={TITLE_MAX_CHARS}
                 onChange={(e) => set('titleUa', e.target.value)}
               />
+              <p className="text-xs text-text-tertiary">
+                {form.titleUa.length}/{TITLE_MAX_CHARS} — one line on the
+                catalog card
+              </p>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="descUa">Description (UA)</Label>
@@ -118,8 +130,13 @@ export function ProductForm({ product }: { product?: Record<string, any> }) {
               <Input
                 id="titleEn"
                 value={form.titleEn}
+                maxLength={TITLE_MAX_CHARS}
                 onChange={(e) => set('titleEn', e.target.value)}
               />
+              <p className="text-xs text-text-tertiary">
+                {form.titleEn.length}/{TITLE_MAX_CHARS} — one line on the
+                catalog card
+              </p>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="descEn">Description (EN)</Label>
@@ -210,6 +227,20 @@ export function ProductForm({ product }: { product?: Record<string, any> }) {
             value={form.order}
             onChange={(e) => set('order', Number(e.target.value))}
           />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="stock">Stock</Label>
+          <Input
+            id="stock"
+            type="number"
+            min={0}
+            placeholder="Unlimited"
+            value={form.stock}
+            onChange={(e) => set('stock', e.target.value)}
+          />
+          <p className="text-xs text-text-secondary">
+            Leave blank for unlimited. Drops automatically as orders are paid.
+          </p>
         </div>
       </div>
 

@@ -20,6 +20,16 @@ const bodySchema = z.object({
     .max(MAX_LINES),
 });
 
+type ProductRow = {
+  slug: string;
+  title_ua: string;
+  title_en: string;
+  price_amount: number;
+  price_currency: string;
+  cover_image: string | null;
+  stock: number | null;
+};
+
 export async function POST(req: NextRequest) {
   let body: unknown;
   try {
@@ -44,11 +54,20 @@ export async function POST(req: NextRequest) {
   }
   const slugs = [...qtyBySlug.keys()];
 
-  // Re-price from the DB — the client's prices are never trusted.
+  // Re-price from the DB — the client's prices are never trusted. `stock`
+  // isn't in the generated types yet (added via migration) — cast the query.
   const sb = createAdminClient();
-  const { data: products, error } = await sb
-    .from("shop_products")
-    .select("slug, title_ua, title_en, price_amount, price_currency, cover_image")
+  const { data: products, error } = await (
+    sb.from("shop_products") as unknown as {
+      select: (c: string) => {
+        in: (
+          col: string,
+          vals: string[],
+        ) => Promise<{ data: ProductRow[] | null; error: { message?: string } | null }>;
+      };
+    }
+  )
+    .select("slug, title_ua, title_en, price_amount, price_currency, cover_image, stock")
     .in("slug", slugs);
 
   if (error) {
@@ -56,6 +75,24 @@ export async function POST(req: NextRequest) {
   }
   if (!products || products.length === 0) {
     return NextResponse.json({ error: "Cart is empty or invalid" }, { status: 400 });
+  }
+
+  // Stock check — reject before charging if any item doesn't have enough.
+  for (const p of products) {
+    const want = qtyBySlug.get(p.slug) ?? 0;
+    const have = (p as { stock?: number | null }).stock;
+    if (have != null && want > have) {
+      const name = (locale === "ua" ? p.title_ua : p.title_en) || p.slug;
+      return NextResponse.json(
+        {
+          error:
+            have === 0
+              ? `"${name}" is out of stock`
+              : `Only ${have} of "${name}" left`,
+        },
+        { status: 409 },
+      );
+    }
   }
 
   // Stripe Checkout takes a single currency per session — enforce it.
@@ -93,7 +130,11 @@ export async function POST(req: NextRequest) {
       phone_number_collection: { enabled: true },
       success_url: `${origin}/${locale}/shop/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/${locale}/shop/cart`,
-      metadata: { source: "shop" },
+      // `items` lets the webhook decrement stock once the order is paid.
+      metadata: {
+        source: "shop",
+        items: [...qtyBySlug.entries()].map(([s, q]) => `${s}:${q}`).join(","),
+      },
     });
 
     return NextResponse.json({ url: session.url });

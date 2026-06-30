@@ -15,6 +15,7 @@ type Capture = {
     phone?: { phone_number?: { national_number?: string } };
   };
   purchase_units?: Array<{
+    custom_id?: string;
     payments?: {
       captures?: Array<{
         id: string;
@@ -76,20 +77,40 @@ export async function POST(req: NextRequest) {
       })),
     };
 
-    // Idempotent — onApprove and the webhook can both land.
+    // `shop_orders` / the RPC aren't in the generated types yet — cast.
     const sb = createAdminClient();
-    await (
-      sb as unknown as {
-        from: (t: string) => {
-          upsert: (
-            row: unknown,
-            opts: { onConflict: string; ignoreDuplicates: boolean },
-          ) => Promise<unknown>;
+    const sbx = sb as unknown as {
+      from: (t: string) => {
+        select: (c: string) => {
+          eq: (
+            col: string,
+            v: string,
+          ) => { maybeSingle: () => Promise<{ data: { id: string } | null }> };
         };
-      }
-    )
+        insert: (row: unknown) => Promise<unknown>;
+      };
+      rpc: (fn: string, args: Record<string, unknown>) => Promise<unknown>;
+    };
+
+    // Idempotent: only persist + decrement stock the first time.
+    const { data: existingOrder } = await sbx
       .from("shop_orders")
-      .upsert(orderRow, { onConflict: "external_id", ignoreDuplicates: true });
+      .select("id")
+      .eq("external_id", capture.id)
+      .maybeSingle();
+    if (existingOrder) return NextResponse.json({ ok: true });
+
+    await sbx.from("shop_orders").insert(orderRow);
+
+    // Decrement stock from the items we stored in custom_id at create time.
+    const itemsMeta = unit?.custom_id ?? "";
+    for (const part of itemsMeta.split(",").filter(Boolean)) {
+      const [s, qtyStr] = part.split(":");
+      const qty = Number(qtyStr);
+      if (s && qty > 0) {
+        await sbx.rpc("decrement_shop_stock", { p_slug: s, p_qty: qty });
+      }
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err) {

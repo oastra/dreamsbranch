@@ -35,6 +35,7 @@ interface Row {
   cover_image: string | null;
   status: string;
   sort_order: number;
+  stock: number | null;
 }
 
 const SECTION_LABELS: Record<string, string> = {
@@ -123,6 +124,7 @@ export function ProductsTable({
               <TableHead>Title</TableHead>
               <TableHead>Section</TableHead>
               <TableHead>Price</TableHead>
+              <TableHead>Stock</TableHead>
               <TableHead>Order</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-12" />
@@ -182,6 +184,15 @@ export function ProductsTable({
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     {Number(p.price_amount).toFixed(2)} {p.price_currency}
+                  </TableCell>
+                  <TableCell>
+                    {p.stock == null ? (
+                      <span className="text-text-secondary">Unlimited</span>
+                    ) : p.stock === 0 ? (
+                      <span className="font-medium text-red-600">Out</span>
+                    ) : (
+                      p.stock
+                    )}
                   </TableCell>
                   <TableCell>{p.sort_order}</TableCell>
                   <TableCell>
