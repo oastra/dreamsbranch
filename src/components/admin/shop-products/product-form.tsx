@@ -32,6 +32,10 @@ const SECTIONS = [
 const CURRENCIES = ['AUD', 'USD', 'EUR', 'UAH'] as const;
 const STATUSES = ['DRAFT', 'ACTIVE', 'ARCHIVED'] as const;
 
+// Product blurb on the product page renders at 16px — a couple of short
+// paragraphs reads best.
+const DESCRIPTION_IDEAL_CHARS = 400;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ProductForm({ product }: { product?: Record<string, any> }) {
   const router = useRouter();
@@ -90,12 +94,20 @@ export function ProductForm({ product }: { product?: Record<string, any> }) {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="descUa">Description (UA)</Label>
+              <p className="mb-1 text-xs text-text-secondary">
+                Shown on the product page. Aim for around{' '}
+                {DESCRIPTION_IDEAL_CHARS} characters.
+              </p>
               <Textarea
                 id="descUa"
                 rows={5}
                 value={form.descriptionUa}
                 onChange={(e) => set('descriptionUa', e.target.value)}
               />
+              <p className="mt-1 text-xs text-text-tertiary">
+                {form.descriptionUa.length} characters (ideal: ~
+                {DESCRIPTION_IDEAL_CHARS})
+              </p>
             </div>
           </div>
         }
@@ -111,12 +123,20 @@ export function ProductForm({ product }: { product?: Record<string, any> }) {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="descEn">Description (EN)</Label>
+              <p className="mb-1 text-xs text-text-secondary">
+                Shown on the product page. Aim for around{' '}
+                {DESCRIPTION_IDEAL_CHARS} characters.
+              </p>
               <Textarea
                 id="descEn"
                 rows={5}
                 value={form.descriptionEn}
                 onChange={(e) => set('descriptionEn', e.target.value)}
               />
+              <p className="mt-1 text-xs text-text-tertiary">
+                {form.descriptionEn.length} characters (ideal: ~
+                {DESCRIPTION_IDEAL_CHARS})
+              </p>
             </div>
           </div>
         }
@@ -194,14 +214,14 @@ export function ProductForm({ product }: { product?: Record<string, any> }) {
       </div>
 
       <ImageUpload
-        label="Cover image"
+        label="Cover image — shown on the catalog card and as the first product photo. Upload at 1000 × 1000 px (1:1, square) for an exact, no-crop fit."
         folder="shop"
         value={form.coverImage}
         onChange={(url) => set('coverImage', url ?? '')}
       />
 
       <MultiImageUpload
-        label="Gallery images"
+        label="Gallery images (optional) — extra product photos on the product page. Upload at 1000 × 1000 px (1:1, square)."
         folder="shop"
         minImages={0}
         value={form.galleryImages}
