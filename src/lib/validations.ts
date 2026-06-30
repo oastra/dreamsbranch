@@ -166,6 +166,21 @@ export const shopReviewSchema = z.object({
 });
 export type ShopReviewInput = z.infer<typeof shopReviewSchema>;
 
+export const shopProductSchema = z.object({
+  titleUa: z.string().min(1, 'Title (UA) is required'),
+  titleEn: z.string().min(1, 'Title (EN) is required'),
+  descriptionUa: z.string().default(''),
+  descriptionEn: z.string().default(''),
+  priceAmount: z.coerce.number().nonnegative().default(0),
+  priceCurrency: z.string().min(1).default('AUD'),
+  section: z.enum(['handmade', 'from_ukraine', 'cuisine', 'catering']),
+  coverImage: z.string().default(''),
+  galleryImages: z.array(z.string()).optional(),
+  status: z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']).default('DRAFT'),
+  order: z.coerce.number().int().default(0),
+});
+export type ShopProductInput = z.infer<typeof shopProductSchema>;
+
 export const reportSchema = z
   .object({
     year: z.coerce.number().int().min(2020).max(2030),

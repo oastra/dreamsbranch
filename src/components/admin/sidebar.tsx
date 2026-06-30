@@ -62,6 +62,7 @@ const navGroups: NavGroup[] = [
   {
     heading: "Shop",
     items: [
+      { label: "Products", href: "/admin/products", icon: ShoppingBag },
       { label: "Orders", href: "/admin/orders", icon: Package },
       { label: "Photo Reports", href: "/admin/shop-photo-reports", icon: ShoppingBag },
       { label: "Reviews", href: "/admin/shop-reviews", icon: Star },
