@@ -39,7 +39,6 @@ export function ProductGallery({
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 50vw"
             priority
-            quality={70}
             className="object-cover"
           />
         ) : (

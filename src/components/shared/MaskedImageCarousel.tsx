@@ -85,7 +85,7 @@ export function MaskedImageCarousel({
               <MaskedImage src={s.src} alt={s.alt} className="h-full w-full" priority={i === 0} sizes={sizes} />
             ) : (
               <div className="relative h-full w-full overflow-hidden rounded-[20px]">
-                <Image src={s.src} alt={s.alt} fill priority={i === 0} sizes={sizes} quality={70} className="object-cover" />
+                <Image src={s.src} alt={s.alt} fill priority={i === 0} sizes={sizes} className="object-cover" />
               </div>
             )}
           </div>

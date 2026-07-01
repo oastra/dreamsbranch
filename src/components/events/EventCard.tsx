@@ -69,7 +69,6 @@ export function EventCard({
               fill
               priority={priority}
               className="object-cover"
-              quality={70}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           ) : (

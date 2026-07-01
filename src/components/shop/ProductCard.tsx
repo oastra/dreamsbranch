@@ -30,7 +30,6 @@ export function ProductCard({ locale, product, addLabel }: Props) {
             alt={product.title}
             fill
             sizes="(max-width: 1024px) 280px, 302px"
-            quality={70}
             className="object-cover transition-transform duration-300 group-hover/product:scale-105"
           />
         ) : (
