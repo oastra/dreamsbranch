@@ -30,9 +30,7 @@ export function MaskedImageCarousel({
   // once saturates the connection and delays the LCP/Speed Index. Indices
   // only ever get added, so already-loaded slides stay mounted for the
   // cross-fade.
-  const [loaded, setLoaded] = useState<Set<number>>(
-    () => new Set(slides.length > 1 ? [0, 1] : [0]),
-  );
+  const [loaded, setLoaded] = useState<Set<number>>(() => new Set([0]));
 
   const goTo = useCallback(
     (next: number) => {
@@ -50,6 +48,16 @@ export function MaskedImageCarousel({
   useEffect(() => {
     indexRef.current = index;
   }, [index]);
+
+  // Preload the second slide shortly after mount — ready before the first
+  // transition, but kept out of the initial-load critical path (LCP/SI).
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const t = setTimeout(() => {
+      setLoaded((prev) => (prev.has(1) ? prev : new Set(prev).add(1)));
+    }, 2500);
+    return () => clearTimeout(t);
+  }, [slides.length]);
 
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -77,7 +85,7 @@ export function MaskedImageCarousel({
               <MaskedImage src={s.src} alt={s.alt} className="h-full w-full" priority={i === 0} sizes={sizes} />
             ) : (
               <div className="relative h-full w-full overflow-hidden rounded-[20px]">
-                <Image src={s.src} alt={s.alt} fill priority={i === 0} sizes={sizes} className="object-cover" />
+                <Image src={s.src} alt={s.alt} fill priority={i === 0} sizes={sizes} quality={70} className="object-cover" />
               </div>
             )}
           </div>

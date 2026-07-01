@@ -30,6 +30,7 @@ export function ContactSection({ title, description }: ContactSectionProps) {
                 fill
                 className="object-cover object-[center_15%]"
                 sizes="(max-width: 1024px) 100vw, 45vw"
+                quality={70}
               />
             </div>
 

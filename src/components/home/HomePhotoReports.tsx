@@ -49,6 +49,7 @@ export function HomePhotoReports({
             alt=""
             fill
             className="object-cover"
+            quality={70}
             // Only shown below the `sm` breakpoint; tell larger screens
             // (where it is display:none) to fetch the smallest variant.
             sizes="(min-width: 640px) 1px, 100vw"
@@ -90,6 +91,7 @@ export function HomePhotoReports({
                   alt=""
                   fill
                   className="object-cover"
+                  quality={70}
                   sizes="(max-width: 1024px) 33vw, 30vw"
                 />
               </div>
@@ -108,6 +110,7 @@ export function HomePhotoReports({
                   alt=""
                   fill
                   className="object-cover"
+                  quality={70}
                   sizes="(max-width: 1024px) 25vw, 22vw"
                 />
               </div>

@@ -51,7 +51,7 @@ export function MaskedImage({
         className="absolute inset-0 overflow-hidden rounded-[20px]"
         style={{ clipPath: `polygon(${CLIP_PATH})` }}
       >
-        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />
+        <Image src={src} alt={alt} fill sizes={sizes} priority={priority} quality={70} className="object-cover" />
       </div>
 
       <svg
