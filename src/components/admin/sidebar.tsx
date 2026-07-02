@@ -19,6 +19,7 @@ import {
   ShoppingBag,
   Package,
   Star,
+  Accessibility,
   ExternalLink,
   LogOut,
 } from "lucide-react";
@@ -48,6 +49,7 @@ const navGroups: NavGroup[] = [
       { label: "Reports", href: "/admin/reports", icon: FileText },
       { label: "Donations", href: "/admin/donations", icon: DollarSign },
       { label: "Contact Inbox", href: "/admin/contacts", icon: Inbox },
+      { label: "Alt Text", href: "/admin/alt-text", icon: Accessibility },
     ],
   },
   {

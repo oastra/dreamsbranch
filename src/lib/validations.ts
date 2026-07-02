@@ -316,3 +316,15 @@ export const aboutSettingsSchema = z.object({
   faqItems: z.array(faqItemSchema),
 });
 export type AboutSettingsInput = z.infer<typeof aboutSettingsSchema>;
+
+// Alt text is reviewed by a human before publish, so the schema is permissive:
+// any field may be blank/edited. `status` gates visibility (see image_alt_text).
+export const altTextSchema = z.object({
+  url: z.string().url(),
+  alt_ua: z.string().max(300).nullable().optional(),
+  alt_en: z.string().max(300).nullable().optional(),
+  caption_ua: z.string().max(1000).nullable().optional(),
+  caption_en: z.string().max(1000).nullable().optional(),
+  status: z.enum(['pending', 'approved']).optional(),
+});
+export type AltTextInput = z.infer<typeof altTextSchema>;

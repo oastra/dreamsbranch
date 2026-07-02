@@ -846,6 +846,44 @@ export const db = {
     },
   },
 
+  // ── image_alt_text ────────────────────────────────────────────────────────────
+  // Central bilingual alt-text store keyed by image URL. Not in the generated
+  // types (regenerating them wipes the hand-maintained aliases), so it's reached
+  // via `as never` casts like catering_events. `status` stays literal
+  // 'pending'/'approved' — no toDb/fromDb enum conversion here.
+  imageAltText: {
+    async findExistingUrls(): Promise<Set<string>> {
+      const sb = createAdminClient();
+      const { data } = await sb.from('image_alt_text' as never).select('url');
+      return new Set((data ?? []).map((r) => (r as { url: string }).url));
+    },
+
+    async findMany({ where = {} }: { where?: Record<string, unknown> } = {}) {
+      const sb = createAdminClient();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let q: any = sb.from('image_alt_text' as never).select('*').order('updated_at', { ascending: false });
+      q = applyWhere(q, where);
+      const { data } = await q;
+      return (data ?? []) as unknown as import('@/lib/alt-text/types').ImageAltTextRow[];
+    },
+
+    async upsert({ url, data }: { url: string; data: Record<string, unknown> }) {
+      const sb = createAdminClient();
+      const { data: saved, error } = await sb
+        .from('image_alt_text' as never)
+        .upsert({ url, ...data } as never, { onConflict: 'url' })
+        .select()
+        .single();
+      if (error) throw new DbWriteError(error.message ?? 'Alt-text write failed', error.code);
+      return saved as unknown as import('@/lib/alt-text/types').ImageAltTextRow;
+    },
+
+    async delete({ where }: { where: { url: string } }) {
+      const sb = createAdminClient();
+      await sb.from('image_alt_text' as never).delete().eq('url', where.url);
+    },
+  },
+
   // ── about_page_settings (singleton row id=1) ──────────────────────────────────
   aboutSetting: {
     async findFirst() {
