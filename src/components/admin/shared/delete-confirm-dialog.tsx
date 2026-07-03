@@ -1,6 +1,7 @@
 'use client';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 
 interface DeleteConfirmDialogProps {
   open: boolean;
@@ -21,7 +22,14 @@ export function DeleteConfirmDialog({ open, onOpenChange, onConfirm, loading, it
         <DialogFooter>
           <Button size="lg" variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>Cancel</Button>
           <Button size="lg" variant="destructive" onClick={onConfirm} disabled={loading}>
-            {loading ? 'Deleting...' : 'Delete'}
+            {loading ? (
+              <>
+                <Spinner size="sm" aria-hidden />
+                Deleting...
+              </>
+            ) : (
+              'Delete'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

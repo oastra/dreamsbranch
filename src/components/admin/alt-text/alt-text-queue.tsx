@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Spinner } from '@/components/ui/spinner';
 import {
   approveAltTextAction,
   rejectAltTextAction,
@@ -80,7 +81,11 @@ export function AltTextQueue({ pending, backlogCount }: Props) {
           disabled={generating || backlogCount === 0}
           onClick={handleGenerate}
         >
-          <Sparkles className="w-4 h-4" />
+          {generating ? (
+            <Spinner size="sm" aria-hidden />
+          ) : (
+            <Sparkles className="w-4 h-4" />
+          )}
           {generating
             ? 'Generating…'
             : backlogCount === 0
@@ -185,11 +190,11 @@ function AltTextCard({
           </p>
           <div className="flex shrink-0 gap-2">
             <Button variant="outline" onClick={handleReject} disabled={busy !== null}>
-              <X className="w-4 h-4" />
+              {busy === 'reject' ? <Spinner size="sm" aria-hidden /> : <X className="w-4 h-4" />}
               {busy === 'reject' ? 'Rejecting…' : 'Reject'}
             </Button>
             <Button variant="default" onClick={handleApprove} disabled={busy !== null}>
-              <Check className="w-4 h-4" />
+              {busy === 'approve' ? <Spinner size="sm" aria-hidden /> : <Check className="w-4 h-4" />}
               {busy === 'approve' ? 'Approving…' : 'Approve'}
             </Button>
           </div>

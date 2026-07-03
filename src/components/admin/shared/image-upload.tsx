@@ -1,8 +1,9 @@
 'use client';
 import { useRef, useState } from 'react';
 import { uploadFileAction, deleteFileAction } from '@/lib/actions/upload';
-import { Loader2, X, Upload } from 'lucide-react';
+import { X, Upload } from 'lucide-react';
 import { toast } from 'sonner';
+import { Spinner } from '@/components/ui/spinner';
 import { DeleteConfirmDialog } from './delete-confirm-dialog';
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB
@@ -76,7 +77,7 @@ export function ImageUpload({ value, onChange, folder = 'general', label = 'Imag
           disabled={uploading}
           className="w-40 h-28 rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 text-text-tertiary hover:border-brand-blue hover:text-brand-blue transition-colors"
         >
-          {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
+          {uploading ? <Spinner aria-hidden /> : <Upload className="w-5 h-5" />}
           <span className="text-caption">{uploading ? 'Uploading...' : 'Upload'}</span>
         </button>
       )}

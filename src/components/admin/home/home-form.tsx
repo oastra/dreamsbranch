@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
 import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 import { updateHomeSettings } from '@/lib/actions/home';
@@ -122,7 +123,14 @@ export function HomeForm({ settings }: Props) {
           className="rounded-full"
           disabled={saving}
         >
-          {saving ? 'Saving...' : 'Save changes'}
+          {saving ? (
+            <>
+              <Spinner size="sm" aria-hidden />
+              Saving...
+            </>
+          ) : (
+            'Save changes'
+          )}
         </Button>
         <Button
           type="button"

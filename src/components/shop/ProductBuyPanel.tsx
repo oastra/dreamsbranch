@@ -7,6 +7,7 @@ import { QuantityStepper } from "./QuantityStepper";
 import { useCart } from "./cart-provider";
 import { PayPalCartButtons } from "./PayPalCartButtons";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import ApplePayMark from "@/components/icons/payments/ApplePayMark";
 import GooglePayMark from "@/components/icons/payments/GooglePayMark";
 import MastercardMark from "@/components/icons/payments/MastercardMark";
@@ -190,7 +191,8 @@ export function ProductBuyPanel({
           className="inline-flex h-[54px] w-full items-center justify-center gap-2 rounded-full border border-border bg-white px-6 transition-colors hover:border-text-strong disabled:opacity-60"
         >
           {buying ? (
-            <span className="text-body text-text-secondary">
+            <span className="inline-flex items-center gap-2 text-body text-text-secondary">
+              <Spinner size="sm" aria-hidden />
               {labels.processing}
             </span>
           ) : (

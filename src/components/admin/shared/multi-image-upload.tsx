@@ -1,8 +1,9 @@
 'use client';
 import { useRef, useState } from 'react';
 import { uploadFileAction, deleteFileAction } from '@/lib/actions/upload';
-import { Loader2, Upload, X, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Upload, X, ArrowLeft, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
+import { Spinner } from '@/components/ui/spinner';
 import { DeleteConfirmDialog } from './delete-confirm-dialog';
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB
@@ -158,7 +159,7 @@ export function MultiImageUpload({
             className="aspect-video rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 text-text-tertiary hover:border-brand-blue hover:text-brand-blue transition-colors"
           >
             {uploading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Spinner aria-hidden />
             ) : (
               <Upload className="w-5 h-5" />
             )}

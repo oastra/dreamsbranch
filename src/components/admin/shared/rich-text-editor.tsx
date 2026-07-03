@@ -12,9 +12,9 @@ import {
   Image as ImageIcon,
   List,
   ListOrdered,
-  Loader2,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Spinner } from '@/components/ui/spinner';
 import { uploadFileAction } from '@/lib/actions/upload';
 
 type Props = {
@@ -175,7 +175,7 @@ export function RichTextEditor({
               label="Insert image"
             >
               {uploadingRef.current ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Spinner size="sm" aria-hidden />
               ) : (
                 <ImageIcon className="h-4 w-4" />
               )}

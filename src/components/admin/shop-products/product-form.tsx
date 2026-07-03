@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
 import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
@@ -267,7 +268,16 @@ export function ProductForm({ product }: { product?: Record<string, any> }) {
           className="rounded-full"
           disabled={saving}
         >
-          {saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create product'}
+          {saving ? (
+            <>
+              <Spinner size="sm" aria-hidden />
+              Saving...
+            </>
+          ) : isEdit ? (
+            'Save changes'
+          ) : (
+            'Create product'
+          )}
         </Button>
         <Button
           type="button"

@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
 import {
@@ -208,7 +209,16 @@ export function ShopReviewForm({ review }: { review?: Record<string, any> }) {
 
       <div className="flex gap-3">
         <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>
-          {saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create review'}
+          {saving ? (
+            <>
+              <Spinner size="sm" aria-hidden />
+              Saving...
+            </>
+          ) : isEdit ? (
+            'Save changes'
+          ) : (
+            'Create review'
+          )}
         </Button>
         <Button
           type="button"

@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
 import { createCampaign, updateCampaign } from '@/lib/actions/campaigns';
@@ -307,7 +308,18 @@ export function CampaignForm({ campaign }: { campaign?: Record<string, any> }) {
       </div>
 
       <div className="flex gap-3">
-        <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>{saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create campaign'}</Button>
+        <Button type="submit" size="lg" variant="default" className="rounded-full" disabled={saving}>
+          {saving ? (
+            <>
+              <Spinner size="sm" aria-hidden />
+              Saving...
+            </>
+          ) : isEdit ? (
+            'Save changes'
+          ) : (
+            'Create campaign'
+          )}
+        </Button>
         <Button type="button" size="lg" variant="destructive" className="rounded-full" onClick={handleCancel}>Cancel</Button>
       </div>
     </form>

@@ -1,8 +1,9 @@
 'use client';
 import { useRef, useState } from 'react';
 import { uploadFileAction } from '@/lib/actions/upload';
-import { Loader2, X, Upload, FileText } from 'lucide-react';
+import { X, Upload, FileText } from 'lucide-react';
 import { toast } from 'sonner';
+import { Spinner } from '@/components/ui/spinner';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -94,7 +95,7 @@ export function FileUpload({
           disabled={uploading}
           className="flex h-28 w-full max-w-md flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border text-text-tertiary transition-colors hover:border-brand-blue hover:text-brand-blue"
         >
-          {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
+          {uploading ? <Spinner aria-hidden /> : <Upload className="h-5 w-5" />}
           <span className="text-caption">{uploading ? 'Uploading...' : 'Upload PDF'}</span>
         </button>
       )}

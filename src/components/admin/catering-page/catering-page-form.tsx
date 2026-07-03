@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
 import { updateCateringPageSettings } from '@/lib/actions/catering-page';
@@ -162,7 +163,14 @@ export function CateringPageForm({ settings }: Props) {
           className="rounded-full"
           disabled={saving}
         >
-          {saving ? 'Saving...' : 'Save changes'}
+          {saving ? (
+            <>
+              <Spinner size="sm" aria-hidden />
+              Saving...
+            </>
+          ) : (
+            'Save changes'
+          )}
         </Button>
         <Button
           type="button"

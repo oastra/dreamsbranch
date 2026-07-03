@@ -6,6 +6,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
 import { ImageUpload } from '@/components/admin/shared/image-upload';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
@@ -184,7 +185,14 @@ export function CampaignsPageForm({ settings }: Props) {
           className="rounded-full"
           disabled={saving}
         >
-          {saving ? 'Saving...' : 'Save changes'}
+          {saving ? (
+            <>
+              <Spinner size="sm" aria-hidden />
+              Saving...
+            </>
+          ) : (
+            'Save changes'
+          )}
         </Button>
       </div>
     </form>

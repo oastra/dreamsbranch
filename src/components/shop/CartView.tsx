@@ -7,6 +7,7 @@ import { useCart } from "./cart-provider";
 import { QuantityStepper } from "./QuantityStepper";
 import { PayPalCartButtons } from "./PayPalCartButtons";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 type Labels = {
   empty: string;
@@ -150,7 +151,14 @@ export function CartView({ locale, shopHref, labels }: Props) {
           disabled={loading}
           className="mt-6 w-full"
         >
-          {loading ? labels.processing : labels.checkout}
+          {loading ? (
+            <>
+              <Spinner aria-hidden />
+              {labels.processing}
+            </>
+          ) : (
+            labels.checkout
+          )}
         </Button>
 
         {/* PayPal — only shown when NEXT_PUBLIC_PAYPAL_CLIENT_ID is set. */}

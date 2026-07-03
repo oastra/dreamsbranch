@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { BilingualTabs } from '@/components/admin/shared/bilingual-tabs';
 import { MultiImageUpload } from '@/components/admin/shared/multi-image-upload';
 import { useCancelWithConfirm } from '@/components/admin/shared/use-cancel-with-confirm';
@@ -239,7 +240,16 @@ export function CateringEventForm({ event }: Props) {
           className="rounded-full"
           disabled={saving}
         >
-          {saving ? 'Saving...' : isEdit ? 'Save changes' : 'Create event'}
+          {saving ? (
+            <>
+              <Spinner size="sm" aria-hidden />
+              Saving...
+            </>
+          ) : isEdit ? (
+            'Save changes'
+          ) : (
+            'Create event'
+          )}
         </Button>
         <Button
           type="button"
