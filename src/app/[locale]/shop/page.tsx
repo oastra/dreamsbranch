@@ -20,11 +20,6 @@ import type {
   ShopProduct,
   ShopSection,
 } from "@/types/database";
-import {
-  MOCK_SHOP_CATEGORIES,
-  MOCK_SHOP_PRODUCTS,
-  MOCK_SHOP_PHOTO_REPORTS,
-} from "@/lib/mocks/shop";
 
 const HERO_SLIDES = [{ src: "/images/shop/varenuky.webp", alt: "" }];
 
@@ -108,12 +103,8 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
       productCategoryById.set(c.id, c.slug);
     }
   } catch {
-    // DB unreachable — fall through to mocks
+    // DB unreachable — render with whatever loaded (possibly empty).
   }
-
-  if (products.length === 0) products = MOCK_SHOP_PRODUCTS;
-  if (categories.length === 0) categories = MOCK_SHOP_CATEGORIES;
-  if (photoReports.length === 0) photoReports = MOCK_SHOP_PHOTO_REPORTS;
 
   const reportTitleKey = locale === "ua" ? "title_ua" : "title_en";
   const photoReportCards: PhotoReportCardData[] = photoReports.map((r) => ({

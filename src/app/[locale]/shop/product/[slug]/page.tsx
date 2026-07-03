@@ -10,7 +10,6 @@ import { ProductMission } from "@/components/shop/ProductMission";
 import { type ProductCardProduct } from "@/components/shop/ProductCard";
 import { RelatedProducts } from "@/components/shop/RelatedProducts";
 import { ShareCard } from "@/components/shop/ShareCard";
-import { MOCK_SHOP_PRODUCTS } from "@/lib/mocks/shop";
 import type { ShopProduct, ShopSection } from "@/types/database";
 
 // ─── Section ↔ URL slug map ─────────────────────────────────────────────────
@@ -65,27 +64,10 @@ async function loadProduct(
     if (redirectTo) return { product: null, redirectTo };
     if (row) return { product: row as unknown as ProductDetail, redirectTo: null };
   } catch {
-    // DB unreachable — fall through to mock lookup.
+    // DB unreachable — treat as not found.
   }
 
-  const mock = MOCK_SHOP_PRODUCTS.find((p) => p.slug === slug);
-  if (!mock) return { product: null, redirectTo: null };
-  return {
-    product: {
-      id: mock.id,
-      slug: mock.slug,
-      section: mock.section,
-      title_ua: mock.title_ua,
-      title_en: mock.title_en,
-      description_ua: mock.description_ua,
-      description_en: mock.description_en,
-      price_amount: mock.price_amount,
-      price_currency: mock.price_currency,
-      cover_image: mock.cover_image,
-      gallery_images: mock.gallery_images,
-    },
-    redirectTo: null,
-  };
+  return { product: null, redirectTo: null };
 }
 
 function formatPrice(amount: number, currency: string, locale: string) {
@@ -124,19 +106,7 @@ async function loadRelated(
       where: { section, status: "ACTIVE" },
     })) as unknown as RelatedRow[];
   } catch {
-    // DB unreachable — fall back to mocks below.
-  }
-  if (rows.length === 0) {
-    rows = MOCK_SHOP_PRODUCTS.filter((p) => p.section === section).map((p) => ({
-      id: p.id,
-      slug: p.slug,
-      section: p.section,
-      title_ua: p.title_ua,
-      title_en: p.title_en,
-      price_amount: p.price_amount,
-      price_currency: p.price_currency,
-      cover_image: p.cover_image,
-    }));
+    // DB unreachable — return no related products.
   }
   return rows.filter((r) => r.id !== excludeId).slice(0, RELATED_LIMIT);
 }

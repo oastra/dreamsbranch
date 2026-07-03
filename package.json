@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "types:db": "supabase gen types typescript --project-id imerrfenfuhjmwoffztx --schema public > src/types/database.ts"
+    "types:db": "supabase gen types typescript --project-id imerrfenfuhjmwoffztx --schema public > src/types/database.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.91",
@@ -47,7 +49,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^25.9.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.4",

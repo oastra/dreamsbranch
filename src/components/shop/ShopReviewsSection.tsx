@@ -1,5 +1,4 @@
 import { ReviewsCarousel, type Review } from "@/components/shop/ReviewsCarousel";
-import { MOCK_SHOP_REVIEWS } from "@/lib/mocks/shop-reviews";
 import { db } from "@/lib/db";
 import type { ShopReview, ShopSection } from "@/types/database";
 import { getTranslations } from "next-intl/server";
@@ -30,7 +29,6 @@ type ReviewSource = {
 export async function ShopReviewsSection({ locale, section }: Props) {
   const t = await getTranslations({ locale });
 
-  // Try DB first; fall back to mocks if empty/unreachable.
   let source: ReviewSource[] = [];
   try {
     const where: Record<string, unknown> = { status: "ACTIVE" };
@@ -50,24 +48,7 @@ export async function ShopReviewsSection({ locale, section }: Props) {
       avatar: r.avatar,
     }));
   } catch {
-    // DB unreachable — fall through.
-  }
-
-  // Only fall back to mocks for the legacy "all sections" mode. When a
-  // specific section is requested, an empty result means "no reviews
-  // scoped here yet" — show nothing rather than unrelated mocks.
-  if (source.length === 0 && !section) {
-    source = MOCK_SHOP_REVIEWS.map((r) => ({
-      id: r.id,
-      name_ua: r.name_ua,
-      name_en: r.name_en,
-      role_ua: r.role_ua,
-      role_en: r.role_en,
-      quote_ua: r.quote_ua,
-      quote_en: r.quote_en,
-      rating: r.rating,
-      avatar: r.avatar,
-    }));
+    // DB unreachable — render nothing rather than crash.
   }
 
   // Don't render the section at all if there are no reviews to show.

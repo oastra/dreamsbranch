@@ -12,7 +12,6 @@ import { CategoryHero, type CategoryHeroCollage } from "@/components/shop/Catego
 import { OtherCategoriesSection } from "@/components/shop/OtherCategoriesSection";
 import { ShopReviewsSection } from "@/components/shop/ShopReviewsSection";
 import { ContactSection } from "@/components/contact/ContactSection";
-import { MOCK_SHOP_CATEGORIES, MOCK_SHOP_PRODUCTS } from "@/lib/mocks/shop";
 import type { ShopCategory, ShopProduct, ShopSection } from "@/types/database";
 
 // ─── Section catalog ─────────────────────────────────────────────────────────
@@ -119,24 +118,7 @@ async function loadCatalogData(section: ShopSection) {
       productCategoryById.set(c.id, c.slug);
     }
   } catch {
-    // DB unreachable — fall through to mocks.
-  }
-
-  if (products.length === 0) {
-    products = MOCK_SHOP_PRODUCTS.filter((p) => p.section === section).map((p) => ({
-      id: p.id,
-      slug: p.slug,
-      section: p.section,
-      title_ua: p.title_ua,
-      title_en: p.title_en,
-      price_amount: p.price_amount,
-      price_currency: p.price_currency,
-      cover_image: p.cover_image,
-      category_id: null,
-    }));
-  }
-  if (categories.length === 0) {
-    categories = MOCK_SHOP_CATEGORIES.filter((c) => c.section === section);
+    // DB unreachable — render with whatever loaded (possibly empty).
   }
 
   return { products, categories, productCategoryById };
@@ -148,16 +130,10 @@ function buildCatalogProducts(
   locale: string,
 ): CatalogProduct[] {
   const titleKey = locale === "ua" ? "title_ua" : "title_en";
-  // Mock products carry category_slug directly; for DB rows we resolve via
-  // the category_id → slug map.
-  const productCategoryBySlugMock = new Map<string, string | null>();
-  for (const p of MOCK_SHOP_PRODUCTS) productCategoryBySlugMock.set(p.slug, p.category_slug);
 
   return products.map((p) => {
     const categorySlug =
-      (p.category_id ? productCategoryById.get(p.category_id) : null) ??
-      productCategoryBySlugMock.get(p.slug) ??
-      null;
+      (p.category_id ? productCategoryById.get(p.category_id) : null) ?? null;
     return {
       slug: p.slug,
       title: p[titleKey],
