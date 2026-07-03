@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { resolveLocaleSlug } from "@/lib/slug";
 
 import { db } from "@/lib/db";
+import { getApprovedAlt } from "@/lib/alt-text/read";
 import { NewsCard } from "@/components/news/NewsCard";
 import { ContactSection } from "@/components/contact/ContactSection";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
@@ -607,6 +608,8 @@ export default async function NewsArticlePage({
     locale,
   );
   const coverImage = article.cover_image;
+  // Approved AI alt text for the cover, falling back to the title until reviewed.
+  const coverAlt = (await getApprovedAlt(coverImage, locale)) ?? title;
   const extra = article as unknown as {
     body_image?: string | null;
     gallery_images?: string[];
@@ -665,7 +668,7 @@ export default async function NewsArticlePage({
             <div className="relative mb-8 aspect-3/1 w-full overflow-hidden rounded-2xl bg-secondary-10 lg:mb-10">
               <Image
                 src={coverImage}
-                alt={title}
+                alt={coverAlt}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 1280px"

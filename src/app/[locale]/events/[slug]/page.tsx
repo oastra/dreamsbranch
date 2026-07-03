@@ -5,6 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { isEventPast } from "@/lib/events";
 import { resolveLocaleSlug } from "@/lib/slug";
+import { getApprovedAltMap } from "@/lib/alt-text/read";
 
 // Related-events carousel filters out past ACTIVE events — re-fetch
 // every 5 minutes so the carousel stays accurate.
@@ -196,6 +197,23 @@ export default async function EventDetailPage({
   const financialReport =
     event.financial_report as unknown as FinancialReport | null;
 
+  // Approved AI alt text for this event's images, keyed by URL. Any image not
+  // yet reviewed is simply absent, so we fall back to the event title below —
+  // nothing breaks while the backlog fills.
+  const legacyImg = event as unknown as {
+    hero_image?: string | null;
+    secondary_image?: string | null;
+  };
+  const altMap = await getApprovedAltMap(
+    [
+      event.cover_image,
+      legacyImg.hero_image,
+      legacyImg.secondary_image,
+      ...(event.gallery_images ?? []),
+    ],
+    locale,
+  );
+
   const tagLabels = {
     active: t("events.tag_active"),
     archive: t("events.archive"),
@@ -252,7 +270,7 @@ export default async function EventDetailPage({
               return hero ? (
                 <Image
                   src={hero}
-                  alt={title}
+                  alt={altMap.get(hero) ?? title}
                   fill
                   className="object-cover"
                   priority
@@ -321,7 +339,7 @@ export default async function EventDetailPage({
                 <div className="relative mb-4 aspect-4/3 w-full overflow-hidden rounded-2xl bg-secondary-10 md:float-left md:mr-6 md:mb-4 md:w-[45%] lg:w-[42%]">
                   <Image
                     src={floatedImage}
-                    alt={title}
+                    alt={altMap.get(floatedImage) ?? title}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 45vw"
