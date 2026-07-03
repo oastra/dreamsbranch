@@ -1,5 +1,5 @@
 'use client';
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -16,7 +16,10 @@ import {
 import type { ImageAltTextRow } from '@/lib/alt-text/types';
 import { cn } from '@/lib/utils';
 
-const GENERATE_BATCH = 25;
+// Each click generates this many images synchronously. Kept small so the server
+// action finishes quickly and reliably (Sonnet vision ≈ a few seconds each) —
+// click again for more, or use scripts/run-alt-text-backlog.ts for a bulk drain.
+const GENERATE_BATCH = 5;
 // Soft screen-reader ceiling for alt text — over this, screen readers get
 // verbose. Shown as a live counter so reviewers can trim before approving.
 const ALT_LIMIT = 125;
@@ -30,6 +33,13 @@ export function AltTextQueue({ pending, backlogCount }: Props) {
   const router = useRouter();
   const [rows, setRows] = useState(pending);
   const [generating, startGenerating] = useTransition();
+
+  // Re-sync with the server whenever it sends fresh pending rows (after a
+  // router.refresh() following a generate run). Without this, useState keeps its
+  // initial snapshot and newly generated cards never appear.
+  useEffect(() => {
+    setRows(pending);
+  }, [pending]);
 
   function removeRow(url: string) {
     setRows((r) => r.filter((row) => row.url !== url));
