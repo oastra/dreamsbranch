@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { Check, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Spinner } from '@/components/ui/spinner';
 import {
@@ -171,10 +170,10 @@ function AltTextCard({
       <div className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Alt text (UA)" hint="Screen-reader text" current={altUa.length} max={ALT_LIMIT}>
-            <Input value={altUa} onChange={(e) => setAltUa(e.target.value)} />
+            <Textarea rows={3} value={altUa} onChange={(e) => setAltUa(e.target.value)} />
           </Field>
           <Field label="Alt text (EN)" hint="Screen-reader text" current={altEn.length} max={ALT_LIMIT}>
-            <Input value={altEn} onChange={(e) => setAltEn(e.target.value)} />
+            <Textarea rows={3} value={altEn} onChange={(e) => setAltEn(e.target.value)} />
           </Field>
           <Field label="Caption (UA)" hint="Longer description" current={captionUa.length}>
             <Textarea rows={2} value={captionUa} onChange={(e) => setCaptionUa(e.target.value)} />
