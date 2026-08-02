@@ -8,7 +8,6 @@ import { ProductSection } from "@/components/shop/ProductSection";
 import { CateringSection } from "@/components/shop/CateringSection";
 import { PhotoReportSection } from "@/components/shop/PhotoReportSection";
 import type { PhotoReportCardData } from "@/components/shop/PhotoReportCard";
-import { SupportSection } from "@/components/shared/SupportSection";
 import { ContactSection } from "@/components/contact/ContactSection";
 import HandmadeIcon from "@/components/icons/HandmadeIcon";
 import FromUAIcon from "@/components/icons/FromUAIcon";
@@ -284,8 +283,6 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: s
         imageSrc="/images/shop/catering.webp"
         imageAlt={t("shop.catering.image_alt")}
       />
-
-      <SupportSection locale={locale} />
 
       <ContactSection
         title={t("shop.contact_title")}

@@ -70,7 +70,7 @@ export function ProductSection({
       <div className="container-page">
         <h2
           id={`${id}-title`}
-          className="text-h2 mb-6 text-text-strong sm:mb-8 lg:mb-10"
+          className="text-title-tablet mb-6 text-text-strong sm:mb-8 lg:mb-10"
         >
           {title}
         </h2>

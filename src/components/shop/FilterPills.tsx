@@ -11,7 +11,7 @@ type Props = {
 
 export function FilterPills({ options, value, onChange, ariaLabel }: Props) {
   return (
-    <div role="tablist" aria-label={ariaLabel} className="flex flex-wrap gap-3">
+    <div role="tablist" aria-label={ariaLabel} className="flex flex-wrap gap-4">
       {options.map((opt) => {
         const active = opt.value === value;
         return (
@@ -21,10 +21,10 @@ export function FilterPills({ options, value, onChange, ariaLabel }: Props) {
             type="button"
             aria-selected={active}
             onClick={() => onChange(opt.value)}
-            className={`inline-flex h-10 items-center justify-center rounded-full px-5 text-body-sm font-medium transition-colors ${
+            className={`inline-flex items-center justify-center rounded-[20px] px-8 py-2 text-[18px] leading-[1.2] transition-colors ${
               active
                 ? "bg-primary text-text-strong"
-                : "bg-primary-20 text-text-strong hover:bg-primary-40"
+                : "bg-accent-1 text-text-strong hover:bg-primary-40"
             }`}
           >
             {opt.label}

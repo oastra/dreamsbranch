@@ -35,7 +35,7 @@ export function CateringSection({
       <div className="container-page">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-stretch lg:gap-12">
           {/* Image — top on mobile/tablet, left on desktop */}
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl lg:aspect-620/493">
             <Image
               src={imageSrc}
               alt={imageAlt}
@@ -46,27 +46,27 @@ export function CateringSection({
           </div>
 
           {/* Content — below image on mobile/tablet, right on desktop */}
-          <div className="flex flex-col gap-6 lg:gap-8">
+          <div className="flex flex-col gap-6 lg:gap-10">
             <SectionHeading align="center">
               <span id={id ? `${id}-title` : undefined}>{title}</span>
             </SectionHeading>
 
-            <p className="text-body text-text-primary lg:text-[18px] lg:leading-[150%]">
+            <p className="text-body text-text-primary lg:text-[24px] lg:leading-[1.2]">
               {description}
             </p>
 
             <div>
-              <h3 className="text-h3 mb-4 font-semibold text-text-strong">
+              <h3 className="text-title-mobile mb-4 text-text-strong">
                 {whatWeOfferLabel}
               </h3>
-              <ul className="space-y-3 text-body text-text-primary lg:text-[18px]">
+              <ul className="space-y-3 text-body text-text-primary lg:text-[20px]">
                 {items.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
             </div>
 
-            <div className="mt-2 flex justify-center lg:mt-auto lg:justify-center lg:pt-4">
+            <div className="mt-2 flex justify-center lg:mt-auto lg:justify-start lg:pt-4">
               <Button
                 render={<Link href={ctaHref} />}
                 size="xl"
